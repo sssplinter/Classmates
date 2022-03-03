@@ -1,8 +1,9 @@
 module.exports = signupRoute
 
 const jwt = require("jsonwebtoken");
-const accessTokenSecret = "myAccessTokenSecret1234567890";
 const bcrypt = require("bcrypt");
+
+const accessTokenSecret = "myAccessTokenSecret1234567890";
 const salt = 10
 
 function signupRoute(app, database) {
