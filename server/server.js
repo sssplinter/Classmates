@@ -1,4 +1,5 @@
 var homeRoute = require("./routes/homeRoute")
+var signupRoute = require("./routes/signupRoute")
 var express = require("express")
 var app = express()
 
@@ -37,6 +38,7 @@ http.listen(3000, function () {
         console.log("database connected")
 
         homeRoute(app)
+        signupRoute(app, database)
     })
 })
 
