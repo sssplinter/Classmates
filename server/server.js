@@ -1,3 +1,4 @@
+var homeRoute = require("./routes/homeRoute")
 var express = require("express")
 var app = express()
 
@@ -31,8 +32,11 @@ socketIO.on("connection", function (socket) {
 
 http.listen(3000, function () {
     console.log("server started")
-    app.get("/", function (request, result) {
-        result.send("hell")
+    mongoClient.connect("mongodb://localhost:27017", function (error, client) {
+        const database = client.db("my_social_network");
+        console.log("database connected")
+
+        homeRoute(app)
     })
 })
 
