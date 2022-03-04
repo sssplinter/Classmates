@@ -19,7 +19,12 @@ function signupRoute(app, database) {
                     const accessToken = jwt.sign({email: email}, accessTokenSecret);
                     database.collection("users").insertOne({
                         "email": email,
-                        "password": hash
+                        "password": hash,
+                        "accessToken": accessToken,
+                        "name": "",
+                        "surname": "",
+                        "patronim": "",
+                        "university": []
                     }, function (error, data) {
                         result.json({
                             "status": "success",
