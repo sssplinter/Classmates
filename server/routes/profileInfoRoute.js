@@ -1,9 +1,8 @@
 module.exports = profileInfoRoute
 
 function profileInfoRoute(app, database) {
-    app.get("/userInfo", function (request, result) {
+    app.get("/profileInfo", function (request, result) {
         const accessToken = request.headers.access;
-        console.log(accessToken)
         database.collection("users").findOne({
             "accessToken": accessToken
         }, function (error, user) {
