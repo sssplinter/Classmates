@@ -5,6 +5,7 @@ var allUsersRoute = require("./routes/allUsersRoute")
 var userInfoRoute = require("./routes/profileInfoRoute")
 var updateFullNameRoute = require("./routes/updateFullNameRoute")
 var addUniversityInfoRoute = require("./routes/addUniversityInfoRoute")
+var deleteUniversityInfoRoute = require("./routes/deleteUniversityInfoRoute")
 var express = require("express")
 var app = express()
 
@@ -49,6 +50,7 @@ http.listen(3000, function () {
         userInfoRoute(app, database)
         updateFullNameRoute(app, database)
         addUniversityInfoRoute(app, database)
+        deleteUniversityInfoRoute(app, database)
     })
 })
 
