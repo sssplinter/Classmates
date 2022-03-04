@@ -6,33 +6,28 @@ function allUsersRoute(app, database) {
         database.collection("users").findOne({
             "accessToken": accessToken
         }, function (error, user) {
-            database.collection("users").find().toArray(function (error, data) {
-                const modifiedData = data.map(userData => {
-                    let data;
-                    if (user == null) {
-                        data = {
-                            "email": userData.email,
-                            "name": userData.name,
-                            "surname": userData.surname,
-                            "patronim": userData.patronim
+            if (accessToken == null || user != null) {
+                database.collection("users").find().toArray(function (error, data) {
+                    const modifiedData = data.map(userData => {
+                        delete userData.password;
+                        delete userData.accessToken;
+                        if (user == null) {
+                            delete userData.education;
                         }
-                    } else {
-                        data = {
-                            "email": userData.email,
-                            "name": userData.name,
-                            "surname": userData.surname,
-                            "patronim": userData.patronim,
-                            "education": userData.education
-                        }
-                    }
-                    return data;
-                })
-                result.json({
-                    "status": "success",
-                    "message": "All users",
-                    "data": modifiedData
+                        return userData;
+                    })
+                    result.json({
+                        "status": "success",
+                        "message": "All users",
+                        "data": modifiedData
+                    });
                 });
-            });
+            } else {
+                result.json({
+                    "status": "error",
+                    "message": "User has been logged out"
+                });
+            }
         });
     });
 }
