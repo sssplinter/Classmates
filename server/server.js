@@ -1,6 +1,7 @@
 var homeRoute = require("./routes/homeRoute")
 var signupRoute = require("./routes/signupRoute")
 var signinRoute = require("./routes/signinRoute")
+var allUsersRoute = require("./routes/allUsersRoute")
 var express = require("express")
 var app = express()
 
@@ -41,6 +42,7 @@ http.listen(3000, function () {
         homeRoute(app)
         signupRoute(app, database)
         signinRoute(app, database)
+        allUsersRoute(app, database)
     })
 })
 
