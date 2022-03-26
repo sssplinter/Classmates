@@ -1,32 +1,44 @@
-// Copyright 2000-2021 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-import androidx.compose.material.MaterialTheme
-import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.material.Button
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.awt.ComposeWindow
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
+import androidx.compose.ui.window.WindowPosition
+import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
+import presentation.screens.login_screen.LoginScreen
+import ui.theme.AppTheme
+import java.awt.Dimension
 
-@Composable
-@Preview
-fun App() {
-    var text by remember { mutableStateOf("Hello, World!") }
+private val DEFAULT_WIDTH = 900.dp
+private val DEFAULT_HEIGHT = 600.dp
 
-    MaterialTheme {
-        Button(onClick = {
-            text = "Hello, Desktop!"
-        }) {
-            Text(text)
+private val MIN_WIDTH = 500.dp
+private val MIN_HEIGHT = 500.dp
+
+fun main() = application {
+    Window(
+        title = "Classmates",
+        state = WindowState(
+            width = DEFAULT_WIDTH,
+            height = DEFAULT_HEIGHT,
+            position = WindowPosition(Alignment.Center)
+        ),
+        onCloseRequest = ::exitApplication
+    ) {
+        window.setMinSize(
+            width = MIN_WIDTH,
+            height = MIN_HEIGHT
+        )
+        AppTheme {
+            LoginScreen()
         }
     }
 }
 
-fun main() = application {
-    Window(onCloseRequest = ::exitApplication) {
-        App()
-    }
+private fun ComposeWindow.setMinSize(width: Dp, height: Dp) {
+    val size = Dimension()
+    size.width = width.value.toInt()
+    size.height = height.value.toInt()
+    this.minimumSize = size
 }
