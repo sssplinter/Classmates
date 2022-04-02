@@ -1,4 +1,4 @@
-package presentation.screens
+package presentation.screens.splash_screen
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Box
