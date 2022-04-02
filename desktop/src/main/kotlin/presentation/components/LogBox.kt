@@ -1,6 +1,7 @@
 package presentation.components
 
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -13,12 +14,14 @@ import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.delay
 import ui.theme.*
 import util.isEmail
 
@@ -31,11 +34,21 @@ fun LogBox() {
     var isPasswordError by remember { mutableStateOf(false) }
     var isRepeatPasswordError by remember { mutableStateOf(false) }
     var repeatPassword by remember { mutableStateOf("") }
+    var startCardAnimation by remember { mutableStateOf(false) }
+    val cardAlpha = animateFloatAsState(
+        targetValue = if (startCardAnimation) 1f else 0f,
+        animationSpec = tween(durationMillis = 1000)
+    )
     val scale = animateFloatAsState(if (!isSignIn) 1f else 0f)
+    LaunchedEffect(true) {
+        delay(1000)
+        startCardAnimation = true
+    }
     Card(
         modifier = Modifier
             .width(350.dp)
-            .wrapContentHeight(),
+            .wrapContentHeight()
+            .alpha(cardAlpha.value),
         shape = MaterialTheme.shapes.large
     ) {
         Column(
@@ -50,8 +63,8 @@ fun LogBox() {
             ) {
                 Icon(
                     modifier = Modifier.height(50.dp),
-                    painter = painterResource("owl.png"),
-                    contentDescription = "email icon"
+                    painter = painterResource("owl.svg"),
+                    contentDescription = "logo icon"
                 )
                 Text(
                     text = "Login",
@@ -176,7 +189,7 @@ fun LogBox() {
                     TextField(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height((70 * scale.value).dp)
+                            .height(70.dp * scale.value)
                             .padding(vertical = EXTRA_SMALL_PADDING),
                         value = repeatPassword,
                         isError = isRepeatPasswordError,
