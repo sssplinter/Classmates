@@ -14,10 +14,12 @@ repositories {
     google()
     mavenCentral()
     maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+    maven("https://jitpack.io")
 }
 
 dependencies {
     implementation(compose.desktop.currentOs)
+    implementation("com.github.Dansoftowner:jSystemThemeDetector:3.6")
 }
 
 tasks.withType<KotlinCompile> {
