@@ -5,9 +5,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import navigation.component.NavHostController
 
 @Composable
-fun SplashScreen() {
+fun SplashScreen(navController: NavHostController) {
     Box(modifier = Modifier.fillMaxSize()) {
 
     }
@@ -16,5 +17,5 @@ fun SplashScreen() {
 @Preview
 @Composable
 fun SplashScreenPreview(){
-    SplashScreen()
+//    SplashScreen()
 }

@@ -6,7 +6,8 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
-import presentation.screens.home_screen.HomeScreen
+import navigation.EnteringNavGraph
+import navigation.component.rememberNavController
 import ui.theme.AppTheme
 import java.awt.Dimension
 
@@ -31,7 +32,7 @@ fun main() = application {
             height = MIN_HEIGHT
         )
         AppTheme {
-            HomeScreen()
+            EnteringNavGraph(rememberNavController())
         }
     }
 }

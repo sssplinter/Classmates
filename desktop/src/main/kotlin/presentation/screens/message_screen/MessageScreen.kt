@@ -14,11 +14,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import navigation.component.NavHostController
 import ui.theme.EXTRA_SMALL_PADDING
 import ui.theme.SMALL_PADDING
 
 @Composable
-fun MessageScreen() {
+fun MessageScreen(navController: NavHostController) {
     var searchText by remember { mutableStateOf("") }
 
     Row(modifier = Modifier.fillMaxSize()) {

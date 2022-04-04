@@ -15,6 +15,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import navigation.component.NavHostController
 import presentation.screens.message_screen.MessageScreen
 import ui.theme.EXTRA_SMALL_PADDING
 import ui.theme.MenuPanel
@@ -22,7 +23,7 @@ import ui.theme.ProfileOutline
 import ui.theme.SMALL_PADDING
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController: NavHostController) {
     Box(
         modifier = Modifier
             .padding(SMALL_PADDING)
@@ -111,7 +112,7 @@ fun HomeScreen() {
                 }
             }
             Box(modifier = Modifier.padding(start = SMALL_PADDING)) {
-                MessageScreen()
+                MessageScreen(navController)
             }
         }
     }

@@ -14,10 +14,11 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import navigation.component.NavHostController
 import presentation.components.LogBox
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(navController: NavHostController) {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
