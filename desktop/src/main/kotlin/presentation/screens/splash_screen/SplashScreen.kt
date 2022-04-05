@@ -22,6 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
+import navigation.Screen
 import navigation.component.NavHostController
 import ui.theme.MEDIUM_PADDING
 
@@ -35,6 +36,8 @@ fun SplashScreen(navController: NavHostController) {
         startLogoAnimation = true
         delay(1000)
         startTextAnimation = true
+        delay(1000)
+        navController.navigate(Screen.Login.route)
     }
 
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
