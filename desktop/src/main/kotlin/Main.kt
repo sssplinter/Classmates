@@ -6,8 +6,11 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
+import di.di
+import localization.Localization
 import navigation.EnteringNavGraph
 import navigation.component.rememberNavController
+import org.kodein.di.compose.withDI
 import ui.theme.AppTheme
 import java.awt.Dimension
 
@@ -18,21 +21,25 @@ private val MIN_WIDTH = 500.dp
 private val MIN_HEIGHT = 500.dp
 
 fun main() = application {
-    Window(
-        title = "Classmates",
-        state = WindowState(
-            width = DEFAULT_WIDTH,
-            height = DEFAULT_HEIGHT,
-            position = WindowPosition(Alignment.Center)
-        ),
-        onCloseRequest = ::exitApplication
-    ) {
-        window.setMinSize(
-            width = MIN_WIDTH,
-            height = MIN_HEIGHT
-        )
-        AppTheme {
-            EnteringNavGraph(rememberNavController())
+    withDI(di) {
+        Window(
+            title = "Classmates",
+            state = WindowState(
+                width = DEFAULT_WIDTH,
+                height = DEFAULT_HEIGHT,
+                position = WindowPosition(Alignment.Center)
+            ),
+            onCloseRequest = ::exitApplication
+        ) {
+            window.setMinSize(
+                width = MIN_WIDTH,
+                height = MIN_HEIGHT
+            )
+            AppTheme {
+                Localization {
+                    EnteringNavGraph(rememberNavController())
+                }
+            }
         }
     }
 }
