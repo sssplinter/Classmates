@@ -17,6 +17,10 @@ class SignInUseCase {
             return@withContext LoginScreenViewModel.AuthResult.Failed(300)
         }
 
-        return@withContext LoginScreenViewModel.AuthResult.UnAuthorized
+        if (email == "test@test.com" && password == "12345678") {
+            return@withContext LoginScreenViewModel.AuthResult.Authorized
+        }
+
+        return@withContext LoginScreenViewModel.AuthResult.NoSuchAccount
     }
 }
