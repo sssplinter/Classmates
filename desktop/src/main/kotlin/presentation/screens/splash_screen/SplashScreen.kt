@@ -31,6 +31,7 @@ import org.kodein.di.compose.rememberInstance
 import presentation.components.LoadingDialog
 import presentation.components.NoInternetDialog
 import ui.theme.MEDIUM_PADDING
+import util.resetActivationState
 
 @Composable
 fun SplashScreen(navController: NavHostController) {
@@ -140,16 +141,20 @@ private fun initObservable(
                     scope.cancel()
                 }
                 is SplashScreenContract.SplashScreenState.NoInternetConnection -> {
-                    showNoInternetConnectionDialog.value = true
-                    showLoadingDialog.value = false
+                    resetActivationState(
+                        activate = listOf(showNoInternetConnectionDialog),
+                        disActivate = listOf(showLoadingDialog)
+                    )
                 }
                 is SplashScreenContract.SplashScreenState.Loading -> {
-                    showNoInternetConnectionDialog.value = true
-                    showLoadingDialog.value = true
+                    resetActivationState(
+                        activate = listOf(showNoInternetConnectionDialog, showLoadingDialog),
+                    )
                 }
                 is SplashScreenContract.SplashScreenState.Idle -> {
-                    showNoInternetConnectionDialog.value = false
-                    showLoadingDialog.value = false
+                    resetActivationState(
+                        disActivate = listOf(showNoInternetConnectionDialog, showLoadingDialog)
+                    )
                 }
             }
         }

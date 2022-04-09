@@ -1,6 +1,6 @@
 package presentation.screens.splash_screen
 
-import domain.use_cases.CheckAuthorizationUseCase
+import domain.use_cases.authorization.CheckAuthorizationUseCase
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import presentation.base.BaseViewModel
