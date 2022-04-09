@@ -1,0 +1,66 @@
+package presentation.components
+
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.material.TextField
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.unit.dp
+import ui.theme.EXTRA_SMALL_PADDING
+import ui.theme.MEDIUM_PADDING
+
+@Composable
+fun TextFieldWithError(
+    modifier: Modifier = Modifier,
+    value: String,
+    onValueChange: (String) -> Unit,
+    label: String,
+    labelIcon: @Composable () -> Unit,
+    errorText: String,
+    isError: Boolean,
+    keyboardOptions: KeyboardOptions,
+    visualTransformation: VisualTransformation = VisualTransformation.None
+) {
+    Column {
+        TextField(
+            modifier = modifier
+                .fillMaxWidth()
+                .height(70.dp)
+                .padding(vertical = EXTRA_SMALL_PADDING),
+            value = value,
+            isError = isError,
+            onValueChange = onValueChange,
+            label = { Text(label) },
+            leadingIcon = labelIcon,
+            trailingIcon = {
+                if (isError)
+                    Icon(
+                        imageVector = Icons.Default.Warning,
+                        "Error image",
+                        tint = MaterialTheme.colors.error
+                    )
+            },
+            singleLine = true,
+            keyboardOptions = keyboardOptions,
+            visualTransformation = visualTransformation
+        )
+
+        if (isError) {
+            Text(
+                text = errorText,
+                color = MaterialTheme.colors.error,
+                style = MaterialTheme.typography.caption,
+                modifier = Modifier.padding(start = MEDIUM_PADDING)
+            )
+        }
+    }
+}
