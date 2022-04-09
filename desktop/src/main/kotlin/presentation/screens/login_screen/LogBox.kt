@@ -20,16 +20,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
-import localization.Language
 import localization.Vocabulary
 import presentation.components.TextFieldWithError
 import ui.theme.*
-import util.isEmail
+import util.checkEmailError
+import util.checkPasswordError
+import util.checkSecondPasswordError
 
 @Composable
 fun LogBox(
-    onLogIn: (email: String, password: String) -> Unit,
-    onSignUp: (email: String, password: String) -> Unit,
+    viewModel: LoginScreenViewModel,
+    onLogin: (email: String, password: String) -> Unit,
 ) {
     var isSignIn by remember { mutableStateOf(true) }
 
@@ -94,6 +95,7 @@ fun LogBox(
                     colors = if (isSignIn) ButtonDefaults.textButtonColors(backgroundColor = MaterialTheme.colors.loginActiveButton) else ButtonDefaults.textButtonColors(),
                     onClick = {
                         isSignIn = true
+                        viewModel.handleEvent(LoginScreenContract.Event.OnSwitchToSignInClick)
                         isWrongEmailError = false
                         isPasswordError = false
                         isRepeatPasswordError = false
@@ -108,6 +110,7 @@ fun LogBox(
                     colors = if (!isSignIn) ButtonDefaults.textButtonColors(backgroundColor = MaterialTheme.colors.loginActiveButton) else ButtonDefaults.textButtonColors(),
                     onClick = {
                         isSignIn = false
+                        viewModel.handleEvent(LoginScreenContract.Event.OnSwitchToSignUpClick)
                         isWrongEmailError = false
                         isPasswordError = false
                         isRepeatPasswordError = false
@@ -124,12 +127,7 @@ fun LogBox(
                 value = email,
                 onValueChange = { email = it },
                 label = Vocabulary.localization.email,
-                labelIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Email,
-                        contentDescription = "email icon"
-                    )
-                },
+                imageVector = Icons.Default.Email,
                 errorText = emailError,
                 isError = isWrongEmailError,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
@@ -139,12 +137,7 @@ fun LogBox(
                 value = password,
                 onValueChange = { password = it },
                 label = Vocabulary.localization.password,
-                labelIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Lock,
-                        contentDescription = "password icon"
-                    )
-                },
+                imageVector = Icons.Default.Lock,
                 errorText = passwordError,
                 isError = isPasswordError,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -157,12 +150,7 @@ fun LogBox(
                     value = repeatPassword,
                     onValueChange = { repeatPassword = it },
                     label = Vocabulary.localization.repeatPassword,
-                    labelIcon = {
-                        Icon(
-                            imageVector = Icons.Default.Lock,
-                            contentDescription = "password icon"
-                        )
-                    },
+                    imageVector = Icons.Default.Lock,
                     errorText = repeatPasswordError,
                     isError = isRepeatPasswordError,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -187,15 +175,8 @@ fun LogBox(
                         isRepeatPasswordError = repeatPasswordError.isNotEmpty()
                     }
 
-                    if (!isWrongEmailError && !isPasswordError) {
-                        when {
-                            isSignIn -> {
-                                onLogIn(email, password)
-                            }
-                            !isRepeatPasswordError -> {
-                                onSignUp(email, password)
-                            }
-                        }
+                    if (!isWrongEmailError && !isPasswordError && (isSignIn || !isRepeatPasswordError)) {
+                        onLogin(email, password)
                     }
                 }
             ) {
@@ -203,23 +184,4 @@ fun LogBox(
             }
         }
     }
-}
-
-private fun checkEmailError(language: Language, email: String) = when {
-    email.isEmpty() -> language.emptyEmailError
-    !email.isEmail() -> language.wrongEmailError
-    else -> language.emptyText
-}
-
-private fun checkPasswordError(language: Language, password: String) = when {
-    password.isEmpty() -> language.emptyPasswordError
-    password.length < 8 -> language.wrongPasswordLengthError
-    else -> language.emptyText
-}
-
-private fun checkSecondPasswordError(language: Language, firstPassword: String, secondPassword: String) = when {
-    secondPassword.isEmpty() -> language.emptyPasswordError
-    secondPassword.length < 8 -> language.wrongPasswordLengthError
-    firstPassword != secondPassword -> language.differentPasswordError
-    else -> language.emptyText
 }
