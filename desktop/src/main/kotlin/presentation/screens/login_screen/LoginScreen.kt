@@ -145,7 +145,7 @@ private fun initObservable(
                 }
                 is LoginScreenContract.LoginScreenState.Authorized -> {
                     navController.popBackStack()
-                    navController.navigate(Screen.Home.route)
+                    navController.navigate(Screen.Main.route)
                     viewModel.clearState()
                     scope.cancel()
                 }

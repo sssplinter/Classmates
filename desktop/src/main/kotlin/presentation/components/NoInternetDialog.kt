@@ -39,8 +39,8 @@ fun NoInternetDialog(
             .animateContentSize()
             .clip(shape)
             .background(backgroundColor)
-            .padding(16.dp)
-            .clickable { onClick() },
+            .clickable { onClick() }
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {

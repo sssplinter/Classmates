@@ -130,7 +130,7 @@ private fun initObservable(
             when (it.splashScreenState) {
                 is SplashScreenContract.SplashScreenState.Authorized -> {
                     navController.popBackStack()
-                    navController.navigate(Screen.Home.route)
+                    navController.navigate(Screen.Main.route)
                     viewModel.clearState()
                     scope.cancel()
                 }
