@@ -20,8 +20,8 @@ repositories {
 dependencies {
     implementation(compose.desktop.currentOs)
     implementation("com.github.Dansoftowner:jSystemThemeDetector:3.6")
-    implementation("org.kodein.di:kodein-di:7.10.0")
-    implementation("org.kodein.di:kodein-di-framework-compose:7.10.0")
+    implementation("org.kodein.di:kodein-di:7.11.0")
+    implementation("org.kodein.di:kodein-di-framework-compose:7.11.0")
 }
 
 tasks.withType<KotlinCompile> {
