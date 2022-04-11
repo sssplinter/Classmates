@@ -1,7 +1,6 @@
 package presentation.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
@@ -16,10 +15,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun LoadingDialog(backgroundColor: Color, shape: Shape) {
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .clickable(enabled = false, onClick = {})
-        .background(Color.Black.copy(0.2f))) {}
+    ShadowBox(onClick = {})
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center

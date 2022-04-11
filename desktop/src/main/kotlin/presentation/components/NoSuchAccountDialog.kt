@@ -1,7 +1,6 @@
 package presentation.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
@@ -25,10 +24,7 @@ fun NoSuchAccountDialog(
     buttonText: String,
     onOkClick: () -> Unit,
 ) {
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .clickable(enabled = false, onClick = {})
-        .background(Color.Black.copy(0.2f))) {}
+    ShadowBox(onClick = {})
     Column(
         modifier = Modifier
             .width(200.dp)
