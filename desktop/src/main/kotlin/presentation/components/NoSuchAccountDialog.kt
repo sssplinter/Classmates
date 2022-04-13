@@ -24,7 +24,7 @@ fun NoSuchAccountDialog(
     buttonText: String,
     onOkClick: () -> Unit,
 ) {
-    ShadowBox(onClick = {})
+    ShadowBox()
     Column(
         modifier = Modifier
             .width(200.dp)

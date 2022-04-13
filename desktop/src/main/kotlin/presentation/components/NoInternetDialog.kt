@@ -29,7 +29,7 @@ fun NoInternetDialog(
     actionMessage: String,
     onClick: () -> Unit,
 ) {
-    ShadowBox(onClick = {})
+    ShadowBox()
     Column(
         modifier = Modifier
             .size(250.dp)

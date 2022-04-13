@@ -9,9 +9,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 
 @Composable
-fun ShadowBox(onClick: () -> Unit) {
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .clickable(enabled = false, onClick = onClick)
-        .background(Color.Black.copy(0.2f))) {}
+fun ShadowBox(onClick: (() -> Unit)? = null) {
+    val onClickAction = onClick ?: {}
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .clickable(enabled = onClick != null, onClick = onClickAction)
+            .background(Color.Black.copy(0.2f))
+    ) {}
 }

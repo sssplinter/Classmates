@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun LoadingDialog(backgroundColor: Color, shape: Shape) {
-    ShadowBox(onClick = {})
+    ShadowBox()
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
