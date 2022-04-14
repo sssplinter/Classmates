@@ -46,7 +46,8 @@ fun SplashScreen(navController: NavHostController) {
         viewModel = viewModel,
         navController = navController,
         showNoInternetConnectionDialog = showNoInternetConnectionDialog,
-        showLoadingDialog = showLoadingDialog)
+        showLoadingDialog = showLoadingDialog
+    )
 
     LaunchedEffect(true) {
         viewModel.setEvent(SplashScreenContract.Event.OnAnimationStart)
