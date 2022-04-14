@@ -15,18 +15,11 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.ensureActive
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
-import navigation.Screen
 import navigation.component.NavHostController
 import org.kodein.di.compose.rememberInstance
 import presentation.components.LoadingDialog
 import presentation.components.NoInternetDialog
 import presentation.components.NoSuchAccountDialog
-import util.resetActivationState
 
 @Composable
 fun LoginScreen(navController: NavHostController) {
@@ -36,7 +29,7 @@ fun LoginScreen(navController: NavHostController) {
     val showLoadingDialog = remember { mutableStateOf(false) }
     val showNoSuchAccountDialog = remember { mutableStateOf(false) }
 
-    initObservable(
+    initLoginObservable(
         scope = rememberCoroutineScope(),
         viewModel = viewModel,
         navController = navController,
@@ -101,55 +94,6 @@ fun LoginScreen(navController: NavHostController) {
                     viewModel.setEvent(LoginScreenContract.Event.OnNoAccountOkBtnClick)
                 }
             )
-        }
-    }
-}
-
-private fun initObservable(
-    scope: CoroutineScope,
-    viewModel: LoginScreenViewModel,
-    navController: NavHostController,
-    showNoInternetConnectionDialog: MutableState<Boolean>,
-    showLoadingDialog: MutableState<Boolean>,
-    showNoSuchAccountDialog: MutableState<Boolean>,
-) {
-    scope.launch {
-        viewModel.uiState.collect {
-            scope.ensureActive()
-            when (it.loginScreenState) {
-                is LoginScreenContract.LoginScreenState.NoSuchAccount -> {
-                    resetActivationState(
-                        activate = listOf(showNoSuchAccountDialog),
-                        disActivate = listOf(showLoadingDialog, showNoInternetConnectionDialog)
-                    )
-                }
-                is LoginScreenContract.LoginScreenState.NoInternetConnection -> {
-                    resetActivationState(
-                        activate = listOf(showNoInternetConnectionDialog),
-                        disActivate = listOf(showLoadingDialog, showNoSuchAccountDialog)
-                    )
-                }
-                is LoginScreenContract.LoginScreenState.Loading -> {
-                    resetActivationState(
-                        activate = listOf(showLoadingDialog),
-                        disActivate = listOf(showNoInternetConnectionDialog,
-                            showNoSuchAccountDialog)
-                    )
-                }
-                is LoginScreenContract.LoginScreenState.Idle -> {
-                    resetActivationState(
-                        disActivate = listOf(showLoadingDialog,
-                            showNoInternetConnectionDialog,
-                            showNoSuchAccountDialog)
-                    )
-                }
-                is LoginScreenContract.LoginScreenState.Authorized -> {
-                    navController.popBackStack()
-                    navController.navigate(Screen.Main.route)
-                    viewModel.clearState()
-                    scope.cancel()
-                }
-            }
         }
     }
 }

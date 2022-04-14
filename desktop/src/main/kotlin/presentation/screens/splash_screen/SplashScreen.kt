@@ -22,16 +22,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.delay
 import localization.Vocabulary
-import navigation.Screen
 import navigation.component.NavHostController
 import org.kodein.di.compose.rememberInstance
 import presentation.components.LoadingDialog
 import presentation.components.NoInternetDialog
 import ui.theme.MEDIUM_PADDING
-import util.resetActivationState
 
 @Composable
 fun SplashScreen(navController: NavHostController) {
@@ -44,7 +41,7 @@ fun SplashScreen(navController: NavHostController) {
     val showNoInternetConnectionDialog = remember { mutableStateOf(false) }
     val showLoadingDialog = remember { mutableStateOf(false) }
 
-    initObservable(
+    initSplashObservable(
         scope = rememberCoroutineScope(),
         viewModel = viewModel,
         navController = navController,
@@ -113,50 +110,6 @@ fun SplashScreen(navController: NavHostController) {
                 backgroundColor = Color.White,
                 shape = MaterialTheme.shapes.medium
             )
-        }
-    }
-}
-
-private fun initObservable(
-    scope: CoroutineScope,
-    viewModel: SplashScreenViewModel,
-    navController: NavHostController,
-    showNoInternetConnectionDialog: MutableState<Boolean>,
-    showLoadingDialog: MutableState<Boolean>,
-) {
-    scope.launch {
-        viewModel.uiState.collect {
-            scope.ensureActive()
-            when (it.splashScreenState) {
-                is SplashScreenContract.SplashScreenState.Authorized -> {
-                    navController.popBackStack()
-                    navController.navigate(Screen.Main.route)
-                    viewModel.clearState()
-                    scope.cancel()
-                }
-                is SplashScreenContract.SplashScreenState.Unauthorized -> {
-                    navController.popBackStack()
-                    navController.navigate(Screen.Login.route)
-                    viewModel.clearState()
-                    scope.cancel()
-                }
-                is SplashScreenContract.SplashScreenState.NoInternetConnection -> {
-                    resetActivationState(
-                        activate = listOf(showNoInternetConnectionDialog),
-                        disActivate = listOf(showLoadingDialog)
-                    )
-                }
-                is SplashScreenContract.SplashScreenState.Loading -> {
-                    resetActivationState(
-                        activate = listOf(showNoInternetConnectionDialog, showLoadingDialog),
-                    )
-                }
-                is SplashScreenContract.SplashScreenState.Idle -> {
-                    resetActivationState(
-                        disActivate = listOf(showNoInternetConnectionDialog, showLoadingDialog)
-                    )
-                }
-            }
         }
     }
 }
