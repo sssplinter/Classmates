@@ -1,5 +1,6 @@
 package presentation.screens.profile_dialog.elements
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -18,6 +19,7 @@ fun ProfileCommentText(
     text: String,
     fontSize: TextUnit,
     imageVector: ImageVector? = null,
+    onImageClick: (() -> Unit)? = null,
 ) {
     Row(
         modifier = Modifier
@@ -31,7 +33,7 @@ fun ProfileCommentText(
         )
         imageVector?.let {
             Icon(
-                modifier = Modifier.size(14.sp.dp),
+                modifier = Modifier.size(14.sp.dp).clickable { onImageClick?.invoke() },
                 imageVector = imageVector,
                 contentDescription = "",
                 tint = Color.Black

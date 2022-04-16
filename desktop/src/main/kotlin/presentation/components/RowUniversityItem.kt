@@ -1,5 +1,6 @@
 package presentation.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -14,7 +15,12 @@ import androidx.compose.ui.unit.sp
 import ui.theme.THE_SMALLEST_PADDING
 
 @Composable
-fun RowUniversityItem(universityName: String, speciality: String, group: String) {
+fun RowUniversityItem(
+    universityName: String,
+    speciality: String,
+    group: String,
+    onEditClick: () -> Unit
+) {
     Row(
         modifier = Modifier.fillMaxWidth().padding(THE_SMALLEST_PADDING),
         verticalAlignment = Alignment.CenterVertically,
@@ -38,6 +44,7 @@ fun RowUniversityItem(universityName: String, speciality: String, group: String)
             )
         }
         Text(
+            modifier = Modifier.clickable { onEditClick() },
             text = "edit ->",
             fontSize = 12.sp,
             color = Color.Gray
