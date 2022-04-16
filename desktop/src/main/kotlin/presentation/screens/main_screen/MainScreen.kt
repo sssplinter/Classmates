@@ -18,6 +18,7 @@ import navigation.HomeNavGraph
 import navigation.Screen
 import navigation.component.NavHostController
 import navigation.component.rememberNavController
+import presentation.screens.profile_dialog.ProfileScreen
 import ui.theme.EXTRA_SMALL_PADDING
 import ui.theme.MenuPanel
 import ui.theme.ProfileOutline
@@ -29,6 +30,7 @@ typealias ButtonInfo = Pair<String, ImageVector>
 fun MainScreen(navController: NavHostController) {
     val tabNavController = rememberNavController()
     var currentTabRoute by remember { mutableStateOf(Screen.Messages.route) }
+    var isProfileDialog by remember { mutableStateOf(false) }
     Box(
         modifier = Modifier
             .fillMaxSize(),
@@ -95,7 +97,8 @@ fun MainScreen(navController: NavHostController) {
                             backgroundColor = MaterialTheme.colors.ProfileOutline
                         ),
                         onClick = {
-                            tabNavController.navigate(Screen.Profile.route)
+                            isProfileDialog = true
+//                            tabNavController.navigate(Screen.Profile.route)
                         }
                     ) {
                         Image(
@@ -108,6 +111,14 @@ fun MainScreen(navController: NavHostController) {
                     HomeNavGraph(tabNavController)
                 }
             }
+        }
+        if (isProfileDialog) {
+            ProfileScreen(
+                navController = navController,
+                onOutBoxClick = {
+                    isProfileDialog = false
+                }
+            )
         }
     }
 }

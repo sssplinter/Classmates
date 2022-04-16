@@ -8,6 +8,7 @@ import presentation.screens.splash_screen.SplashScreenViewModel
 class CheckAuthorizationUseCase {
     var isFirstTime = true
 
+    // TODO: 13.04.22 return type should be in use case, not in view model
     suspend operator fun invoke(): SplashScreenViewModel.AuthResult = withContext(Dispatchers.IO) {
         delay(2000)
 
