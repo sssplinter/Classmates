@@ -1,5 +1,6 @@
 module.exports = signupRoute
 
+const {ObjectId} = require("mongodb");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
@@ -18,13 +19,16 @@ function signupRoute(app, database) {
                 bcrypt.hash(password, salt, function (error, hash) {
                     const accessToken = jwt.sign({email: email}, accessTokenSecret);
                     database.collection("users").insertOne({
+                        _id: ObjectId(),
                         "email": email,
                         "password": hash,
                         "accessToken": accessToken,
                         "name": "",
                         "surname": "",
                         "patronim": "",
-                        "university": []
+                        "university": [],
+                        "chats": [],
+                        "groupChats": []
                     }, function (error, data) {
                         result.json({
                             "status": "success",
