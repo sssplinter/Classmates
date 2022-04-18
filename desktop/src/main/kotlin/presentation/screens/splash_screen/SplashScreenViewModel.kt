@@ -1,20 +1,20 @@
 package presentation.screens.splash_screen
 
 import domain.use_cases.authorization.CheckAuthorizationUseCase
+import domain.use_cases.authorization.UseCaseAuthResult
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import presentation.base.BaseViewModel
+import presentation.screens.splash_screen.SplashScreenContract.SplashScreenState
 
 class SplashScreenViewModel(
     private val checkAuthorizationUseCase: CheckAuthorizationUseCase,
 ) :
     BaseViewModel<SplashScreenContract.Event, SplashScreenContract.State, SplashScreenContract.Effect>() {
-    private var authResult: AuthResult = AuthResult.UnAuthorized
+    private var authResult: UseCaseAuthResult = UseCaseAuthResult.UnAuthorized
 
     override fun createInitialState(): SplashScreenContract.State {
-        return SplashScreenContract.State(
-            SplashScreenContract.SplashScreenState.Idle
-        )
+        return SplashScreenContract.State(SplashScreenState.Idle)
     }
 
     override fun handleEvent(event: SplashScreenContract.Event) {
@@ -36,7 +36,7 @@ class SplashScreenViewModel(
     }
 
     private fun runAuthCheckWithStates() {
-        setState { copy(splashScreenState = SplashScreenContract.SplashScreenState.Loading) }
+        setState { copy(splashScreenState = SplashScreenState.Loading) }
         runAuthCheck(true)
     }
 
@@ -52,21 +52,19 @@ class SplashScreenViewModel(
     }
 
     private fun checkIsUserAuthorized() {
-        val authState = when (authResult) {
-            is AuthResult.Authorized -> SplashScreenContract.SplashScreenState.Authorized
-            is AuthResult.UnAuthorized -> SplashScreenContract.SplashScreenState.Unauthorized
-            is AuthResult.Failed -> SplashScreenContract.SplashScreenState.NoInternetConnection
+        val authState = when (val authResult = authResult) {
+            is UseCaseAuthResult.Authorized -> {
+                authResult.token
+                SplashScreenState.Authorized
+            }
+            is UseCaseAuthResult.UnAuthorized -> SplashScreenState.Unauthorized
+            else -> null
+
         }
-        setState { copy(splashScreenState = authState) }
+        authState?.let { state -> setState { copy(splashScreenState = state) } }
     }
 
     override fun clearState() {
-        setState { copy(splashScreenState = SplashScreenContract.SplashScreenState.Idle) }
-    }
-
-    sealed interface AuthResult {
-        object Authorized : AuthResult
-        object UnAuthorized : AuthResult
-        data class Failed(val errorCode: Int) : AuthResult
+        setState { copy(splashScreenState = SplashScreenState.Idle) }
     }
 }

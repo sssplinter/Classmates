@@ -52,7 +52,7 @@ class ProfileScreenViewModel(
     private fun deleteAccount() {
         setState { copy(profileScreenState = ProfileScreenContract.ProfileScreenState.Loading) }
         MainScope().launch {
-            deleteAccountUseCase()
+            deleteAccountUseCase("")
             setState { copy(profileScreenState = ProfileScreenContract.ProfileScreenState.Deleted) }
         }
     }

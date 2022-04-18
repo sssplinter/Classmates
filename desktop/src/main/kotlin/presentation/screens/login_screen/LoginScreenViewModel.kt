@@ -2,6 +2,7 @@ package presentation.screens.login_screen
 
 import domain.use_cases.authorization.SignInUseCase
 import domain.use_cases.authorization.SignUpUseCase
+import domain.use_cases.authorization.UseCaseAuthResult
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import presentation.base.BaseViewModel
@@ -12,7 +13,7 @@ class LoginScreenViewModel(
 ) :
     BaseViewModel<LoginScreenContract.Event, LoginScreenContract.State, LoginScreenContract.Effect>() {
     private var signState: SignState = SignState.SIGN_IN
-    private var authResult: AuthResult = AuthResult.UnAuthorized
+    private var authResult: UseCaseAuthResult = UseCaseAuthResult.UnAuthorized
     override fun createInitialState(): LoginScreenContract.State {
         return LoginScreenContract.State(
             LoginScreenContract.LoginScreenState.Idle
@@ -56,10 +57,10 @@ class LoginScreenViewModel(
 
     private fun checkAuthState() {
         val authState = when (authResult) {
-            is AuthResult.Authorized -> LoginScreenContract.LoginScreenState.Authorized
-            is AuthResult.NoSuchAccount -> LoginScreenContract.LoginScreenState.NoSuchAccount
-            is AuthResult.Failed -> LoginScreenContract.LoginScreenState.NoInternetConnection
-            is AuthResult.UnAuthorized -> LoginScreenContract.LoginScreenState.Idle
+            is UseCaseAuthResult.Authorized -> LoginScreenContract.LoginScreenState.Authorized
+            is UseCaseAuthResult.NoSuchAccount -> LoginScreenContract.LoginScreenState.NoSuchAccount
+//            is AuthResult.Failed -> LoginScreenContract.LoginScreenState.NoInternetConnection
+            is UseCaseAuthResult.UnAuthorized -> LoginScreenContract.LoginScreenState.Idle
         }
 
         setState { copy(loginScreenState = authState) }
@@ -70,11 +71,4 @@ class LoginScreenViewModel(
     }
 
     enum class SignState { SIGN_IN, SIGN_UP }
-
-    sealed interface AuthResult {
-        object Authorized : AuthResult
-        object UnAuthorized : AuthResult
-        object NoSuchAccount : AuthResult
-        data class Failed(val errorCode: Int) : AuthResult
-    }
 }

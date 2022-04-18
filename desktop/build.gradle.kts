@@ -22,6 +22,20 @@ dependencies {
     implementation("com.github.Dansoftowner:jSystemThemeDetector:3.6")
     implementation("org.kodein.di:kodein-di:7.11.0")
     implementation("org.kodein.di:kodein-di-framework-compose:7.11.0")
+
+    implementation("com.google.code.gson:gson:2.9.0")
+    implementation("com.github.nazmulidris:color-console:1.0.0")
+
+    val okhttpVersion = "4.9.3"
+    implementation("com.squareup.okhttp3:okhttp:$okhttpVersion")
+    implementation("com.squareup.okhttp3:logging-interceptor:$okhttpVersion")
+
+    val retrofitVersion = "2.9.0"
+    implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
+    implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
+
+    implementation("com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2")
+
 }
 
 tasks.withType<KotlinCompile> {
