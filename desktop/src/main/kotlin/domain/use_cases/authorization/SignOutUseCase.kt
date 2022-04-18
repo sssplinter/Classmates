@@ -1,13 +1,13 @@
 package domain.use_cases.authorization
 
-import domain.source.UserRepository
+import domain.source.auth.AuthRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class SignOutUseCase(
-    private val userRepository: UserRepository,
+    private val authRepository: AuthRepository,
 ) {
     suspend operator fun invoke() = withContext(Dispatchers.IO) {
-        userRepository.logOut()
+        authRepository.logOut()
     }
 }

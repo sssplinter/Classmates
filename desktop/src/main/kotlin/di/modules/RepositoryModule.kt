@@ -1,6 +1,6 @@
 package di.modules
 
-import domain.source.UserRepository
+import domain.source.auth.AuthRepository
 import domain.source.auth.local.AuthPreferences
 import domain.source.auth.local.AuthPreferencesImpl
 import domain.source.auth.remote.AuthApiClient
@@ -14,5 +14,5 @@ import util.BASE_URL
 val repositoryModule = DI.Module(name = "repository", allowSilentOverride = false) {
     bind<AuthPreferences>() with singleton { AuthPreferencesImpl() }
     bind<AuthApiService>() with singleton { AuthApiClient.create(BASE_URL) }
-    bind { singleton { UserRepository(instance(), instance()) } }
+    bind { singleton { AuthRepository(instance(), instance()) } }
 }

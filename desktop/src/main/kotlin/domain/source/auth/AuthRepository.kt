@@ -1,4 +1,4 @@
-package domain.source
+package domain.source.auth
 
 import domain.source.auth.local.AuthPreferences
 import domain.source.auth.remote.AuthApiService
@@ -6,7 +6,7 @@ import domain.source.response.AuthResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class UserRepository(
+class AuthRepository(
     private val preferences: AuthPreferences,
     private val authApiService: AuthApiService,
 ) {

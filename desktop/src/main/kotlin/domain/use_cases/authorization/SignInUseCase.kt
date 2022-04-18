@@ -1,18 +1,18 @@
 package domain.use_cases.authorization
 
-import domain.source.UserRepository
+import domain.source.auth.AuthRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class SignInUseCase(
-    private val userRepository: UserRepository,
+    private val authRepository: AuthRepository,
 ) {
     suspend operator fun invoke(email: String, password: String): UseCaseAuthResult = withContext(Dispatchers.IO) {
-        val authResponse = userRepository.signIn(email, password)
+        val authResponse = authRepository.signIn(email, password)
         return@withContext when {
             authResponse?.accessToken == null -> UseCaseAuthResult.UnAuthorized
             authResponse.accessToken.isNotEmpty() -> {
-                userRepository.saveAuthorization(authResponse.accessToken)
+                authRepository.saveAuthorization(authResponse.accessToken)
                 UseCaseAuthResult.Authorized(authResponse.accessToken)
             }
             else -> UseCaseAuthResult.NoSuchAccount

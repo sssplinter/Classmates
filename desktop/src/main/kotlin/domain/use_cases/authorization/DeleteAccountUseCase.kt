@@ -1,13 +1,13 @@
 package domain.use_cases.authorization
 
-import domain.source.UserRepository
+import domain.source.auth.AuthRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class DeleteAccountUseCase(
-    private val userRepository: UserRepository,
+    private val authRepository: AuthRepository,
 ) {
     suspend operator fun invoke(token: String) = withContext(Dispatchers.IO) {
-        userRepository.deleteAccount(token)
+        authRepository.deleteAccount(token)
     }
 }
