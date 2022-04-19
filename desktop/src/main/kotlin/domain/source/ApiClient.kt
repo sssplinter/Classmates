@@ -1,10 +1,10 @@
-package domain.source.auth.remote
+package domain.source
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-object AuthApiClient {
+object ApiClient {
     inline fun <reified T> create(url: String): T {
         return Retrofit.Builder()
             .baseUrl(url)

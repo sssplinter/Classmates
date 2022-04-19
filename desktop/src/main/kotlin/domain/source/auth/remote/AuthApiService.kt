@@ -1,6 +1,6 @@
 package domain.source.auth.remote
 
-import domain.source.response.AuthResponse
+import domain.entities.response.AuthResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST

@@ -1,4 +1,4 @@
-package domain.source.response
+package domain.entities.response
 
 data class AuthResponse(
     val accessToken: String?,
