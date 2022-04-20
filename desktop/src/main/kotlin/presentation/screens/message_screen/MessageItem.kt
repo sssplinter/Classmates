@@ -43,19 +43,19 @@ fun MessageItem() {
                 ) {
                     Text(
                         text = "User name",
-                        fontSize = 12.sp,
+                        fontSize = 14.sp,
                         color = Color.Black,
                         fontWeight = FontWeight.Black
                     )
                     Text(
                         text = "05.06.2022",
-                        fontSize = 8.sp,
+                        fontSize = 10.sp,
                         color = Color.Gray
                     )
                 }
                 Text(
                     text = "messagemessagemessagemessagemessagemessagemessagemessagemessagemessagemessagemessagemessagemessagemessagemessagemessagemessagemessagemessagemessagemessagemessagemessage",
-                    fontSize = 8.sp,
+                    fontSize = 10.sp,
                     maxLines = 2,
                     color = Color.Gray,
                     overflow = TextOverflow.Ellipsis
