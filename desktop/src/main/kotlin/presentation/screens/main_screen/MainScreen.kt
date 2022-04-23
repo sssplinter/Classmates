@@ -33,7 +33,8 @@ fun MainScreen(navController: NavHostController) {
     var isProfileDialog by remember { mutableStateOf(false) }
     Box(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .background(Color.White),
         contentAlignment = Alignment.Center
     ) {
         Box(
