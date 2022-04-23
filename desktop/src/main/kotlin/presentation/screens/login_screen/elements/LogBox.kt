@@ -1,4 +1,4 @@
-package presentation.screens.login_screen
+package presentation.screens.login_screen.elements
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -22,6 +22,8 @@ import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
 import localization.Vocabulary
 import presentation.components.TextFieldWithError
+import presentation.screens.login_screen.LoginScreenContract
+import presentation.screens.login_screen.LoginScreenViewModel
 import ui.theme.*
 import util.checkEmailError
 import util.checkPasswordError

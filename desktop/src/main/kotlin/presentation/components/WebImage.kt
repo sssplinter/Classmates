@@ -23,14 +23,16 @@ fun WebImage(
     contentScale: ContentScale = ContentScale.Crop,
     placeHolder: Painter,
 ) {
-    var isLoaded by remember { mutableStateOf(false) }
+    var isLoadedSuccessfully by remember { mutableStateOf(false) }
     val image = remember { mutableStateOf<ImageBitmap?>(null) }
-    val exceptionHandler = CoroutineExceptionHandler { _, _ -> println("error on image loading") }
-    MainScope().launch(exceptionHandler) {
-        isLoaded = true
-        image.value = loadNetworkImage(url)
+    val exceptionHandler = CoroutineExceptionHandler { _, _ ->
+        //println("error on image loading")
     }
-    if (isLoaded) {
+    MainScope().launch(exceptionHandler) {
+        image.value = loadNetworkImage(url)
+        isLoadedSuccessfully = true
+    }
+    if (isLoadedSuccessfully) {
         image.value?.let { img ->
             Image(
                 bitmap = img,

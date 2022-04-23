@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import navigation.component.NavHostController
 import org.kodein.di.compose.rememberInstance
-import presentation.screens.profile_dialog.elements.SearchTextField
+import presentation.components.SearchTextField
 import ui.theme.MEDIUM_PADDING
 
 @OptIn(ExperimentalFoundationApi::class)
