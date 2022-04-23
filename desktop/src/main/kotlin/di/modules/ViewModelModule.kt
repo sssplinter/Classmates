@@ -5,6 +5,7 @@ import org.kodein.di.bind
 import org.kodein.di.instance
 import org.kodein.di.singleton
 import presentation.screens.login_screen.LoginScreenViewModel
+import presentation.screens.message_screen.MessageScreenViewModel
 import presentation.screens.profile_dialog.ProfileScreenViewModel
 import presentation.screens.splash_screen.SplashScreenViewModel
 
@@ -12,4 +13,5 @@ val viewModelModule = DI.Module(name = "viewModelModule", allowSilentOverride = 
     bind { singleton { SplashScreenViewModel(instance()) } }
     bind { singleton { LoginScreenViewModel(instance(), instance()) } }
     bind { singleton { ProfileScreenViewModel(instance(), instance()) } }
+    bind { singleton { MessageScreenViewModel(instance(), instance(), instance(), instance()) } }
 }
