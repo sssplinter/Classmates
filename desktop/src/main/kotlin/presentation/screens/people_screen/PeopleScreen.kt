@@ -1,27 +1,20 @@
 package presentation.screens.people_screen
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import domain.entities.response.UsersInfoResponse
 import navigation.component.NavHostController
 import org.kodein.di.compose.rememberInstance
-import ui.theme.EXTRA_SMALL_PADDING
+import presentation.screens.profile_dialog.elements.SearchTextField
 import ui.theme.MEDIUM_PADDING
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -29,7 +22,7 @@ import ui.theme.MEDIUM_PADDING
 fun PeopleScreen(navController: NavHostController) {
     val viewModel: PeopleScreenViewModel by rememberInstance()
 
-    var searchText by remember { mutableStateOf("") }
+    val searchText = remember { mutableStateOf("") }
     val peopleList = viewModel.peopleList
 
     Column(
@@ -47,35 +40,11 @@ fun PeopleScreen(navController: NavHostController) {
                 textAlign = TextAlign.Center,
                 fontSize = 28.sp
             )
-            BasicTextField(
+            SearchTextField(
                 modifier = Modifier.fillMaxWidth(),
-                value = searchText,
-                onValueChange = { searchText = it },
-                singleLine = true
-            ) { innerTextField ->
-                Row(
-                    modifier = Modifier
-                        .border(
-                            width = 1.dp,
-                            color = Color.Black,
-                            shape = MaterialTheme.shapes.medium
-                        )
-                        .padding(EXTRA_SMALL_PADDING),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        modifier = Modifier.padding(end = EXTRA_SMALL_PADDING),
-                        imageVector = Icons.Default.Search,
-                        contentDescription = ""
-                    )
-                    Box {
-                        if (searchText.isEmpty()) {
-                            Text(text = "Search")
-                        }
-                        innerTextField()
-                    }
-                }
-            }
+                text = searchText,
+                hint = "Search"
+            )
         }
         LazyVerticalGrid(
             cells = GridCells.Fixed(3),
