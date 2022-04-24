@@ -38,7 +38,7 @@ function signupRoute(app, database) {
                             "groupChats": [],
                             "friends": [],
                             "subscribers": [],
-                            "subscription": []
+                            "subscriptions": []
                         }, function (error, data) {
                             result.status(200).json({
                                 "status": "success",

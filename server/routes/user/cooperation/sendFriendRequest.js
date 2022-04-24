@@ -23,12 +23,12 @@ function sendFriendRequest(app, database) {
                         });
                         return;
                     }
-                    if (user.subscription.findIndex(x => x.userId === userId) === -1) {
+                    if (user.subscriptions.findIndex(x => x.userId === userId) === -1) {
                         database.collection("users").updateOne({
                                 "accessToken": accessToken
                             }, {
                                 $push: {
-                                    "subscription": {
+                                    "subscriptions": {
                                         "userId": userId
                                     }
                                 }
