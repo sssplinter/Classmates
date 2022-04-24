@@ -37,16 +37,16 @@ function rejectFriendRequest(app, database) {
                             _id: ObjectID(userId.toString())
                         }, function (error, toUser) {
                             if (toUser != null) {
-                                if (toUser.subscription.findIndex(x => x.userId.toString() === userFrom._id.toString()) !== -1) {
-                                    for (let i = 0; i < toUser.subscription.length; i++) {
-                                        if (toUser.subscription[i].userId.toString() === userFrom._id.toString()) {
-                                            toUser.subscription.splice(i, 1);
+                                if (toUser.subscriptions.findIndex(x => x.userId.toString() === userFrom._id.toString()) !== -1) {
+                                    for (let i = 0; i < toUser.subscriptions.length; i++) {
+                                        if (toUser.subscriptions[i].userId.toString() === userFrom._id.toString()) {
+                                            toUser.subscriptions.splice(i, 1);
                                             database.collection("users").updateOne({
                                                     _id: ObjectID(userId.toString())
                                                 },
                                                 {
                                                     $set: {
-                                                        "subscription": toUser.subscription
+                                                        "subscriptions": toUser.subscriptions
                                                     }
                                                 }
                                             );
