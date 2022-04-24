@@ -17,7 +17,7 @@ function getChatMessages(app, database) {
                 "accessToken": accessToken
             }, function (error, user) {
                 if (user != null) {
-                    if (user.chats.findIndex(x => x.chatId.toString() === chatId) !== -1) {
+                    if (user.chats.findIndex(x => x.chatId.toString() === chatId) === -1) {
                         result.status(403).json({
                             "status": "error",
                             "chatMessages": null,
