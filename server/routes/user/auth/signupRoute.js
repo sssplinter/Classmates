@@ -32,7 +32,7 @@ function signupRoute(app, database) {
                             "accessToken": accessToken,
                             "name": "",
                             "surname": "",
-                            "patronim": "",
+                            "photoUrl": "",
                             "university": [],
                             "chats": [],
                             "groupChats": [],
