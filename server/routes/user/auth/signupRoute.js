@@ -28,7 +28,10 @@ function signupRoute(app, database) {
                         "patronim": "",
                         "university": [],
                         "chats": [],
-                        "groupChats": []
+                        "groupChats": [],
+                        "friends": [],
+                        "subscribers": [],
+                        "subscription": []
                     }, function (error, data) {
                         result.json({
                             "status": "success",
