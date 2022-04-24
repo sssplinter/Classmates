@@ -11,7 +11,7 @@ function getAllFriends(app, database) {
                 result.status(200).json({
                     "status": "success",
                     "friends": user.friends,
-                    "message": "User has been logged out"
+                    "message": "List of all friends"
                 })
             } else {
                 result.status(401).json({
