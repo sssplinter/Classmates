@@ -4,10 +4,10 @@ import domain.source.chat.ChatRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class DeleteMessageUseCase(
+class CopyMessageToClipboardTextUseCase(
     private val chatRepository: ChatRepository
 ) {
-    suspend operator fun invoke(chatId: Int, messageId: Int) = withContext(Dispatchers.IO) {
-        chatRepository.deleteMessage(chatId, messageId)
+    suspend operator fun invoke(messageId: Int) = withContext(Dispatchers.IO) {
+        chatRepository
     }
 }

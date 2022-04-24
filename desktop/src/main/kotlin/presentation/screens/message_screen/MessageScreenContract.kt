@@ -27,6 +27,6 @@ class MessageScreenContract {
 
     sealed class Effect : UiEffect {
         data class ShowUserProfile(val id: Int) : Effect()
-        data class ShowFoundMessage(val id: Int, val hasNext: Boolean, val hasPrev: Boolean) : Effect()
+        data class ShowFoundMessage(val position: Int, val hasNext: Boolean, val hasPrev: Boolean) : Effect()
     }
 }

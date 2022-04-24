@@ -13,10 +13,10 @@ val useCaseModule = DI.Module(name = "useCase", allowSilentOverride = false) {
     bind { singleton { SignUpUseCase(instance()) } }
     bind { singleton { SignOutUseCase(instance()) } }
     bind { singleton { DeleteAccountUseCase(instance()) } }
-    bind { singleton { CopyMessageTextUseCase() } }
-    bind { singleton { DeleteMessageUseCase() } }
-    bind { singleton { FindChatsUseCase() } }
-    bind { singleton { FindMessagesUseCase() } }
-    bind { singleton { GetChatMessagesUseCase() } }
-    bind { singleton { SendMessageUseCase() } }
+    bind { singleton { CopyMessageToClipboardTextUseCase(instance()) } }
+    bind { singleton { DeleteMessageUseCase(instance()) } }
+    bind { singleton { FindChatsUseCase(instance()) } }
+    bind { singleton { FindMessagesUseCase(instance()) } }
+    bind { singleton { GetChatMessagesUseCase(instance()) } }
+    bind { singleton { SendMessageUseCase(instance()) } }
 }

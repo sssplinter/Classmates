@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -42,6 +43,7 @@ fun MessageDialog(
     chatInfo: ChatInfo,
     messages: List<MessageInfo>,
     findMessageStatus: MutableState<FindMessageStatus>,
+    messagesListState: LazyListState,
     viewModel: MessageScreenViewModel,
 ) {
     val isSearchPanelVisible = viewModel.isSearchPanelVisible
@@ -110,8 +112,7 @@ fun MessageDialog(
                         .clip(MaterialTheme.shapes.medium)
                         .background(if (findMessageStatus.value.second) Color(0xFF6C85F5) else Color(0xFFD7D7D7))
                         .clickable(enabled = findMessageStatus.value.second) {
-                            viewModel.setEvent(MessageScreenContract.Event.OnSendMessageBtnClick(sendMessageText.value))
-                            sendMessageText.value = ""
+                            viewModel.setEvent(MessageScreenContract.Event.OnPrevFoundMessageBtnClick)
                         }
                 ) {
                     Icon(
@@ -129,8 +130,7 @@ fun MessageDialog(
                         .clip(MaterialTheme.shapes.medium)
                         .background(if (findMessageStatus.value.third) Color(0xFF6C85F5) else Color(0xFFD7D7D7))
                         .clickable(enabled = findMessageStatus.value.third) {
-                            viewModel.setEvent(MessageScreenContract.Event.OnSendMessageBtnClick(sendMessageText.value))
-                            sendMessageText.value = ""
+                            viewModel.setEvent(MessageScreenContract.Event.OnNextFoundMessageBtnClick)
                         }
                 ) {
                     Icon(
@@ -174,11 +174,13 @@ fun MessageDialog(
             }
             LazyColumn(
                 modifier = Modifier.fillMaxSize().weight(1f).animateContentSize(),
-//                        state = messagesState
+                state = messagesListState
             ) {
-                messages.forEach { message ->
+                messages.withIndex().forEach { (index, message) ->
                     item {
-                        Box(modifier = Modifier.fillMaxWidth()) {
+                        val backgroundColor =
+                            if (findMessageStatus.value.first == index) Color.Blue else Color.Transparent
+                        Box(modifier = Modifier.fillMaxWidth().background(backgroundColor)) {
                             if (message.fromId == 4) {
                                 Box(modifier = Modifier
                                     .padding(SMALL_PADDING)

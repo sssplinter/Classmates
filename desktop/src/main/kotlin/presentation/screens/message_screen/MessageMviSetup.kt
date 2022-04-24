@@ -1,5 +1,6 @@
 package presentation.screens.message_screen
 
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.MutableState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ensureActive
@@ -10,6 +11,7 @@ import util.resetActivationState
 fun initMessageObservable(
     scope: CoroutineScope,
     viewModel: MessageScreenViewModel,
+    messagesListState: LazyListState,
     showNoInternetConnectionDialog: MutableState<Boolean>,
     showLoadingDialog: MutableState<Boolean>,
     findMessageStatus: MutableState<FindMessageStatus>,
@@ -42,7 +44,10 @@ fun initMessageObservable(
             scope.ensureActive()
             when (it) {
                 is MessageScreenContract.Effect.ShowFoundMessage -> {
-                    findMessageStatus.value = FindMessageStatus(it.id, it.hasNext, it.hasPrev)
+                    findMessageStatus.value = FindMessageStatus(it.position, it.hasNext, it.hasPrev)
+                    if (it.position != -1) {
+                        messagesListState.scrollToItem(it.position)
+                    }
                 }
                 is MessageScreenContract.Effect.ShowUserProfile -> {
 

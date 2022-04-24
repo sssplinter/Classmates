@@ -17,8 +17,8 @@ interface ChatApiService {
 
     data class ChatBody(
         val accessToken: String = "",
-        val chatId: String = "",
         val messageText: String = "",
+        val chatId: Int = -1,
         val messageId: Int = -1,
     )
 }

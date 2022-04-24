@@ -2,6 +2,7 @@ package presentation.screens.message_screen
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -27,6 +28,7 @@ typealias FindMessageStatus = Triple<Int, Boolean, Boolean>
 fun MessageScreen(navController: NavHostController) {
     val viewModel: MessageScreenViewModel by rememberInstance()
 
+    val messagesListState = rememberLazyListState()
     val searchText = remember { mutableStateOf("") }
     val findMessageStatus = remember { mutableStateOf(FindMessageStatus(-1, false, false)) }
     val chatsList = viewModel.chatsList
@@ -37,6 +39,7 @@ fun MessageScreen(navController: NavHostController) {
     initMessageObservable(
         scope = rememberCoroutineScope(),
         viewModel = viewModel,
+        messagesListState = messagesListState,
         showNoInternetConnectionDialog = showNoInternetConnectionDialog,
         showLoadingDialog = showLoadingDialog,
         findMessageStatus = findMessageStatus
@@ -46,6 +49,9 @@ fun MessageScreen(navController: NavHostController) {
         Column(modifier = Modifier.padding(top = EXTRA_SMALL_PADDING)) {
             SearchTextField(
                 modifier = Modifier.width(250.dp),
+                onValueChanged = {
+                    viewModel.setEvent(MessageScreenContract.Event.OnSearchChatTextAppear(it))
+                },
                 text = searchText,
                 hint = "Search"
             )
@@ -72,6 +78,7 @@ fun MessageScreen(navController: NavHostController) {
                 chatInfo,
                 messages,
                 findMessageStatus,
+                messagesListState,
                 viewModel
             )
         } ?: MessageNoDialog()
