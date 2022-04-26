@@ -1,24 +1,34 @@
 package domain.source.chat.remote
 
+import domain.entities.data.CurrentUser
 import domain.entities.response.AuthResponse
+import domain.entities.response.ChatInfoResponse
+import domain.entities.response.ChatMessagesResponse
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface ChatApiService {
     @POST("/sendMessage")
-    suspend fun sendMessage(@Body body: ChatBody): Response<AuthResponse>
+    suspend fun sendMessage(
+        @Header("Access") token: String = CurrentUser.token,
+        @Body body: ChatBody,
+    ): Response<AuthResponse>
 
-    suspend fun deleteMessage(@Body body: ChatBody): Response<AuthResponse>
+    @POST("/getChatsInfo")
+    suspend fun getChatInfo(
+        @Header("Access") token: String = CurrentUser.token,
+    ): Response<ChatInfoResponse>
 
-    suspend fun getChatMessages(@Body body: ChatBody): Response<AuthResponse>
-
-    suspend fun getAllMessages(@Body body: ChatBody): Response<AuthResponse>
+    @POST("/getMessages")
+    suspend fun getChatMessages(
+        @Header("Access") token: String = CurrentUser.token,
+        @Body body: ChatBody,
+    ): Response<ChatMessagesResponse>
 
     data class ChatBody(
-        val accessToken: String = "",
         val messageText: String = "",
-        val chatId: Int = -1,
-        val messageId: Int = -1,
+        val chatId: String = "",
     )
 }
