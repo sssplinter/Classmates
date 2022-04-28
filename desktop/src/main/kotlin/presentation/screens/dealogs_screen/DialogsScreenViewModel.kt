@@ -1,4 +1,4 @@
-package presentation.screens.message_screen
+package presentation.screens.dealogs_screen
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -9,38 +9,40 @@ import domain.use_cases.chat.FindMessagesUseCase
 import domain.use_cases.chat.GetChatMessagesUseCase
 import domain.use_cases.chat.SendMessageUseCase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import presentation.base.BaseViewModel
+import util.getListIterator
 
-class MessageScreenViewModel(
+class DialogsScreenViewModel(
     private val getChatMessagesUseCase: GetChatMessagesUseCase,
     private val findMessagesUseCase: FindMessagesUseCase,
     private val findChatsUseCase: FindChatsUseCase,
     private val sendMessageUseCase: SendMessageUseCase,
-) : BaseViewModel<MessageScreenContract.Event, MessageScreenContract.State, MessageScreenContract.Effect>() {
+) : BaseViewModel<DialogsScreenContract.Event, DialogsScreenContract.State, DialogsScreenContract.Effect>() {
     var chatsList = mutableStateListOf<ChatInfo>()
     var isSearchPanelVisible = mutableStateOf(false)
-    val currentMessages = mutableStateOf<Pair<ChatInfo, List<MessageInfo>>?>(null)
-    private var findMessagesIterator = emptyList<Int>().listIterator()
+    val currentChatData = mutableStateOf<Pair<ChatInfo, List<MessageInfo>>?>(null)
+    private var findMessagesIterator = emptyList<Int>().getListIterator()
 
     init {
         searchChats()
     }
 
-    override fun createInitialState(): MessageScreenContract.State {
-        return MessageScreenContract.State(MessageScreenContract.MessageScreenState.Idle)
+    override fun createInitialState(): DialogsScreenContract.State {
+        return DialogsScreenContract.State(DialogsScreenContract.DialogsScreenState.Idle)
     }
 
-    override fun handleEvent(event: MessageScreenContract.Event) {
+    override fun handleEvent(event: DialogsScreenContract.Event) {
         when (event) {
-            is MessageScreenContract.Event.OnSelectChat -> selectChat(event.id)
-            is MessageScreenContract.Event.OnOpenCloseSearchClick -> activateSearchPanel()
-            is MessageScreenContract.Event.OnSearchMessageTextAppear -> searchMessages(event.text)
-            is MessageScreenContract.Event.OnSearchChatTextAppear -> searchChats(event.text)
-            is MessageScreenContract.Event.OnSendMessageBtnClick -> sendMessage(event.text)
-            is MessageScreenContract.Event.OnNextFoundMessageBtnClick -> nextFoundMessage()
-            is MessageScreenContract.Event.OnPrevFoundMessageBtnClick -> prevFoundMessage()
+            is DialogsScreenContract.Event.OnSelectChat -> selectChat(event.id)
+            is DialogsScreenContract.Event.OnOpenCloseSearchClick -> activateSearchPanel()
+            is DialogsScreenContract.Event.OnSearchMessageTextAppear -> searchMessages(event.text)
+            is DialogsScreenContract.Event.OnSearchChatTextAppear -> searchChats(event.text)
+            is DialogsScreenContract.Event.OnSendMessageBtnClick -> sendMessage(event.text)
+            is DialogsScreenContract.Event.OnNextFoundMessageBtnClick -> nextFoundMessage()
+            is DialogsScreenContract.Event.OnPrevFoundMessageBtnClick -> prevFoundMessage()
         }
     }
 
@@ -50,7 +52,7 @@ class MessageScreenViewModel(
     }
 
     private fun searchMessages(text: String) = launch {
-        currentMessages.value?.first?.let { chatInfo ->
+        currentChatData.value?.first?.let { chatInfo ->
             findMessagesIterator = findMessagesUseCase(chatInfo.id, text)
             if (findMessagesIterator.hasNext()) {
                 sendFoundEffect(true)
@@ -69,7 +71,7 @@ class MessageScreenViewModel(
     }
 
     private fun sendMessage(text: String) = launch {
-        currentMessages.value?.first?.let { chatInfo ->
+        currentChatData.value?.first?.let { chatInfo ->
             sendMessageUseCase(chatInfo.id, text)
         }
     }
@@ -89,7 +91,7 @@ class MessageScreenViewModel(
     private fun sendFoundEffect(isForward: Boolean) {
         setEffect {
             val index = if (isForward) findMessagesIterator.next() else findMessagesIterator.previous()
-            MessageScreenContract.Effect.ShowFoundMessage(
+            DialogsScreenContract.Effect.ShowFoundMessage(
                 position = index,
                 findMessagesIterator.hasPrevious(),
                 findMessagesIterator.hasNext(),
@@ -99,7 +101,7 @@ class MessageScreenViewModel(
 
     private fun sendUnFoundEffect() {
         setEffect {
-            MessageScreenContract.Effect.ShowFoundMessage(
+            DialogsScreenContract.Effect.ShowFoundMessage(
                 position = -1,
                 hasPrev = false,
                 hasNext = false
@@ -108,24 +110,25 @@ class MessageScreenViewModel(
     }
 
     override fun clearState() {
-        setState { copy(messageScreenState = MessageScreenContract.MessageScreenState.Idle) }
+        setState { copy(dialogsScreenState = DialogsScreenContract.DialogsScreenState.Idle) }
     }
 
-    private fun selectChat(id: Int) {
+    private fun selectChat(id: String) {
         activateChat(id)
         selectCurrentMessages(id)
     }
 
-    private fun activateChat(id: Int) {
+    private fun activateChat(id: String) {
         chatsList.replaceAll {
             it.copy(isSelected = it.id == id)
         }
     }
 
-    private fun selectCurrentMessages(id: Int) = launch {
-        currentMessages.value = chatsList.firstOrNull { it.id == id }?.let { chatInfo ->
-            val messages = getChatMessagesUseCase.invoke(chatInfo.id)
-            chatInfo to messages
+    private fun selectCurrentMessages(id: String) = launch {
+        chatsList.firstOrNull { it.id == id }?.let { chatInfo ->
+            getChatMessagesUseCase.invoke(chatInfo.id)?.collect { list ->
+                setEffect { DialogsScreenContract.Effect.UpdateChatData(chatInfo, list) }
+            }
         }
     }
 }

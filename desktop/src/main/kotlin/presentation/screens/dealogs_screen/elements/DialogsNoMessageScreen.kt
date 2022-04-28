@@ -1,4 +1,4 @@
-package presentation.screens.message_screen.elements
+package presentation.screens.dealogs_screen.elements
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable

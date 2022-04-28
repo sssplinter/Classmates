@@ -1,4 +1,4 @@
-package presentation.screens.message_screen.elements
+package presentation.screens.dealogs_screen.elements
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -23,7 +23,7 @@ import ui.theme.ProfileOutline
 import ui.theme.SMALL_PADDING
 
 @Composable
-fun MessageItem(chatInfo: ChatInfo, onClick: () -> Unit) {
+fun DialogsChatItem(chatInfo: ChatInfo, onClick: () -> Unit) {
     Box(
         modifier = Modifier
             .padding(bottom = SMALL_PADDING)

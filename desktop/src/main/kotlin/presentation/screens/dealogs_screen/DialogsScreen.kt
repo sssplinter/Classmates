@@ -1,4 +1,4 @@
-package presentation.screens.message_screen
+package presentation.screens.dealogs_screen
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -16,27 +16,27 @@ import org.kodein.di.compose.rememberInstance
 import presentation.components.LoadingDialog
 import presentation.components.NoInternetDialog
 import presentation.components.SearchTextField
-import presentation.screens.message_screen.elements.MessageDialog
-import presentation.screens.message_screen.elements.MessageItem
-import presentation.screens.message_screen.elements.MessageNoDialog
+import presentation.screens.dealogs_screen.elements.DialogsMessageScreen
+import presentation.screens.dealogs_screen.elements.DialogsChatItem
+import presentation.screens.dealogs_screen.elements.MessageNoDialog
 import ui.theme.EXTRA_SMALL_PADDING
 import ui.theme.SMALL_PADDING
 
 typealias FindMessageStatus = Triple<Int, Boolean, Boolean>
 
 @Composable
-fun MessageScreen(navController: NavHostController) {
-    val viewModel: MessageScreenViewModel by rememberInstance()
+fun DialogsScreen(navController: NavHostController) {
+    val viewModel: DialogsScreenViewModel by rememberInstance()
 
     val messagesListState = rememberLazyListState()
     val searchText = remember { mutableStateOf("") }
     val findMessageStatus = remember { mutableStateOf(FindMessageStatus(-1, false, false)) }
     val chatsList = viewModel.chatsList
-    val currentMessages = viewModel.currentMessages
+    val currentMessages = viewModel.currentChatData
     val showNoInternetConnectionDialog = remember { mutableStateOf(false) }
     val showLoadingDialog = remember { mutableStateOf(false) }
 
-    initMessageObservable(
+    initDialogsObservable(
         scope = rememberCoroutineScope(),
         viewModel = viewModel,
         messagesListState = messagesListState,
@@ -50,7 +50,7 @@ fun MessageScreen(navController: NavHostController) {
             SearchTextField(
                 modifier = Modifier.width(250.dp),
                 onValueChanged = {
-                    viewModel.setEvent(MessageScreenContract.Event.OnSearchChatTextAppear(it))
+                    viewModel.setEvent(DialogsScreenContract.Event.OnSearchChatTextAppear(it))
                 },
                 text = searchText,
                 hint = "Search"
@@ -63,10 +63,10 @@ fun MessageScreen(navController: NavHostController) {
             ) {
                 chatsList.forEach { chatInfo ->
                     item {
-                        MessageItem(
+                        DialogsChatItem(
                             chatInfo = chatInfo,
                             onClick = {
-                                viewModel.setEvent(MessageScreenContract.Event.OnSelectChat(chatInfo.id))
+                                viewModel.setEvent(DialogsScreenContract.Event.OnSelectChat(chatInfo.id))
                             }
                         )
                     }
@@ -74,7 +74,7 @@ fun MessageScreen(navController: NavHostController) {
             }
         }
         currentMessages.value?.let { (chatInfo, messages) ->
-            MessageDialog(
+            DialogsMessageScreen(
                 chatInfo,
                 messages,
                 findMessageStatus,

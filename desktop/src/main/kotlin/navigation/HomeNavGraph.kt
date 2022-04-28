@@ -3,7 +3,7 @@ package navigation
 import androidx.compose.runtime.Composable
 import navigation.component.NavHost
 import navigation.component.NavHostController
-import presentation.screens.message_screen.MessageScreen
+import presentation.screens.dealogs_screen.DialogsScreen
 import presentation.screens.people_screen.PeopleScreen
 
 @Composable
@@ -13,7 +13,7 @@ fun HomeNavGraph(navController: NavHostController) {
 
         }
         composable(Screen.Messages.route) {
-            MessageScreen(navController)
+            DialogsScreen(navController)
         }
         composable(Screen.Favorite.route) {
 

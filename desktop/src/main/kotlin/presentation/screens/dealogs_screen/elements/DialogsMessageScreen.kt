@@ -1,4 +1,4 @@
-package presentation.screens.message_screen.elements
+package presentation.screens.dealogs_screen.elements
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
@@ -29,22 +29,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import domain.entities.data.ChatInfo
+import domain.entities.data.CurrentUser
 import domain.entities.data.MessageInfo
 import presentation.components.RoundedTextField
 import presentation.components.SearchTextField
 import presentation.components.WebImage
-import presentation.screens.message_screen.FindMessageStatus
-import presentation.screens.message_screen.MessageScreenContract
-import presentation.screens.message_screen.MessageScreenViewModel
+import presentation.screens.dealogs_screen.DialogsScreenContract
+import presentation.screens.dealogs_screen.DialogsScreenViewModel
+import presentation.screens.dealogs_screen.FindMessageStatus
 import ui.theme.*
+import util.toTime
 
 @Composable
-fun MessageDialog(
+fun DialogsMessageScreen(
     chatInfo: ChatInfo,
     messages: List<MessageInfo>,
     findMessageStatus: MutableState<FindMessageStatus>,
     messagesListState: LazyListState,
-    viewModel: MessageScreenViewModel,
+    viewModel: DialogsScreenViewModel,
 ) {
     val isSearchPanelVisible = viewModel.isSearchPanelVisible
     val searchMessageText = remember { mutableStateOf("") }
@@ -79,7 +81,7 @@ fun MessageDialog(
                     .size(45.dp)
                     .clip(MaterialTheme.shapes.medium)
                     .clickable {
-                        viewModel.setEvent(MessageScreenContract.Event.OnOpenCloseSearchClick)
+                        viewModel.setEvent(DialogsScreenContract.Event.OnOpenCloseSearchClick)
                         searchMessageText.value = ""
                     }
             ) {
@@ -101,7 +103,7 @@ fun MessageDialog(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = MEDIUM_PADDING, vertical = SMALL_PADDING)
+                    .padding(horizontal = MEDIUM_PADDING).padding(top = SMALL_PADDING)
                     .height(if (isSearchPanelVisible.value) 25.dp else 0.dp)
                     .animateContentSize()
             ) {
@@ -112,7 +114,7 @@ fun MessageDialog(
                         .clip(MaterialTheme.shapes.medium)
                         .background(if (findMessageStatus.value.second) Color(0xFF6C85F5) else Color(0xFFD7D7D7))
                         .clickable(enabled = findMessageStatus.value.second) {
-                            viewModel.setEvent(MessageScreenContract.Event.OnPrevFoundMessageBtnClick)
+                            viewModel.setEvent(DialogsScreenContract.Event.OnPrevFoundMessageBtnClick)
                         }
                 ) {
                     Icon(
@@ -130,7 +132,7 @@ fun MessageDialog(
                         .clip(MaterialTheme.shapes.medium)
                         .background(if (findMessageStatus.value.third) Color(0xFF6C85F5) else Color(0xFFD7D7D7))
                         .clickable(enabled = findMessageStatus.value.third) {
-                            viewModel.setEvent(MessageScreenContract.Event.OnNextFoundMessageBtnClick)
+                            viewModel.setEvent(DialogsScreenContract.Event.OnNextFoundMessageBtnClick)
                         }
                 ) {
                     Icon(
@@ -145,7 +147,7 @@ fun MessageDialog(
                     modifier = Modifier.fillMaxHeight().weight(1f),
                     text = searchMessageText,
                     onValueChanged = {
-                        viewModel.setEvent(MessageScreenContract.Event.OnSearchMessageTextAppear(it))
+                        viewModel.setEvent(DialogsScreenContract.Event.OnSearchMessageTextAppear(it))
                     },
                     hint = "Search message...",
                     fontSize = 10.sp,
@@ -160,7 +162,7 @@ fun MessageDialog(
                         .clip(MaterialTheme.shapes.medium)
                         .background(Color(0xFF6C85F5))
                         .clickable {
-                            viewModel.setEvent(MessageScreenContract.Event.OnOpenCloseSearchClick)
+                            viewModel.setEvent(DialogsScreenContract.Event.OnOpenCloseSearchClick)
                             searchMessageText.value = ""
                         }
                 ) {
@@ -173,36 +175,19 @@ fun MessageDialog(
                 }
             }
             LazyColumn(
-                modifier = Modifier.fillMaxSize().weight(1f).animateContentSize(),
+                modifier = Modifier.fillMaxSize().weight(1f).animateContentSize().padding(SMALL_PADDING),
                 state = messagesListState
             ) {
                 messages.withIndex().forEach { (index, message) ->
                     item {
-                        val backgroundColor =
-                            if (findMessageStatus.value.first == index) Color.Blue else Color.Transparent
-                        Box(modifier = Modifier.fillMaxWidth().background(backgroundColor)) {
-                            if (message.fromId == 4) {
-                                Box(modifier = Modifier
-                                    .padding(SMALL_PADDING)
-                                    .clip(RoundedCornerShape(5.dp))
-                                    .align(Alignment.CenterEnd)
-                                    .background(Color.Blue)
-                                    .padding(EXTRA_SMALL_PADDING)
-                                ) {
-                                    Text(text = message.text)
-                                }
-                            } else {
-                                Box(modifier = Modifier
-                                    .padding(SMALL_PADDING)
-                                    .clip(RoundedCornerShape(5.dp))
-                                    .align(Alignment.CenterStart)
-                                    .background(Color.Gray)
-                                    .padding(EXTRA_SMALL_PADDING)
-                                ) {
-                                    Text(text = message.text)
-                                }
-                            }
-                        }
+                        DialogsMessageItem(
+                            message = message.messageText,
+                            messageTime = message.sendDate.toTime(),
+                            isMyMessage = message.fromUserId == CurrentUser.userId,
+                            isFoundMessage = findMessageStatus.value.first == index,
+                            isLastUserMessage = false,
+                            isTimeNeeded = false,
+                        )
                     }
                 }
             }
@@ -220,7 +205,7 @@ fun MessageDialog(
                         .clip(MaterialTheme.shapes.medium)
                         .background(if (sendMessageText.value.isNotEmpty()) Color(0xFF6C85F5) else Color(0xFFD7D7D7))
                         .clickable(enabled = sendMessageText.value.isNotEmpty()) {
-                            viewModel.setEvent(MessageScreenContract.Event.OnSendMessageBtnClick(sendMessageText.value))
+                            viewModel.setEvent(DialogsScreenContract.Event.OnSendMessageBtnClick(sendMessageText.value))
                             sendMessageText.value = ""
                         }
                 ) {

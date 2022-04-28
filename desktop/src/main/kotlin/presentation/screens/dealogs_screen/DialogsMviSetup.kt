@@ -1,4 +1,4 @@
-package presentation.screens.message_screen
+package presentation.screens.dealogs_screen
 
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.MutableState
@@ -8,9 +8,9 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import util.resetActivationState
 
-fun initMessageObservable(
+fun initDialogsObservable(
     scope: CoroutineScope,
-    viewModel: MessageScreenViewModel,
+    viewModel: DialogsScreenViewModel,
     messagesListState: LazyListState,
     showNoInternetConnectionDialog: MutableState<Boolean>,
     showLoadingDialog: MutableState<Boolean>,
@@ -19,19 +19,19 @@ fun initMessageObservable(
     scope.launch {
         viewModel.uiState.collect {
             scope.ensureActive()
-            when (it.messageScreenState) {
-                is MessageScreenContract.MessageScreenState.NoInternetConnection -> {
+            when (it.dialogsScreenState) {
+                is DialogsScreenContract.DialogsScreenState.NoInternetConnection -> {
                     resetActivationState(
                         activate = listOf(showNoInternetConnectionDialog),
                         disActivate = listOf(showLoadingDialog)
                     )
                 }
-                is MessageScreenContract.MessageScreenState.Loading -> {
+                is DialogsScreenContract.DialogsScreenState.Loading -> {
                     resetActivationState(
                         activate = listOf(showNoInternetConnectionDialog, showLoadingDialog),
                     )
                 }
-                is MessageScreenContract.MessageScreenState.Idle -> {
+                is DialogsScreenContract.DialogsScreenState.Idle -> {
                     resetActivationState(
                         disActivate = listOf(showNoInternetConnectionDialog, showLoadingDialog)
                     )
@@ -43,14 +43,20 @@ fun initMessageObservable(
         viewModel.effect.collect {
             scope.ensureActive()
             when (it) {
-                is MessageScreenContract.Effect.ShowFoundMessage -> {
+                is DialogsScreenContract.Effect.ShowFoundMessage -> {
                     findMessageStatus.value = FindMessageStatus(it.position, it.hasNext, it.hasPrev)
                     if (it.position != -1) {
-                        messagesListState.scrollToItem(it.position)
+                        messagesListState.animateScrollToItem(it.position, -50)
                     }
                 }
-                is MessageScreenContract.Effect.ShowUserProfile -> {
+                is DialogsScreenContract.Effect.ShowUserProfile -> {
 
+                }
+                is DialogsScreenContract.Effect.UpdateChatData -> {
+                    if (viewModel.currentChatData.value?.second != it.messagesList) {
+                        viewModel.currentChatData.value = it.chatInfo to it.messagesList
+                        messagesListState.animateScrollToItem(it.messagesList.lastIndex)
+                    }
                 }
             }
         }

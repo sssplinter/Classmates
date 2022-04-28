@@ -7,7 +7,7 @@ import kotlinx.coroutines.withContext
 class SendMessageUseCase(
     private val chatRepository: ChatRepository,
 ) {
-    suspend operator fun invoke(chatId: Int, text: String) = withContext(Dispatchers.IO) {
+    suspend operator fun invoke(chatId: String, text: String) = withContext(Dispatchers.IO) {
         chatRepository.sendMessage(chatId, text)
     }
 }
