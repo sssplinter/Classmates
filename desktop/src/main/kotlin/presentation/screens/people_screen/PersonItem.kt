@@ -11,12 +11,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import domain.entities.data.UserInfo
 import domain.entities.response.UsersInfoResponse
 import ui.theme.EXTRA_SMALL_PADDING
 import ui.theme.MEDIUM_PADDING
 
 @Composable
-fun PersonItem(userInfo: UsersInfoResponse.UserInfo) {
+fun PersonItem(userInfo: UserInfo) {
     Box(modifier = Modifier
         .padding(EXTRA_SMALL_PADDING)
         .clip(MaterialTheme.shapes.medium)

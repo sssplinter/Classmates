@@ -3,6 +3,7 @@ package presentation.screens.login_screen
 import domain.use_cases.authorization.SignInUseCase
 import domain.use_cases.authorization.SignUpUseCase
 import domain.use_cases.authorization.UseCaseAuthResult
+import domain.use_cases.user.LoadUserInfoUseCase
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import presentation.base.BaseViewModel
@@ -10,6 +11,7 @@ import presentation.base.BaseViewModel
 class LoginScreenViewModel(
     private val signUpUseCase: SignUpUseCase,
     private val signInUseCase: SignInUseCase,
+    private val loadUserInfoUseCase: LoadUserInfoUseCase,
 ) :
     BaseViewModel<LoginScreenContract.Event, LoginScreenContract.State, LoginScreenContract.Effect>() {
     private var signState: SignState = SignState.SIGN_IN
@@ -35,7 +37,8 @@ class LoginScreenViewModel(
                 }
             }
             is LoginScreenContract.Event.OnNoWiFiBtnClick,
-            is LoginScreenContract.Event.OnNoAccountOkBtnClick -> {
+            is LoginScreenContract.Event.OnNoAccountOkBtnClick,
+            -> {
                 setState { copy(loginScreenState = LoginScreenContract.LoginScreenState.Idle) }
             }
         }
@@ -55,9 +58,12 @@ class LoginScreenViewModel(
         }.invokeOnCompletion { checkAuthState() }
     }
 
-    private fun checkAuthState() {
-        val authState = when (authResult) {
-            is UseCaseAuthResult.Authorized -> LoginScreenContract.LoginScreenState.Authorized
+    private fun checkAuthState() = launch {
+        val authState = when (val authResult = authResult) {
+            is UseCaseAuthResult.Authorized -> {
+                loadUserInfoUseCase(authResult.token)
+                LoginScreenContract.LoginScreenState.Authorized
+            }
             is UseCaseAuthResult.NoSuchAccount -> LoginScreenContract.LoginScreenState.NoSuchAccount
 //            is AuthResult.Failed -> LoginScreenContract.LoginScreenState.NoInternetConnection
             is UseCaseAuthResult.UnAuthorized -> LoginScreenContract.LoginScreenState.Idle

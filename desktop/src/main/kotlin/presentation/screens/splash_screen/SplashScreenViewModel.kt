@@ -2,6 +2,7 @@ package presentation.screens.splash_screen
 
 import domain.use_cases.authorization.CheckAuthorizationUseCase
 import domain.use_cases.authorization.UseCaseAuthResult
+import domain.use_cases.user.LoadUserInfoUseCase
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import presentation.base.BaseViewModel
@@ -9,6 +10,7 @@ import presentation.screens.splash_screen.SplashScreenContract.SplashScreenState
 
 class SplashScreenViewModel(
     private val checkAuthorizationUseCase: CheckAuthorizationUseCase,
+    private val loadUserInfoUseCase: LoadUserInfoUseCase,
 ) :
     BaseViewModel<SplashScreenContract.Event, SplashScreenContract.State, SplashScreenContract.Effect>() {
     private var authResult: UseCaseAuthResult = UseCaseAuthResult.UnAuthorized
@@ -51,15 +53,14 @@ class SplashScreenViewModel(
         authResult = checkAuthorizationUseCase()
     }
 
-    private fun checkIsUserAuthorized() {
+    private fun checkIsUserAuthorized() = launch {
         val authState = when (val authResult = authResult) {
             is UseCaseAuthResult.Authorized -> {
-                authResult.token
+                loadUserInfoUseCase(authResult.token)
                 SplashScreenState.Authorized
             }
             is UseCaseAuthResult.UnAuthorized -> SplashScreenState.Unauthorized
             else -> null
-
         }
         authState?.let { state -> setState { copy(splashScreenState = state) } }
     }

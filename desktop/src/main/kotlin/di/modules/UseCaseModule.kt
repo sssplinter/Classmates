@@ -2,6 +2,7 @@ package di.modules
 
 import domain.use_cases.authorization.*
 import domain.use_cases.chat.*
+import domain.use_cases.user.LoadUserInfoUseCase
 import org.kodein.di.DI
 import org.kodein.di.bind
 import org.kodein.di.instance
@@ -19,4 +20,5 @@ val useCaseModule = DI.Module(name = "useCase", allowSilentOverride = false) {
     bind { singleton { FindMessagesUseCase(instance()) } }
     bind { singleton { GetChatMessagesUseCase(instance()) } }
     bind { singleton { SendMessageUseCase(instance()) } }
+    bind { singleton { LoadUserInfoUseCase(instance()) } }
 }
