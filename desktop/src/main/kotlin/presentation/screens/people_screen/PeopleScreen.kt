@@ -12,8 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import domain.entities.data.UserInfo
 import navigation.component.NavHostController
 import org.kodein.di.compose.rememberInstance
+import presentation.components.PersonItem
 import presentation.components.SearchTextField
 import ui.theme.MEDIUM_PADDING
 
@@ -36,7 +38,7 @@ fun PeopleScreen(navController: NavHostController) {
         ) {
             Text(
                 modifier = Modifier.fillMaxWidth(0.7f),
-                text = "Find your friends",
+                text = "Find all people",
                 textAlign = TextAlign.Center,
                 fontSize = 28.sp
             )
@@ -51,8 +53,15 @@ fun PeopleScreen(navController: NavHostController) {
             contentPadding = PaddingValues(8.dp)
         ) {
             peopleList.forEach { personInfo ->
+                val (actionImg, action) = when (personInfo.userRole) {
+                    UserInfo.UserRole.FRIEND -> "remove_friend.svg" to {}
+                    UserInfo.UserRole.SUBSCRIBER -> "accept.svg" to {}
+                    UserInfo.UserRole.SUBSCRIPTION -> "cancel.svg" to {}
+                    UserInfo.UserRole.DEFAULT -> "add_friend.svg" to {}
+                    UserInfo.UserRole.ME -> return@forEach
+                }
                 item {
-                    PersonItem(personInfo)
+                    PersonItem(personInfo, actionImg, action)
                 }
             }
         }

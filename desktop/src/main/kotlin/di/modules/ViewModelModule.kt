@@ -12,7 +12,7 @@ import presentation.screens.splash_screen.SplashScreenViewModel
 
 val viewModelModule = DI.Module(name = "viewModelModule", allowSilentOverride = false) {
     bind { singleton { SplashScreenViewModel(instance(), instance()) } }
-    bind { singleton { LoginScreenViewModel(instance(), instance(), instance()) } }
+    bind { singleton { LoginScreenViewModel(instance(), instance(), instance(), instance(), instance()) } }
     bind { singleton { ProfileScreenViewModel(instance(), instance()) } }
     bind { singleton { DialogsScreenViewModel(instance(), instance(), instance(), instance()) } }
     bind { singleton { PeopleScreenViewModel() } }

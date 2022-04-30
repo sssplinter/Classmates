@@ -14,6 +14,7 @@ import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import ui.theme.EXTRA_SMALL_PADDING
@@ -25,11 +26,11 @@ fun TextFieldWithError(
     value: String,
     onValueChange: (String) -> Unit,
     label: String,
-    imageVector: ImageVector,
+    imageVector: ImageVector? = null,
     errorText: String,
     isError: Boolean,
-    keyboardOptions: KeyboardOptions,
-    visualTransformation: VisualTransformation = VisualTransformation.None
+    keyboardOptions: KeyboardOptions = KeyboardOptions(),
+    visualTransformation: VisualTransformation = VisualTransformation.None,
 ) {
     Column {
         TextField(
@@ -42,10 +43,12 @@ fun TextFieldWithError(
             onValueChange = onValueChange,
             label = { Text(label) },
             leadingIcon = {
-                Icon(
-                    imageVector = imageVector,
-                    contentDescription = "email icon"
-                )
+                imageVector?.let {
+                    Icon(
+                        imageVector = imageVector,
+                        contentDescription = "email icon"
+                    )
+                }
             },
             trailingIcon = {
                 if (isError)

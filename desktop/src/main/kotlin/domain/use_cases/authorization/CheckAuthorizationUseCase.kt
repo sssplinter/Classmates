@@ -9,7 +9,7 @@ class CheckAuthorizationUseCase(
 ) {
     suspend operator fun invoke(): UseCaseAuthResult = withContext(Dispatchers.IO) {
         val token = authRepository.getSavedToken()
-        if (token.isNotEmpty()) return@withContext UseCaseAuthResult.Authorized(token)
+        if (token.isNotEmpty()) return@withContext UseCaseAuthResult.Authorized(token, true)
         else return@withContext UseCaseAuthResult.UnAuthorized
     }
 }

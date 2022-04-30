@@ -6,11 +6,13 @@ import presentation.base.UiState
 
 class LoginScreenContract {
     sealed class Event : UiEvent {
-        object OnSwitchToSignInClick: Event()
-        object OnSwitchToSignUpClick: Event()
-        data class OnSignClick(val email: String, val password: String): Event()
-        object OnNoWiFiBtnClick: Event()
-        object OnNoAccountOkBtnClick: Event()
+        object OnSwitchToSignInClick : Event()
+        object OnSwitchToSignUpClick : Event()
+        data class OnSignClick(val email: String, val password: String) : Event()
+        data class OnConfirmUserDataBtnClick(val name: String, val surname: String) : Event()
+        object OnBackToLoginBtnClick : Event()
+        object OnNoWiFiBtnClick : Event()
+        object OnNoAccountOkBtnClick : Event()
     }
 
     data class State(
@@ -22,7 +24,8 @@ class LoginScreenContract {
         object NoInternetConnection : LoginScreenState()
         object NoSuchAccount : LoginScreenState()
         object Loading : LoginScreenState()
-        object Authorized : LoginScreenState()
+        object Confirmed : LoginScreenState()
+        object UserDataConfirmation : LoginScreenState()
     }
 
     sealed class Effect : UiEffect

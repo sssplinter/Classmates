@@ -10,4 +10,9 @@ class UserRepository(
     suspend fun getCurrentUserInfo(token: String) = withContext(Dispatchers.IO) {
         return@withContext userApiService.getProfileInfo(token)
     }
+
+    suspend fun setUserFullName(token: String, name: String, surname: String) = withContext(Dispatchers.IO) {
+        val params = UserApiService.UserInfoBody(name, surname)
+        return@withContext userApiService.setUserFullName(token, params)
+    }
 }

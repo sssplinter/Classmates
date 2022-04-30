@@ -10,11 +10,12 @@ import navigation.Screen
 import navigation.component.NavHostController
 import util.resetActivationState
 
-
 fun initLoginObservable(
     scope: CoroutineScope,
     viewModel: LoginScreenViewModel,
     navController: NavHostController,
+    showLoginDialog: MutableState<Boolean>,
+    showDataConfirmationDialog: MutableState<Boolean>,
     showNoInternetConnectionDialog: MutableState<Boolean>,
     showLoadingDialog: MutableState<Boolean>,
     showNoSuchAccountDialog: MutableState<Boolean>,
@@ -46,14 +47,23 @@ fun initLoginObservable(
                     resetActivationState(
                         disActivate = listOf(showLoadingDialog,
                             showNoInternetConnectionDialog,
-                            showNoSuchAccountDialog)
+                            showNoSuchAccountDialog, showDataConfirmationDialog),
+                        activate = listOf(showLoginDialog)
                     )
                 }
-                is LoginScreenContract.LoginScreenState.Authorized -> {
+                is LoginScreenContract.LoginScreenState.Confirmed -> {
                     navController.popBackStack()
                     navController.navigate(Screen.Main.route)
                     viewModel.clearState()
                     scope.cancel()
+                }
+                is LoginScreenContract.LoginScreenState.UserDataConfirmation -> {
+                    resetActivationState(
+                        disActivate = listOf(showLoadingDialog,
+                            showNoInternetConnectionDialog,
+                            showNoSuchAccountDialog, showLoginDialog),
+                        activate = listOf(showDataConfirmationDialog)
+                    )
                 }
             }
         }

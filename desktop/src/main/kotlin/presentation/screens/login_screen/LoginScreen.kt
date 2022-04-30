@@ -24,11 +24,14 @@ import presentation.components.LoadingDialog
 import presentation.components.NoInternetDialog
 import presentation.components.NoSuchAccountDialog
 import presentation.screens.login_screen.elements.LogBox
+import presentation.screens.login_screen.elements.UserInfoBox
 
 @Composable
 fun LoginScreen(navController: NavHostController) {
     val viewModel: LoginScreenViewModel by rememberInstance()
 
+    val showLoginDialog = remember { mutableStateOf(false) }
+    val showDataConfirmationDialog = remember { mutableStateOf(false) }
     val showNoInternetConnectionDialog = remember { mutableStateOf(false) }
     val showLoadingDialog = remember { mutableStateOf(false) }
     val showNoSuchAccountDialog = remember { mutableStateOf(false) }
@@ -37,9 +40,12 @@ fun LoginScreen(navController: NavHostController) {
         scope = rememberCoroutineScope(),
         viewModel = viewModel,
         navController = navController,
+        showLoginDialog = showLoginDialog,
+        showDataConfirmationDialog = showDataConfirmationDialog,
         showNoInternetConnectionDialog = showNoInternetConnectionDialog,
         showLoadingDialog = showLoadingDialog,
-        showNoSuchAccountDialog = showNoSuchAccountDialog)
+        showNoSuchAccountDialog = showNoSuchAccountDialog
+    )
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -61,12 +67,25 @@ fun LoginScreen(navController: NavHostController) {
             )
         )
 
-        LogBox(
-            viewModel = viewModel,
-            onLogin = { email, password ->
-                viewModel.setEvent(LoginScreenContract.Event.OnSignClick(email, password))
-            }
-        )
+        if (showLoginDialog.value) {
+            LogBox(
+                viewModel = viewModel,
+                onLogin = { email, password ->
+                    viewModel.setEvent(LoginScreenContract.Event.OnSignClick(email, password))
+                }
+            )
+        }
+
+        if (showDataConfirmationDialog.value) {
+            UserInfoBox(
+                onConfirmClick = { name, surname ->
+                    viewModel.setEvent(LoginScreenContract.Event.OnConfirmUserDataBtnClick(name, surname))
+                },
+                onBackClick = {
+                    viewModel.setEvent(LoginScreenContract.Event.OnBackToLoginBtnClick)
+                }
+            )
+        }
 
         if (showLoadingDialog.value) {
             LoadingDialog(

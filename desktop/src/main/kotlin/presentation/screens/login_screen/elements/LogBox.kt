@@ -104,7 +104,7 @@ fun LogBox(
                     }
                 ) {
                     Text(
-                        modifier = Modifier.padding(horizontal = EXTRA_LARGE_PADDING),
+                        modifier = Modifier.padding(horizontal = THE_LARGEST_PADDING),
                         text = Vocabulary.localization.signIn
                     )
                 }
@@ -119,7 +119,7 @@ fun LogBox(
                     }
                 ) {
                     Text(
-                        modifier = Modifier.padding(horizontal = EXTRA_LARGE_PADDING),
+                        modifier = Modifier.padding(horizontal = THE_LARGEST_PADDING),
                         text = Vocabulary.localization.signUp
                     )
                 }

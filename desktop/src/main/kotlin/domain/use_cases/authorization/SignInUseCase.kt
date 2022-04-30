@@ -12,8 +12,7 @@ class SignInUseCase(
         return@withContext when {
             authResponse?.accessToken == null -> UseCaseAuthResult.UnAuthorized
             authResponse.accessToken.isNotEmpty() -> {
-                authRepository.saveAuthorization(authResponse.accessToken)
-                UseCaseAuthResult.Authorized(authResponse.accessToken)
+                UseCaseAuthResult.Authorized(authResponse.accessToken, authResponse.isConfirmed)
             }
             else -> UseCaseAuthResult.NoSuchAccount
         }

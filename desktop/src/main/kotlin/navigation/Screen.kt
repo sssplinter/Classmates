@@ -6,7 +6,7 @@ sealed class Screen(val route: String) {
     object Main : Screen(route = "main_screen")
     object Home : Screen(route = "home_screen")
     object Messages : Screen(route = "messages_screen")
-    object Favorite : Screen(route = "favorite_screen")
+    object Connections : Screen(route = "favorite_screen")
     object People : Screen(route = "people_screen")
     object Settings : Screen(route = "settings_screen")
     object Profile : Screen(route = "profile_screen")

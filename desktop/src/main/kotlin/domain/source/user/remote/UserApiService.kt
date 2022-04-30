@@ -3,12 +3,26 @@ package domain.source.user.remote
 import domain.entities.data.CurrentUser
 import domain.entities.response.UserInfoResponse
 import retrofit2.Response
-import retrofit2.http.Header
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Header
+import retrofit2.http.PUT
 
 interface UserApiService {
     @GET("/profileInfo")
     suspend fun getProfileInfo(
         @Header("Access") token: String = CurrentUser.token,
     ): Response<UserInfoResponse>
+
+    @PUT("/updateFullName")
+    suspend fun setUserFullName(
+        @Header("Access") token: String,
+        @Body userInfo: UserInfoBody,
+    ): Response<Void>
+
+
+    data class UserInfoBody(
+        val name: String = "",
+        val surname: String = "",
+    )
 }
