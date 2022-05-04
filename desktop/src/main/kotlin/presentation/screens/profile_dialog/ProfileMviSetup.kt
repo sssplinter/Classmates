@@ -14,40 +14,31 @@ fun initProfileObservable(
     scope: CoroutineScope,
     viewModel: ProfileScreenViewModel,
     navController: NavHostController,
-    showNoInternetConnectionDialog: MutableState<Boolean>,
     showLoadingDialog: MutableState<Boolean>,
 ) {
     scope.launch {
         viewModel.uiState.collect {
             scope.ensureActive()
-            when (it.profileScreenState) {
+            when (it.state) {
                 is ProfileScreenContract.ProfileScreenState.Saved -> {
                     resetActivationState(
-                        disActivate = listOf(showNoInternetConnectionDialog, showLoadingDialog),
+                        disActivate = listOf(showLoadingDialog),
                     )
                 }
                 is ProfileScreenContract.ProfileScreenState.Idle -> {
                     resetActivationState(
-                        disActivate = listOf(showNoInternetConnectionDialog, showLoadingDialog)
+                        disActivate = listOf(showLoadingDialog)
                     )
                 }
                 is ProfileScreenContract.ProfileScreenState.Loading -> {
                     resetActivationState(
                         activate = listOf(showLoadingDialog),
-                        disActivate = listOf(showNoInternetConnectionDialog)
                     )
                 }
-                is ProfileScreenContract.ProfileScreenState.NoInternetConnection -> {
-                    resetActivationState(
-                        activate = listOf(showNoInternetConnectionDialog),
-                        disActivate = listOf(showLoadingDialog)
-                    )
-                }
-                is ProfileScreenContract.ProfileScreenState.Deleted,
                 is ProfileScreenContract.ProfileScreenState.LoggedOut,
                 -> {
                     resetActivationState(
-                        disActivate = listOf(showLoadingDialog, showNoInternetConnectionDialog)
+                        disActivate = listOf(showLoadingDialog)
                     )
                     navController.clearBackStack()
                     navController.navigate(Screen.Login.route)

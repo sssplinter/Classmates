@@ -16,38 +16,25 @@ fun initLoginObservable(
     navController: NavHostController,
     showLoginDialog: MutableState<Boolean>,
     showDataConfirmationDialog: MutableState<Boolean>,
-    showNoInternetConnectionDialog: MutableState<Boolean>,
     showLoadingDialog: MutableState<Boolean>,
-    showNoSuchAccountDialog: MutableState<Boolean>,
 ) {
     scope.launch {
         viewModel.uiState.collect {
             scope.ensureActive()
-            when (it.loginScreenState) {
+            when (it.state) {
                 is LoginScreenContract.LoginScreenState.NoSuchAccount -> {
                     resetActivationState(
-                        activate = listOf(showNoSuchAccountDialog),
-                        disActivate = listOf(showLoadingDialog, showNoInternetConnectionDialog)
-                    )
-                }
-                is LoginScreenContract.LoginScreenState.NoInternetConnection -> {
-                    resetActivationState(
-                        activate = listOf(showNoInternetConnectionDialog),
-                        disActivate = listOf(showLoadingDialog, showNoSuchAccountDialog)
+                        disActivate = listOf(showLoadingDialog)
                     )
                 }
                 is LoginScreenContract.LoginScreenState.Loading -> {
                     resetActivationState(
                         activate = listOf(showLoadingDialog),
-                        disActivate = listOf(showNoInternetConnectionDialog,
-                            showNoSuchAccountDialog)
                     )
                 }
                 is LoginScreenContract.LoginScreenState.Idle -> {
                     resetActivationState(
-                        disActivate = listOf(showLoadingDialog,
-                            showNoInternetConnectionDialog,
-                            showNoSuchAccountDialog, showDataConfirmationDialog),
+                        disActivate = listOf(showLoadingDialog, showDataConfirmationDialog),
                         activate = listOf(showLoginDialog)
                     )
                 }
@@ -59,9 +46,7 @@ fun initLoginObservable(
                 }
                 is LoginScreenContract.LoginScreenState.UserDataConfirmation -> {
                     resetActivationState(
-                        disActivate = listOf(showLoadingDialog,
-                            showNoInternetConnectionDialog,
-                            showNoSuchAccountDialog, showLoginDialog),
+                        disActivate = listOf(showLoadingDialog, showLoginDialog),
                         activate = listOf(showDataConfirmationDialog)
                     )
                 }

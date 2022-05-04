@@ -1,10 +1,8 @@
 package presentation.screens.settings_screen
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
@@ -52,7 +50,7 @@ fun SettingsScreen() {
             )
         }
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-            val themesList = mutableStateListOf("day_mode1.png" to false, "night_mode1.png" to false, "day_night_mode1.png" to true)
+            val themesList = mutableStateListOf("day_mode.png" to false, "night_mode.png" to false, "day_night_mode.png" to true)
             themesList.forEach { (theme, isActive) ->
                 Box(
                     modifier = Modifier
@@ -105,10 +103,4 @@ fun SettingsScreen() {
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun SettingsScreenPreview() {
-    SettingsScreen()
 }

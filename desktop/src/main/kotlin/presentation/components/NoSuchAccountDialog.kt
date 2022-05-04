@@ -15,6 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import presentation.components.dialogs.ShadowBox
 
 @Composable
 fun NoSuchAccountDialog(
@@ -24,32 +25,34 @@ fun NoSuchAccountDialog(
     buttonText: String,
     onOkClick: () -> Unit,
 ) {
-    ShadowBox()
-    Column(
-        modifier = Modifier
-            .width(200.dp)
-            .clip(shape)
-            .background(backgroundColor),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
+    ShadowBox {
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 10.dp),
-            text = message,
-            textAlign = TextAlign.Center,
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Medium
-        )
-        Divider(modifier = Modifier.fillMaxWidth(), color = Color.Gray.copy(alpha = 0.5f))
-        TextButton(onClick = onOkClick, contentPadding = PaddingValues()) {
+                .width(200.dp)
+                .clip(shape)
+                .background(backgroundColor)
+                .align(Alignment.Center),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
             Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = buttonText,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 10.dp),
+                text = message,
                 textAlign = TextAlign.Center,
-                fontSize = 14.sp
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Medium
             )
+            Divider(modifier = Modifier.fillMaxWidth(), color = Color.Gray.copy(alpha = 0.5f))
+            TextButton(onClick = onOkClick, contentPadding = PaddingValues()) {
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = buttonText,
+                    textAlign = TextAlign.Center,
+                    fontSize = 14.sp
+                )
+            }
         }
     }
 }

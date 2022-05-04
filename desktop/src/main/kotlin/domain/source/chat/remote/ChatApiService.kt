@@ -17,7 +17,7 @@ interface ChatApiService {
     ): Response<AuthResponse>
 
     @POST("/getChatsInfo")
-    suspend fun getChatInfo(
+    suspend fun getChatsInfo(
         @Header("Access") token: String = CurrentUser.token,
     ): Response<ChatInfoResponse>
 
@@ -27,8 +27,15 @@ interface ChatApiService {
         @Body body: ChatBody,
     ): Response<ChatMessagesResponse>
 
+    @POST("/sendPrivateMessage")
+    suspend fun sendPrivateMessage(
+        @Header("Access") token: String = CurrentUser.token,
+        @Body body: ChatBody,
+    ): Response<ChatMessagesResponse>
+
     data class ChatBody(
         val messageText: String = "",
         val chatId: String = "",
+        val userId: String = "",
     )
 }

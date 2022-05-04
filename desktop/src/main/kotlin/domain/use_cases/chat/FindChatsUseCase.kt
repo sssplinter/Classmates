@@ -1,14 +1,14 @@
 package domain.use_cases.chat
 
-import domain.source.chat.ChatRepository
+import domain.loader.AsyncChatLoader
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 
 class FindChatsUseCase(
-    private val chatRepository: ChatRepository,
+    private val asyncChatLoader: AsyncChatLoader,
 ) {
     suspend operator fun invoke(text: String = "") = withContext(Dispatchers.IO) {
-        chatRepository.allChats.firstOrNull()?.filter { it.name.contains(text, true) } ?: emptyList()
+        asyncChatLoader.allChats.first().filter { it.name.contains(text, true) }
     }
 }

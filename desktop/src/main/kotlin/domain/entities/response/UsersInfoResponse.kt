@@ -4,6 +4,5 @@ import domain.entities.data.UserInfo
 
 data class UsersInfoResponse(
     val `data`: List<UserInfo>,
-    val message: String,
-    val status: String,
+    val message: String
 )

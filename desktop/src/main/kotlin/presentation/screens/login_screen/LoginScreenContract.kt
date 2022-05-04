@@ -11,17 +11,12 @@ class LoginScreenContract {
         data class OnSignClick(val email: String, val password: String) : Event()
         data class OnConfirmUserDataBtnClick(val name: String, val surname: String) : Event()
         object OnBackToLoginBtnClick : Event()
-        object OnNoWiFiBtnClick : Event()
-        object OnNoAccountOkBtnClick : Event()
     }
 
-    data class State(
-        val loginScreenState: LoginScreenState,
-    ) : UiState
+    data class State(val state: LoginScreenState) : UiState
 
     sealed class LoginScreenState {
         object Idle : LoginScreenState()
-        object NoInternetConnection : LoginScreenState()
         object NoSuchAccount : LoginScreenState()
         object Loading : LoginScreenState()
         object Confirmed : LoginScreenState()

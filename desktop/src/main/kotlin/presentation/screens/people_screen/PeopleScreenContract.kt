@@ -8,17 +8,13 @@ class PeopleScreenContract {
     sealed class Event : UiEvent {
         object OnAddFriendClick : Event()
         object OnRemoveFriendClick : Event()
-        object OnSendMessageClick : Event()
         object OnPersonInfoClick : Event()
     }
 
-    data class State(
-        val peopleScreenState: PeopleScreenState,
-    ) : UiState
+    data class State(val state: PeopleScreenState) : UiState
 
     sealed class PeopleScreenState {
         object Idle : PeopleScreenState()
-        object NoInternetConnection : PeopleScreenState()
         object Loading : PeopleScreenState()
     }
 

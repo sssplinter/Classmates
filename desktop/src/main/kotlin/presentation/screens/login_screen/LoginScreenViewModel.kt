@@ -1,19 +1,16 @@
 package presentation.screens.login_screen
 
-import domain.use_cases.authorization.SaveAuthorizationUseCase
-import domain.use_cases.authorization.SignInUseCase
-import domain.use_cases.authorization.SignUpUseCase
-import domain.use_cases.authorization.UseCaseAuthResult
-import domain.use_cases.user.LoadUserInfoUseCase
-import domain.use_cases.user.SetUserFullNameUseCase
+import domain.use_cases.authorization.*
+import domain.use_cases.user_info.LoadProfileInfoUseCase
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import presentation.base.BaseViewModel
 
 class LoginScreenViewModel(
     private val signUpUseCase: SignUpUseCase,
     private val signInUseCase: SignInUseCase,
-    private val loadUserInfoUseCase: LoadUserInfoUseCase,
+    private val loadProfileInfoUseCase: LoadProfileInfoUseCase,
     private val setUserFullNameUseCase: SetUserFullNameUseCase,
     private val saveAuthorizationUseCase: SaveAuthorizationUseCase,
 ) : BaseViewModel<LoginScreenContract.Event, LoginScreenContract.State, LoginScreenContract.Effect>() {
@@ -47,24 +44,21 @@ class LoginScreenViewModel(
             is LoginScreenContract.Event.OnBackToLoginBtnClick -> {
                 returnToLogin()
             }
-            is LoginScreenContract.Event.OnNoWiFiBtnClick,
-            is LoginScreenContract.Event.OnNoAccountOkBtnClick,
-            -> {
-                setState { copy(loginScreenState = LoginScreenContract.LoginScreenState.Idle) }
-            }
         }
     }
 
     private fun signIn(email: String, password: String) {
-        setState { copy(loginScreenState = LoginScreenContract.LoginScreenState.Loading) }
+        setState { copy(state = LoginScreenContract.LoginScreenState.Loading) }
         MainScope().launch {
+            delay(300)
             authResult = signInUseCase(email, password)
         }.invokeOnCompletion { checkAuthState() }
     }
 
     private fun signUp(email: String, password: String) {
-        setState { copy(loginScreenState = LoginScreenContract.LoginScreenState.Loading) }
+        setState { copy(state = LoginScreenContract.LoginScreenState.Loading) }
         MainScope().launch {
+            delay(300)
             authResult = signUpUseCase(email, password)
         }.invokeOnCompletion { checkAuthState() }
     }
@@ -78,40 +72,37 @@ class LoginScreenViewModel(
                 } else {
                     temporarilyToken = authResult.token
                     LoginScreenContract.LoginScreenState.UserDataConfirmation
-
                 }
             }
-            is UseCaseAuthResult.NoSuchAccount -> LoginScreenContract.LoginScreenState.NoSuchAccount
-//            is AuthResult.Failed -> LoginScreenContract.LoginScreenState.NoInternetConnection
             is UseCaseAuthResult.UnAuthorized -> LoginScreenContract.LoginScreenState.Idle
         }
-        setState { copy(loginScreenState = authState) }
+        setState { copy(state = authState) }
     }
 
     private fun setUserInfo(name: String, surname: String) = MainScope().launch {
-
         temporarilyToken?.let { token ->
             val isSaved = setUserFullNameUseCase(token, name, surname)
             if (isSaved) {
                 loginToAccount(token)
                 val state = LoginScreenContract.LoginScreenState.Confirmed
-                setState { copy(loginScreenState = state) }
+                setState { copy(state = state) }
             }
         }
     }
 
     private suspend fun loginToAccount(token: String) {
         saveAuthorizationUseCase(token)
-        loadUserInfoUseCase(token)
+        loadProfileInfoUseCase(token)
     }
 
     private fun returnToLogin() = MainScope().launch {
+        signState = SignState.SIGN_IN
         val state = LoginScreenContract.LoginScreenState.Idle
-        setState { copy(loginScreenState = state) }
+        setState { copy(state = state) }
     }
 
     override fun clearState() {
-        setState { copy(loginScreenState = LoginScreenContract.LoginScreenState.Idle) }
+        setState { copy(state = LoginScreenContract.LoginScreenState.Idle) }
     }
 
     enum class SignState { SIGN_IN, SIGN_UP }

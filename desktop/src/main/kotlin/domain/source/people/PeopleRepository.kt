@@ -1,5 +1,7 @@
 package domain.source.people
 
+import domain.entities.data.UserInfo
+import domain.source.checkResponseCode
 import domain.source.people.local.PeopleStorage
 import domain.source.people.remote.PeopleApiService
 import kotlinx.coroutines.Dispatchers
@@ -9,28 +11,75 @@ class PeopleRepository(
     private val peopleStorage: PeopleStorage,
     private val peopleApiService: PeopleApiService,
 ) {
-    suspend fun getUserInfo() = withContext(Dispatchers.IO) {
-        val messageBody = PeopleApiService.PeopleBody()
-        peopleApiService.getUserInfo(messageBody)
-    }
-
     suspend fun getAllUsers() = withContext(Dispatchers.IO) {
-        val messageBody = PeopleApiService.PeopleBody()
-        peopleApiService.getAllUsers(messageBody)
+        val response = peopleApiService.getAllUsers()
+        response.checkResponseCode()
+        return@withContext response.body()?.data ?: emptyList()
     }
 
     suspend fun getFriends() = withContext(Dispatchers.IO) {
-        val messageBody = PeopleApiService.PeopleBody()
-        peopleApiService.getFriends(messageBody)
+        val response = peopleApiService.getFriends()
+        response.checkResponseCode()
+        return@withContext response.body()?.data ?: emptyList()
     }
 
-    suspend fun addFriend() = withContext(Dispatchers.IO) {
-        val messageBody = PeopleApiService.PeopleBody()
-        peopleApiService.addFriend(messageBody)
+    suspend fun getSubscribers() = withContext(Dispatchers.IO) {
+        val response = peopleApiService.getSubscribers()
+        response.checkResponseCode()
+        return@withContext response.body()?.data ?: emptyList()
     }
 
-    suspend fun removeFriend() = withContext(Dispatchers.IO) {
-        val messageBody = PeopleApiService.PeopleBody()
-        peopleApiService.removeFriend(messageBody)
+    suspend fun getSubscriptions() = withContext(Dispatchers.IO) {
+        val response = peopleApiService.getSubscriptions()
+        response.checkResponseCode()
+        return@withContext response.body()?.data ?: emptyList()
+    }
+
+    suspend fun getProfileInfo() = withContext(Dispatchers.IO) {
+        val response = peopleApiService.getProfileInfo()
+        response.checkResponseCode()
+        return@withContext response.body()?.data as UserInfo
+    }
+
+    suspend fun getUserInfo(userId: String) = withContext(Dispatchers.IO) {
+        val messageBody = PeopleApiService.PeopleBody(userId)
+        val response = peopleApiService.getUserInfo(body = messageBody)
+        response.checkResponseCode()
+        return@withContext response.body()?.data as UserInfo
+    }
+
+    suspend fun removeFriend(userId: String) = withContext(Dispatchers.IO) {
+        val messageBody = PeopleApiService.PeopleBody(userId)
+        val response = peopleApiService.removeFriend(body = messageBody)
+        response.checkResponseCode()
+        return@withContext response.isSuccessful
+    }
+
+    suspend fun sendFriendRequest(userId: String) = withContext(Dispatchers.IO) {
+        val messageBody = PeopleApiService.PeopleBody(userId)
+        val response = peopleApiService.sendFriendRequest(body = messageBody)
+        response.checkResponseCode()
+        return@withContext response.isSuccessful
+    }
+
+    suspend fun approveFriendRequest(userId: String) = withContext(Dispatchers.IO) {
+        val messageBody = PeopleApiService.PeopleBody(userId)
+        val response = peopleApiService.approveFriendRequest(body = messageBody)
+        response.checkResponseCode()
+        return@withContext response.isSuccessful
+    }
+
+    suspend fun removeSubscription(userId: String) = withContext(Dispatchers.IO) {
+        val messageBody = PeopleApiService.PeopleBody(userId)
+        val response = peopleApiService.removeSubscription(body = messageBody)
+        response.checkResponseCode()
+        return@withContext response.isSuccessful
+    }
+
+    suspend fun rejectFriendRequest(userId: String) = withContext(Dispatchers.IO) {
+        val messageBody = PeopleApiService.PeopleBody(userId)
+        val response = peopleApiService.rejectFriendRequest(body = messageBody)
+        response.checkResponseCode()
+        return@withContext response.isSuccessful
     }
 }

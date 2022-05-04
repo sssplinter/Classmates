@@ -8,7 +8,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -26,8 +25,6 @@ import kotlinx.coroutines.delay
 import localization.Vocabulary
 import navigation.component.NavHostController
 import org.kodein.di.compose.rememberInstance
-import presentation.components.LoadingDialog
-import presentation.components.NoInternetDialog
 import ui.theme.MEDIUM_PADDING
 
 @Composable
@@ -38,15 +35,11 @@ fun SplashScreen(navController: NavHostController) {
     val alphaLogoAnim = animateFloatAsState(targetValue = if (startLogoAnimation) 1f else 0f,
         animationSpec = tween(durationMillis = 1000))
     var startTextAnimation by remember { mutableStateOf(false) }
-    val showNoInternetConnectionDialog = remember { mutableStateOf(false) }
-    val showLoadingDialog = remember { mutableStateOf(false) }
 
     initSplashObservable(
         scope = rememberCoroutineScope(),
         viewModel = viewModel,
-        navController = navController,
-        showNoInternetConnectionDialog = showNoInternetConnectionDialog,
-        showLoadingDialog = showLoadingDialog
+        navController = navController
     )
 
     LaunchedEffect(true) {
@@ -90,26 +83,6 @@ fun SplashScreen(navController: NavHostController) {
                 text = if (startTextAnimation) Vocabulary.localization.appName else Vocabulary.localization.emptyText,
                 color = Color.White,
                 fontSize = 120.sp
-            )
-        }
-
-        if (showNoInternetConnectionDialog.value) {
-            NoInternetDialog(
-                iconSrc = "no_wifi.png",
-                message = "No internet connection",
-                actionMessage = "Press to repeat",
-                backgroundColor = Color.White,
-                shape = MaterialTheme.shapes.medium,
-                onClick = {
-                    viewModel.setEvent(SplashScreenContract.Event.OnRepeatAuthCheckClick)
-                }
-            )
-        }
-
-        if (showLoadingDialog.value) {
-            LoadingDialog(
-                backgroundColor = Color.White,
-                shape = MaterialTheme.shapes.medium
             )
         }
     }

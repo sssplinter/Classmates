@@ -1,19 +1,18 @@
 package domain.use_cases.chat
 
 import domain.entities.data.MessageInfo
-import domain.source.chat.ChatRepository
+import domain.loader.AsyncChatLoader
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import util.getListIterator
 
 class FindMessagesUseCase(
-    private val chatRepository: ChatRepository,
+    private val asyncChatLoader: AsyncChatLoader,
 ) {
     suspend operator fun invoke(chatId: String, text: String) = withContext(Dispatchers.IO) {
-        val messagesList = chatRepository.allMessages[chatId]?.first()
-        val foundMessagesIterator = messagesList?.findTextInMessage(text)
-        return@withContext foundMessagesIterator ?: emptyList<Int>().getListIterator()
+        val messagesList = asyncChatLoader.getChatMessagesFlow(chatId).first()
+        return@withContext messagesList.findTextInMessage(text)
     }
 
     private fun List<MessageInfo>.findTextInMessage(text: String): ListIterator<Int> {

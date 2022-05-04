@@ -6,19 +6,14 @@ import presentation.base.UiState
 
 class SplashScreenContract {
     sealed class Event : UiEvent {
-        object OnAnimationStart: Event()
-        object OnAnimationEnd: Event()
-        object OnRepeatAuthCheckClick: Event()
+        object OnAnimationStart : Event()
+        object OnAnimationEnd : Event()
     }
 
-    data class State(
-        val splashScreenState: SplashScreenState,
-    ) : UiState
+    data class State(val state: SplashScreenState) : UiState
 
     sealed class SplashScreenState {
         object Idle : SplashScreenState()
-        object NoInternetConnection : SplashScreenState()
-        object Loading : SplashScreenState()
         object Authorized : SplashScreenState()
         object Unauthorized : SplashScreenState()
     }

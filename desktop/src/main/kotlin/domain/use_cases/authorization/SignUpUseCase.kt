@@ -10,12 +10,10 @@ class SignUpUseCase(
     suspend operator fun invoke(email: String, password: String): UseCaseAuthResult = withContext(Dispatchers.IO) {
         val authResponse = authRepository.signUp(email, password)
         return@withContext when {
-            authResponse?.accessToken == null -> UseCaseAuthResult.UnAuthorized
             authResponse.accessToken.isNotEmpty() -> {
-//                authRepository.saveAuthorization(authResponse.accessToken)
                 UseCaseAuthResult.Authorized(authResponse.accessToken, false)
             }
-            else -> UseCaseAuthResult.NoSuchAccount
+            else -> UseCaseAuthResult.UnAuthorized
         }
     }
 }

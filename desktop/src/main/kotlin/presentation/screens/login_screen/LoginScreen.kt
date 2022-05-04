@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -20,9 +19,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import navigation.component.NavHostController
 import org.kodein.di.compose.rememberInstance
-import presentation.components.LoadingDialog
-import presentation.components.NoInternetDialog
-import presentation.components.NoSuchAccountDialog
+import presentation.components.dialogs.LoadingDialog
 import presentation.screens.login_screen.elements.LogBox
 import presentation.screens.login_screen.elements.UserInfoBox
 
@@ -32,9 +29,7 @@ fun LoginScreen(navController: NavHostController) {
 
     val showLoginDialog = remember { mutableStateOf(false) }
     val showDataConfirmationDialog = remember { mutableStateOf(false) }
-    val showNoInternetConnectionDialog = remember { mutableStateOf(false) }
     val showLoadingDialog = remember { mutableStateOf(false) }
-    val showNoSuchAccountDialog = remember { mutableStateOf(false) }
 
     initLoginObservable(
         scope = rememberCoroutineScope(),
@@ -42,9 +37,7 @@ fun LoginScreen(navController: NavHostController) {
         navController = navController,
         showLoginDialog = showLoginDialog,
         showDataConfirmationDialog = showDataConfirmationDialog,
-        showNoInternetConnectionDialog = showNoInternetConnectionDialog,
         showLoadingDialog = showLoadingDialog,
-        showNoSuchAccountDialog = showNoSuchAccountDialog
     )
 
     Box(
@@ -88,35 +81,7 @@ fun LoginScreen(navController: NavHostController) {
         }
 
         if (showLoadingDialog.value) {
-            LoadingDialog(
-                backgroundColor = Color.White,
-                shape = MaterialTheme.shapes.medium
-            )
-        }
-
-        if (showNoInternetConnectionDialog.value) {
-            NoInternetDialog(
-                iconSrc = "no_wifi.png",
-                message = "No internet connection",
-                actionMessage = "Press to close",
-                backgroundColor = Color.White,
-                shape = MaterialTheme.shapes.medium,
-                onClick = {
-                    viewModel.setEvent(LoginScreenContract.Event.OnNoWiFiBtnClick)
-                }
-            )
-        }
-
-        if (showNoSuchAccountDialog.value) {
-            NoSuchAccountDialog(
-                message = "User isn't exist",
-                buttonText = "Ok",
-                backgroundColor = Color.White,
-                shape = MaterialTheme.shapes.medium,
-                onOkClick = {
-                    viewModel.setEvent(LoginScreenContract.Event.OnNoAccountOkBtnClick)
-                }
-            )
+            LoadingDialog()
         }
     }
 }

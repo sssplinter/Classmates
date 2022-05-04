@@ -6,11 +6,10 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
-import di.di
+import di.kodein
 import localization.Localization
-import navigation.EnteringNavGraph
-import navigation.component.rememberNavController
 import org.kodein.di.compose.withDI
+import presentation.screens.host_screen.HostScreen
 import ui.theme.AppTheme
 import java.awt.Dimension
 
@@ -21,7 +20,7 @@ private val MIN_WIDTH = 500.dp
 private val MIN_HEIGHT = 500.dp
 
 fun main() = application {
-    withDI(di) {
+    withDI(kodein) {
         Window(
             title = "Classmates",
             state = WindowState(
@@ -37,7 +36,7 @@ fun main() = application {
             )
             AppTheme {
                 Localization {
-                    EnteringNavGraph(rememberNavController())
+                    HostScreen()
                 }
             }
         }
