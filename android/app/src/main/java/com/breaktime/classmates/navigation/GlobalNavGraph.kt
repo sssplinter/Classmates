@@ -27,7 +27,6 @@ fun GlobalNavGraph(navController: NavHostController) {
             ProfileScreen(navController)
         }
         composable(Screen.Chat.route) {
-            // todo how to dial with chat id?
             val chatInfo =
                 navController.previousBackStackEntry?.savedStateHandle?.get<ChatInfo>("chatInfo")
             chatInfo?.let {

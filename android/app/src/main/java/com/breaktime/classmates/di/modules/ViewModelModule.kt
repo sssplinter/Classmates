@@ -21,5 +21,5 @@ val viewModelModule = DI.Module(name = "viewModelModule", allowSilentOverride = 
     bind { singleton { PeopleScreenViewModel(instance(), instance(), instance(), instance(), instance(), instance(), instance()) } }
     bind { singleton { FriendsScreenViewModel(instance(), instance(), instance(), instance(), instance(), instance(), instance(), instance(), instance()) } }
     bind { singleton { SettingsScreenViewModel(instance(), instance(),instance(), instance()) } }
-    bind<ChatScreenViewModel> { multiton { (chatInfo: ChatInfo) -> ChatScreenViewModel(chatInfo, instance(),instance(), instance()) } }
+    bind { multiton { chatInfo: ChatInfo -> ChatScreenViewModel(chatInfo, instance(),instance(), instance()) } }
 }

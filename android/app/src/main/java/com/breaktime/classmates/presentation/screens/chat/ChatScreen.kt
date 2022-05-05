@@ -62,7 +62,7 @@ fun ChatScreen(navController: NavController, chatInfo: ChatInfo) {
     )
 
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize().padding(MEDIUM_PADDING)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth().padding(vertical = THE_SMALLEST_PADDING),
@@ -105,14 +105,15 @@ fun ChatScreen(navController: NavController, chatInfo: ChatInfo) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = SMALL_PADDING, start = MEDIUM_PADDING)
+                .padding(top = SMALL_PADDING)
                 .clip(RoundedCornerShape(15.dp))
                 .background(Color(0xFFF3F4FA))
         ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = MEDIUM_PADDING).padding(top = SMALL_PADDING)
+                    .padding(horizontal = MEDIUM_PADDING)
+                    .padding(top = SMALL_PADDING)
                     .height(if (isSearchPanelVisible.value) 25.dp else 0.dp)
                     .animateContentSize()
             ) {
