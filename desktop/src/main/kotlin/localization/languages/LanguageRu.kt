@@ -27,4 +27,6 @@ object LanguageRu : Language {
         get() = "Abc"
     override val differentPasswordError: String
         get() = "Abc"
+    override val settings: String
+        get() = "Настройки"
 }

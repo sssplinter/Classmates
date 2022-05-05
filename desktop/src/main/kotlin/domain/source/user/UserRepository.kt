@@ -13,6 +13,12 @@ class UserRepository(
         response.checkResponseCode()
         return@withContext response.body()!!.data
     }
+    suspend fun updateProfileInfo(name: String, surname: String, bio: String) = withContext(Dispatchers.IO) {
+        val params = UserApiService.UserInfoBody(name, surname, bio)
+        val response = userApiService.updateProfileInfo(userInfo = params)
+        response.checkResponseCode()
+        return@withContext response.isSuccessful
+    }
 
     suspend fun setUserFullName(token: String, name: String, surname: String) = withContext(Dispatchers.IO) {
         val params = UserApiService.UserInfoBody(name, surname)

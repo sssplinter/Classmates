@@ -29,9 +29,16 @@ private val LightColorPalette = lightColors(
     */
 )
 
+enum class AppTheme { DAY, NIGHT, AUTO }
+
+private var currentTheme = AppTheme.AUTO
+private var themeAppListener: ((AppTheme) -> Unit)? = null
+private var themeDesktopListener: ((AppTheme) -> Unit)? = null
+
 @Composable
-fun AppTheme(content: @Composable () -> Unit) {
-    val darkTheme = rememberDesktopDarkTheme()
+fun AppTheme(startTheme: AppTheme, content: @Composable () -> Unit) {
+    val darkTheme = rememberDesktopDarkTheme(startTheme)
+
     val colors = if (darkTheme) {
         DarkColorPalette
     } else {
@@ -46,15 +53,39 @@ fun AppTheme(content: @Composable () -> Unit) {
     )
 }
 
+fun rememberTheme(theme: AppTheme) {
+    currentTheme = theme
+    themeAppListener?.invoke(theme)
+    themeDesktopListener?.invoke(theme)
+}
+
 @Composable
-private fun rememberDesktopDarkTheme(): Boolean {
+private fun rememberDesktopDarkTheme(startTheme: AppTheme): Boolean {
     var darkTheme by remember {
-        mutableStateOf(currentSystemTheme == SystemTheme.DARK)
+        mutableStateOf(
+            when (startTheme) {
+                AppTheme.DAY -> false
+                AppTheme.NIGHT -> true
+                AppTheme.AUTO -> currentSystemTheme == SystemTheme.DARK
+            }
+        )
+    }
+
+    themeDesktopListener = {
+        darkTheme = when (currentTheme) {
+            AppTheme.DAY -> false
+            AppTheme.NIGHT -> true
+            AppTheme.AUTO -> currentSystemTheme == SystemTheme.DARK
+        }
     }
 
     DisposableEffect(Unit) {
         val darkThemeListener: (Boolean) -> Unit = {
-            darkTheme = it
+            darkTheme = when (currentTheme) {
+                AppTheme.DAY -> false
+                AppTheme.NIGHT -> true
+                AppTheme.AUTO -> it
+            }
         }
 
         val detector = OsThemeDetector.getDetector().apply {

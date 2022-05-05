@@ -13,6 +13,9 @@ import domain.source.people.PeopleRepository
 import domain.source.people.local.PeopleStorage
 import domain.source.people.local.PeopleStorageImpl
 import domain.source.people.remote.PeopleApiService
+import domain.source.settings.SettingsRepository
+import domain.source.settings.local.SettingsStorage
+import domain.source.settings.local.SettingsStorageImpl
 import domain.source.user.UserRepository
 import domain.source.user.remote.UserApiService
 import org.kodein.di.DI
@@ -36,4 +39,7 @@ val repositoryModule = DI.Module(name = "repository", allowSilentOverride = fals
 
     bind<UserApiService>() with singleton { ApiClient.create(BASE_URL) }
     bind { singleton { UserRepository(instance()) } }
+
+    bind<SettingsStorage>() with singleton { SettingsStorageImpl() }
+    bind { singleton { SettingsRepository(instance()) } }
 }

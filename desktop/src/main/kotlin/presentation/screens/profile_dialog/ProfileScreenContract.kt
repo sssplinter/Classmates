@@ -6,10 +6,8 @@ import presentation.base.UiState
 
 class ProfileScreenContract {
     sealed class Event : UiEvent {
-        object OnAddUniversityBtnClick : Event()
-        data class OnEditUniversityBtnClick(val universityId: Int) : Event()
         object OnLogOutBtnClick : Event()
-        object OnDialogClose : Event()
+        data class OnDialogClose(val name: String, val surname: String, val bio: String) : Event()
     }
 
     data class State(val state: ProfileScreenState) : UiState

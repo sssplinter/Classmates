@@ -1,12 +1,13 @@
-module.exports = updateFullNameRoute
+module.exports = updateProfileInfoRoute
 
-function updateFullNameRoute(app, database) {
-    app.put("/updateFullName", function (request, result) {
+function updateProfileInfoRoute(app, database) {
+    app.put("/updateProfileInfo", function (request, result) {
         const accessToken = request.headers.access;
         const name = request.fields.name;
         const surname = request.fields.surname;
+        const bio = request.fields.bio;
 
-        if (accessToken == null || name == null || surname == null) {
+        if (accessToken == null || name == null || surname == null || bio == null) {
             result.status(400).json({
                 "message": "Wrong params"
             });
@@ -22,6 +23,7 @@ function updateFullNameRoute(app, database) {
                             $set: {
                                 "name": name,
                                 "surname": surname,
+                                "bio": bio,
                             }
                         }
                     )

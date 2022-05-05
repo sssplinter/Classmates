@@ -2,12 +2,11 @@ package presentation.screens.profile_dialog
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,7 +20,6 @@ import androidx.compose.ui.unit.sp
 import domain.entities.data.CurrentUser
 import navigation.component.NavHostController
 import org.kodein.di.compose.rememberInstance
-import presentation.components.RowUniversityItem
 import presentation.components.dialogs.LoadingDialog
 import presentation.components.dialogs.Popup
 import presentation.screens.profile_dialog.elements.*
@@ -35,17 +33,6 @@ fun ProfileScreen(navController: NavHostController, onOutBoxClick: () -> Unit) {
     val name = remember { mutableStateOf(CurrentUser.name) }
     val surname = remember { mutableStateOf(CurrentUser.surname) }
     val bio = remember { mutableStateOf(CurrentUser.bio) }
-    val universitiesList = remember {
-        mutableStateOf(
-            listOf(
-                Triple("BSUIR", "Poit", "951006"),
-                Triple("BSU", "Math", "103id4"),
-                Triple("BSU", "Math", "103id4"),
-                Triple("BSU", "Math", "103id4"),
-                Triple("BSU", "Math", "103id4"),
-            )
-        )
-    }
     val showLoadingDialog = remember { mutableStateOf(false) }
 
     initProfileObservable(
@@ -58,7 +45,7 @@ fun ProfileScreen(navController: NavHostController, onOutBoxClick: () -> Unit) {
     Popup(
         onOutBoxClick = {
             onOutBoxClick()
-            viewModel.setEvent(ProfileScreenContract.Event.OnDialogClose)
+            viewModel.setEvent(ProfileScreenContract.Event.OnDialogClose(name.value, surname.value, bio.value))
         })
     {
         Column(
@@ -101,33 +88,11 @@ fun ProfileScreen(navController: NavHostController, onOutBoxClick: () -> Unit) {
                 )
             }
             ProfileCommentText(
-                text = "Education",
-                fontSize = 14.sp,
-                imageVector = Icons.Default.Add,
-                onImageClick = {
-                    viewModel.setEvent(ProfileScreenContract.Event.OnAddUniversityBtnClick)
-                }
+                text = "Email",
+                fontSize = 14.sp
             )
-            ProfileColumnContainer(
-                modifier = Modifier
-                    .padding(bottom = SMALL_PADDING)
-                    .heightIn(max = 140.dp),
-                backgroundColor = Color(0xFFEFEFEF)
-            ) {
-                LazyColumn {
-                    itemsIndexed(universitiesList.value) { index, (universityName, speciality, group) ->
-                        RowUniversityItem(
-                            universityName = universityName,
-                            speciality = speciality,
-                            group = group,
-                            onEditClick = {
-                                viewModel.setEvent(ProfileScreenContract.Event.OnEditUniversityBtnClick(1))
-                            }
-                        )
-                        if (index < universitiesList.value.lastIndex)
-                            ProfileDivider()
-                    }
-                }
+            ProfileColumnContainer(backgroundColor = Color(0xFFEFEFEF)) {
+                ProfileReadOnlyFiled(CurrentUser.email)
             }
             ProfileLogoutButton { viewModel.setEvent(ProfileScreenContract.Event.OnLogOutBtnClick) }
         }

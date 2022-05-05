@@ -7,8 +7,14 @@ import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
 import di.kodein
-import domain.loader.AsyncChatLoader
+import domain.entities.data.Languages
+import domain.entities.data.Themes
+import domain.entities.data.toAppTheme
+import domain.use_cases.settings.GetLanguageUseCase
+import domain.use_cases.settings.GetThemeUseCase
+import localization.Language
 import localization.Localization
+import localization.languages.LanguageEn
 import org.kodein.di.compose.withDI
 import org.kodein.di.instance
 import presentation.screens.host_screen.HostScreen
@@ -36,13 +42,24 @@ fun main() = application {
                 width = MIN_WIDTH,
                 height = MIN_HEIGHT
             )
-            AppTheme {
-                Localization {
+
+            AppTheme(getTheme()) {
+                Localization(getLocalization()) {
                     HostScreen()
                 }
             }
         }
     }
+}
+
+private fun getTheme(): AppTheme {
+    val getThemeUseCase: GetThemeUseCase by kodein.di.instance()
+    return getThemeUseCase()?.let { theme -> Themes.valueOf(theme).toAppTheme() } ?: AppTheme.AUTO
+}
+
+private fun getLocalization(): Language {
+    val getLanguageUseCase: GetLanguageUseCase by kodein.di.instance()
+    return getLanguageUseCase()?.let { language -> Languages.valueOf(language).language } ?: LanguageEn
 }
 
 private fun ComposeWindow.setMinSize(width: Dp, height: Dp) {

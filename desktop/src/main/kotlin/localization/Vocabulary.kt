@@ -19,8 +19,8 @@ fun rememberLocalization(language: Language) {
 }
 
 @Composable
-fun Localization(content: @Composable () -> Unit) {
-    var locale by remember { mutableStateOf(defaultLocalization) }
+fun Localization(startLanguage: Language, content: @Composable () -> Unit) {
+    var locale by remember { mutableStateOf(startLanguage) }
     if (onChangeLanguage == null) {
         onChangeLanguage = { language ->
             locale = language

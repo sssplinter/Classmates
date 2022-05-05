@@ -14,15 +14,21 @@ interface UserApiService {
         @Header("Access") token: String = CurrentUser.token,
     ): Response<UserInfoResponse>
 
+    @PUT("/updateProfileInfo")
+    suspend fun updateProfileInfo(
+        @Header("Access") token: String = CurrentUser.token,
+        @Body userInfo: UserInfoBody,
+    ): Response<UserInfoResponse>
+
     @PUT("/updateFullName")
     suspend fun setUserFullName(
         @Header("Access") token: String,
         @Body userInfo: UserInfoBody,
     ): Response<Void>
 
-
     data class UserInfoBody(
         val name: String = "",
         val surname: String = "",
+        val bio: String = "",
     )
 }
