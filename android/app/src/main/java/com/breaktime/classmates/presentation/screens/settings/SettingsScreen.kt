@@ -65,7 +65,7 @@ fun SettingsScreen(navController: NavHostController) {
         ) {
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = "Theme",
+                text = Vocabulary.localization.theme,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colors.loginActiveButton,
                 fontSize = 22.sp
@@ -103,7 +103,7 @@ fun SettingsScreen(navController: NavHostController) {
         ) {
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = "Language",
+                text = Vocabulary.localization.language,
                 textAlign = TextAlign.Center,
                 fontSize = 22.sp
             )

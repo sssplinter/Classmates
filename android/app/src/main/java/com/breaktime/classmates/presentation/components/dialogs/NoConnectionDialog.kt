@@ -2,13 +2,14 @@ package com.breaktime.classmates.presentation.components.dialogs
 
 import androidx.compose.runtime.Composable
 import com.breaktime.classmates.R
+import com.breaktime.classmates.localization.Vocabulary
 
 @Composable
 fun NoConnectionDialog() {
     Popup {
         BasicDialogBody(
-            title = "No internet connection",
-            message = "Please reconnect to network",
+            title = Vocabulary.localization.noInternet,
+            message = Vocabulary.localization.noInternetMsg,
             imgSrc = R.drawable.no_wifi
         )
     }

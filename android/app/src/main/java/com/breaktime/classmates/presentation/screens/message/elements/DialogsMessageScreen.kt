@@ -40,6 +40,7 @@ import com.breaktime.classmates.presentation.screens.message.MessagesScreenContr
 import com.breaktime.classmates.ui.theme.*
 import com.breaktime.classmates.util.toTime
 import com.breaktime.classmates.R
+import com.breaktime.classmates.localization.Vocabulary
 
 @Composable
 fun DialogsMessageScreen(
@@ -150,7 +151,7 @@ fun DialogsMessageScreen(
                     onValueChanged = {
                         viewModel.setEvent(MessagesScreenContract.Event.OnSearchMessageTextAppear(it))
                     },
-                    hint = "Search message...",
+                    hint = Vocabulary.localization.searchMsg,
                     fontSize = 10.sp,
                     hintFontSize = 10.sp,
                     borderColor = Color.Transparent,
@@ -198,7 +199,7 @@ fun DialogsMessageScreen(
                         .weight(1f)
                         .padding(end = SMALL_PADDING),
                     text = sendMessageText,
-                    hint = "Message..."
+                    hint = Vocabulary.localization.msg
                 )
                 Box(
                     modifier = Modifier

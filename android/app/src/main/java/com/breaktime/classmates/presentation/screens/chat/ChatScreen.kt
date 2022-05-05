@@ -32,6 +32,7 @@ import androidx.navigation.NavController
 import com.breaktime.classmates.R
 import com.breaktime.classmates.domain.entities.data.ChatInfo
 import com.breaktime.classmates.domain.entities.data.CurrentUser
+import com.breaktime.classmates.localization.Vocabulary
 import com.breaktime.classmates.presentation.components.RoundedTextField
 import com.breaktime.classmates.presentation.components.SearchTextField
 import com.breaktime.classmates.presentation.components.WebImage
@@ -159,7 +160,7 @@ fun ChatScreen(navController: NavController, chatInfo: ChatInfo) {
                     onValueChanged = {
                         viewModel.setEvent(ChatScreenContract.Event.OnSearchMessageTextAppear(it))
                     },
-                    hint = "Search message...",
+                    hint = Vocabulary.localization.searchMsg,
                     fontSize = 10.sp,
                     hintFontSize = 10.sp,
                     borderColor = Color.Transparent,
@@ -207,7 +208,7 @@ fun ChatScreen(navController: NavController, chatInfo: ChatInfo) {
                         .weight(1f)
                         .padding(end = SMALL_PADDING),
                     text = sendMessageText,
-                    hint = "Message..."
+                    hint = Vocabulary.localization.msg
                 )
                 Box(
                     modifier = Modifier

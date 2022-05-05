@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.breaktime.classmates.localization.Vocabulary
 import com.breaktime.classmates.presentation.components.TextFieldWithError
 import com.breaktime.classmates.ui.theme.LARGE_PADDING
 import com.breaktime.classmates.ui.theme.SMALL_PADDING
@@ -45,14 +46,14 @@ fun UserInfoBox(
                 Icon(
                     modifier = Modifier.height(50.dp).clickable(onClick = onBackClick),
                     imageVector = Icons.Default.ArrowBack,
-                    contentDescription = "logo icon"
+                    contentDescription = Vocabulary.localization.logoImgContent
                 )
 
                 Row(
                     modifier = Modifier.align(Alignment.Center)
                 ) {
                     Text(
-                        text = "Setup user info",
+                        text = Vocabulary.localization.setupUserInfo,
                         modifier = Modifier
                             .padding(bottom = SMALL_PADDING)
                             .padding(start = SMALL_PADDING),
@@ -67,8 +68,8 @@ fun UserInfoBox(
                     name = it
                     isNameError = name.isEmpty()
                 },
-                label = "Name",
-                errorText = "Name shouldn't be empty",
+                label = Vocabulary.localization.name,
+                errorText = Vocabulary.localization.nameNotEmpty,
                 isError = isNameError
             )
 
@@ -79,8 +80,8 @@ fun UserInfoBox(
                     surname = it
                     isSurnameError = surname.isEmpty()
                 },
-                label = "Surname",
-                errorText = "Surname shouldn't be empty",
+                label = Vocabulary.localization.surname,
+                errorText = Vocabulary.localization.surnameNotEmpty,
                 isError = isSurnameError
             )
 
@@ -96,7 +97,7 @@ fun UserInfoBox(
                     }
                 }
             ) {
-                Text(text = "Confirm")
+                Text(text = Vocabulary.localization.confirm)
             }
         }
     }

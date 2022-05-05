@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.breaktime.classmates.R
 import com.breaktime.classmates.domain.entities.data.UserInfo
+import com.breaktime.classmates.localization.Vocabulary
 import com.breaktime.classmates.presentation.components.WebImage
 import com.breaktime.classmates.ui.theme.MEDIUM_PADDING
 import com.breaktime.classmates.ui.theme.ProfileOutline
@@ -64,7 +65,7 @@ fun PersonItemImage(imgSrc: Int, onClick: () -> Unit) {
                 onClick()
             },
         painter = painterResource(imgSrc),
-        contentDescription = "Action image",
+        contentDescription = Vocabulary.localization.actionImgContent,
         tint = Color.Black
     )
 }

@@ -9,6 +9,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.breaktime.classmates.localization.Vocabulary
 import com.breaktime.classmates.navigation.Screen
 import com.breaktime.classmates.presentation.components.SearchTextField
 import com.breaktime.classmates.presentation.components.dialogs.LoadingDialog
@@ -42,7 +43,7 @@ fun MessagesScreen(globalNavController: NavHostController, navController: NavHos
                 viewModel.setEvent(MessagesScreenContract.Event.OnSearchChatTextAppear(it))
             },
             text = searchText,
-            hint = "Search"
+            hint = Vocabulary.localization.search
         )
         LazyColumn(
             modifier = Modifier

@@ -79,7 +79,7 @@ fun LogBox(
                 Icon(
                     modifier = Modifier.height(50.dp),
                     painter = painterResource(R.drawable.owl),
-                    contentDescription = "logo icon"
+                    contentDescription = Vocabulary.localization.logoImgContent
                 )
                 Text(
                     text = Vocabulary.localization.login,

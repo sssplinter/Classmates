@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.breaktime.classmates.domain.entities.data.CurrentUser
+import com.breaktime.classmates.localization.Vocabulary
 import com.breaktime.classmates.presentation.components.dialogs.LoadingDialog
 import com.breaktime.classmates.presentation.screens.profile.elements.*
 import com.breaktime.classmates.ui.theme.EXTRA_SMALL_PADDING
@@ -102,19 +103,19 @@ fun ProfileScreen(navController: NavHostController) {
                         }
                     }
                     ProfileCommentText(
-                        text = "Enter your name and add a profile photo",
+                        text = Vocabulary.localization.enterYourName,
                         fontSize = 12.sp
                     )
                     Column(modifier = Modifier.padding(vertical = SMALL_PADDING)) {
                         ProfileCommentText(
-                            text = "BIO",
+                            text = Vocabulary.localization.bio,
                             fontSize = 14.sp
                         )
                         ProfileColumnContainer(backgroundColor = Color(0xFFEFEFEF)) {
                             ProfileTextField(text = bio)
                         }
                         ProfileCommentText(
-                            text = "Any details such as age, occupation or city",
+                            text = Vocabulary.localization.anyDetails,
                             fontSize = 12.sp
                         )
                     }

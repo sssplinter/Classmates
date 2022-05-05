@@ -9,22 +9,20 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.breaktime.classmates.localization.Vocabulary
 import com.breaktime.classmates.presentation.components.RoundedTextField
-import com.breaktime.classmates.ui.theme.MEDIUM_PADDING
 import com.breaktime.classmates.ui.theme.EXTRA_SMALL_PADDING
+import com.breaktime.classmates.ui.theme.MEDIUM_PADDING
 import com.breaktime.classmates.ui.theme.SMALL_PADDING
 import com.breaktime.classmates.util.dp
 
@@ -47,7 +45,7 @@ fun SendMessageDialog(onClickCancel: () -> Unit, onClickSend: (String) -> Unit) 
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = EXTRA_SMALL_PADDING),
-                text = "Send message",
+                text = Vocabulary.localization.sendMsg,
                 textAlign = TextAlign.Center,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Medium
@@ -56,14 +54,14 @@ fun SendMessageDialog(onClickCancel: () -> Unit, onClickSend: (String) -> Unit) 
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = SMALL_PADDING),
-                text = "That message will be send to private messages",
+                text = Vocabulary.localization.privateMsgSend,
                 textAlign = TextAlign.Center,
                 fontSize = 10.sp,
             )
             RoundedTextField(
                 modifier = Modifier.fillMaxWidth().border(1.dp, Color.Gray, RoundedCornerShape(5.dp)),
                 text = messageText,
-                hint = "message",
+                hint = Vocabulary.localization.message,
             )
             Row(modifier = Modifier.fillMaxWidth().padding(top = MEDIUM_PADDING)) {
                 Text(
@@ -71,7 +69,7 @@ fun SendMessageDialog(onClickCancel: () -> Unit, onClickSend: (String) -> Unit) 
                         .weight(1f)
                         .height(20.sp.dp)
                         .clickable(onClick = onClickCancel),
-                    text = "Cancel",
+                    text = Vocabulary.localization.cancel,
                     textAlign = TextAlign.Center,
                     fontSize = 14.sp,
                     color = Color(0xFF0C4CDD)
@@ -85,7 +83,7 @@ fun SendMessageDialog(onClickCancel: () -> Unit, onClickSend: (String) -> Unit) 
                                 onClickSend(messageText.value)
                             }
                         },
-                    text = "Send",
+                    text = Vocabulary.localization.send,
                     textAlign = TextAlign.Center,
                     fontSize = 14.sp,
                     color = Color(0xFF0C4CDD)

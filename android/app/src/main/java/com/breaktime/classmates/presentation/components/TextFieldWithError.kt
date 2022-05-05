@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import com.breaktime.classmates.localization.Vocabulary
 import com.breaktime.classmates.ui.theme.EXTRA_SMALL_PADDING
 import com.breaktime.classmates.ui.theme.MEDIUM_PADDING
 
@@ -45,7 +46,7 @@ fun TextFieldWithError(
                 imageVector?.let {
                     Icon(
                         imageVector = imageVector,
-                        contentDescription = "email icon"
+                        contentDescription = Vocabulary.localization.emailImgContent
                     )
                 }
             },
@@ -53,7 +54,7 @@ fun TextFieldWithError(
                 if (isError)
                     Icon(
                         imageVector = Icons.Default.Warning,
-                        "Error image",
+                        Vocabulary.localization.errorImgContent,
                         tint = MaterialTheme.colors.error
                     )
             },

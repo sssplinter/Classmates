@@ -87,7 +87,7 @@ fun SplashScreen(navController: NavHostController) {
                     .padding(MEDIUM_PADDING)
                     .height(150.dp),
                 painter = painterResource(R.drawable.owl),
-                contentDescription = "logo icon",
+                contentDescription = Vocabulary.localization.logoImgContent,
                 tint = Color.White
             )
             Text(

@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.breaktime.classmates.R
 import com.breaktime.classmates.domain.entities.data.UserInfo
+import com.breaktime.classmates.localization.Vocabulary
 import com.breaktime.classmates.presentation.components.SearchTextField
 import com.breaktime.classmates.presentation.components.dialogs.SendMessageDialog
 import com.breaktime.classmates.presentation.components.person_item.PersonItemOneButton
@@ -45,7 +46,7 @@ fun PeopleScreen(navController: NavHostController) {
             onValueChanged = {
                 viewModel.setEvent(PeopleScreenContract.Event.OnSearchUserTextAppear(it))
             },
-            hint = "Search"
+            hint = Vocabulary.localization.search
         )
 
         LazyColumn(

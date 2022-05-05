@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.breaktime.classmates.R
 import com.breaktime.classmates.domain.entities.data.UserInfo
+import com.breaktime.classmates.localization.Vocabulary
 import com.breaktime.classmates.presentation.components.SearchTextField
 import com.breaktime.classmates.presentation.components.dialogs.SendMessageDialog
 import com.breaktime.classmates.presentation.components.person_item.PersonItemOneButton
@@ -50,7 +51,7 @@ fun FriendsScreen(navController: NavHostController) {
             onValueChanged = {
                 viewModel.setEvent(FriendsScreenContract.Event.OnSearchUserTextAppear(it))
             },
-            hint = "Search"
+            hint = Vocabulary.localization.search
         )
         Row(modifier = Modifier.fillMaxWidth().padding(horizontal = MEDIUM_PADDING)) {
             Column(
@@ -64,7 +65,7 @@ fun FriendsScreen(navController: NavHostController) {
             ) {
                 Text(
                     modifier = Modifier.padding(vertical = THE_SMALLEST_PADDING),
-                    text = "Friends",
+                    text = Vocabulary.localization.friends,
                     fontSize = 16.sp
                 )
                 Divider(
@@ -87,7 +88,7 @@ fun FriendsScreen(navController: NavHostController) {
             ) {
                 Text(
                     modifier = Modifier.padding(vertical = THE_SMALLEST_PADDING),
-                    text = "Subscribers",
+                    text = Vocabulary.localization.subscribers,
                     fontSize = 16.sp
                 )
                 Divider(
@@ -110,7 +111,7 @@ fun FriendsScreen(navController: NavHostController) {
             ) {
                 Text(
                     modifier = Modifier.padding(vertical = THE_SMALLEST_PADDING),
-                    text = "Subscriptions",
+                    text = Vocabulary.localization.subscriptions,
                     fontSize = 16.sp
                 )
                 Divider(
