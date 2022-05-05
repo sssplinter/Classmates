@@ -8,11 +8,10 @@ function removeFriend(app, database) {
 
         if (accessToken == null || userId == null) {
             result.status(400).json({
-                "status": "error",
                 "message": "Wrong params"
             });
         } else {
-            database.collection("users").findOne({
+            database.collection("Users").findOne({
                 "accessToken": accessToken
             }, function (error, user) {
                 if (user != null) {
@@ -20,8 +19,7 @@ function removeFriend(app, database) {
                         for (let i = 0; i < user.friends.length; i++) {
                             if (user.friends[i].userId.toString() === userId) {
                                 user.friends.splice(i, 1);
-                                console.log("remove 1")
-                                database.collection("users").updateOne({
+                                database.collection("Users").updateOne({
                                         "accessToken": accessToken
                                     },
                                     {
@@ -33,7 +31,7 @@ function removeFriend(app, database) {
                                 break;
                             }
                         }
-                        database.collection("users").findOne({
+                        database.collection("Users").findOne({
                             _id: ObjectID(userId.toString())
                         }, function (error, newUser) {
                             if (newUser != null) {
@@ -41,7 +39,7 @@ function removeFriend(app, database) {
                                     for (let i = 0; i < newUser.friends.length; i++) {
                                         if (newUser.friends[i].userId.toString() === user._id.toString()) {
                                             newUser.friends.splice(i, 1);
-                                            database.collection("users").updateOne({
+                                            database.collection("Users").updateOne({
                                                     _id: ObjectID(userId.toString())
                                                 },
                                                 {
@@ -51,7 +49,6 @@ function removeFriend(app, database) {
                                                 }
                                             );
                                             result.status(200).json({
-                                                "status": "success",
                                                 "message": "User had been removed"
                                             });
                                             break;
@@ -59,26 +56,22 @@ function removeFriend(app, database) {
                                     }
                                 } else {
                                     result.status(202).json({
-                                        "status": "success",
                                         "message": "User hadn't been your friend"
                                     });
                                 }
                             } else {
                                 result.status(404).json({
-                                    "status": "error",
                                     "message": "User not found"
                                 });
                             }
                         });
                     } else {
                         result.status(202).json({
-                            "status": "success",
                             "message": "Users isn't your friend"
                         });
                     }
                 } else {
                     result.status(401).json({
-                        "status": "error",
                         "message": "User has been logged out"
                     });
                 }

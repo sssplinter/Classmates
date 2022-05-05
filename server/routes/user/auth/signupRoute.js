@@ -14,25 +14,26 @@ function signupRoute(app, database) {
 
         if (email == null || password == null) {
             result.status(400).json({
-                "status": "error",
                 "accessToken": "",
+                "isConfirmed": false,
                 "message": "Wrong params"
             });
         } else {
-            database.collection("users").findOne({
+            database.collection("Users").findOne({
                 "email": email
             }, function (error, user) {
                 if (user == null) {
                     bcrypt.hash(password, salt, function (error, hash) {
                         const accessToken = jwt.sign({email: email}, accessTokenSecret);
-                        database.collection("users").insertOne({
+                        database.collection("Users").insertOne({
                             _id: ObjectId(),
                             "email": email,
                             "password": hash,
                             "accessToken": accessToken,
                             "name": "",
                             "surname": "",
-                            "photoUrl": "",
+                            "bio": "",
+                            "profileImageUrl": "",
                             "university": [],
                             "chats": [],
                             "groupChats": [],
@@ -41,16 +42,16 @@ function signupRoute(app, database) {
                             "subscriptions": []
                         }, function (error, data) {
                             result.status(200).json({
-                                "status": "success",
                                 "accessToken": accessToken,
+                                "isConfirmed": false,
                                 "message": "Signed up successfully"
                             });
                         });
                     });
                 } else {
                     result.status(400).json({
-                        "status": "error",
                         "accessToken": "",
+                        "isConfirmed": false,
                         "message": "Email or username already exist"
                     });
                 }

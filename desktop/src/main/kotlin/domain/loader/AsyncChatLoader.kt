@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 private const val CHAT_CHECK_DELAY_CHECK_DELAY = 500L
 private const val NO_INTERNET_CONNECTION_DELAY = 3000L
 
-private typealias MessageMapValue = Pair<AsyncDataLoader.ValueWrapper<Boolean>, MutableSharedFlow<List<MessageInfo>>>
+private typealias MessageMapValue = Pair<AsyncDataLoader.ValueWrapper<Boolean>, MutableStateFlow<List<MessageInfo>>>
 
 class AsyncChatLoader(
     private val asyncDataLoader: AsyncDataLoader,
@@ -24,7 +24,7 @@ class AsyncChatLoader(
     val newMessage: StateFlow<Any?> get() = _newMessage.asStateFlow()
 
     private var isChatsLoading = AsyncDataLoader.ValueWrapper(false)
-    private val _allChats: MutableSharedFlow<List<ChatInfo>> = MutableSharedFlow()
+    private val _allChats: MutableStateFlow<List<ChatInfo>> = MutableStateFlow(emptyList())
     val allChats = _allChats.asSharedFlow()
 
     private val _allMessages = HashMap<String, MessageMapValue>()
@@ -49,7 +49,7 @@ class AsyncChatLoader(
             _allChats.firstOrNull()?.forEach { chatInfo ->
                 var messageMapValue = _allMessages[chatInfo.id]
                 if (messageMapValue == null) {
-                    messageMapValue = AsyncDataLoader.ValueWrapper(true) to MutableSharedFlow()
+                    messageMapValue = AsyncDataLoader.ValueWrapper(false) to MutableStateFlow(emptyList())
                     _allMessages[chatInfo.id] = messageMapValue
                 }
                 asyncDataLoader.dataLoading(

@@ -13,6 +13,8 @@ fun initMainObservable(
     tabNavController: NavHostController,
     isProfileDialog: MutableState<Boolean>,
     currentTabRoute: MutableState<String>,
+    isMessagesNotified: MutableState<Boolean>,
+    isConnectionsNotified: MutableState<Boolean>,
 ) {
     scope.launch {
         viewModel.effect.collect {
@@ -24,6 +26,8 @@ fun initMainObservable(
                 }
                 MainScreenContract.Effect.OpenProfile -> isProfileDialog.value = true
                 MainScreenContract.Effect.CloseProfile -> isProfileDialog.value = false
+                MainScreenContract.Effect.NotifyMessages -> isMessagesNotified.value = true
+                MainScreenContract.Effect.NotifyConnections -> isConnectionsNotified.value = true
             }
         }
     }

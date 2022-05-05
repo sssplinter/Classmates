@@ -102,6 +102,8 @@ class LoginScreenViewModel(
     }
 
     override fun clearState() {
+        signState = SignState.SIGN_IN
+        authResult = UseCaseAuthResult.UnAuthorized
         setState { copy(state = LoginScreenContract.LoginScreenState.Idle) }
     }
 

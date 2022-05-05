@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 
 @Composable
 fun BadInputDialog(onClick: () -> Unit) {
-    ShadowBox {
+    Popup {
         BasicDialogBody(
             title = "",
             message = "",

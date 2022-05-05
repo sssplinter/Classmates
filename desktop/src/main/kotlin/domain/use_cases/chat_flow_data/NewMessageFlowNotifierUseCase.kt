@@ -1,9 +1,9 @@
 package domain.use_cases.chat_flow_data
 
-import domain.loader.AsyncChatLoader
+import domain.loader.AsyncDataLoader
 
 class NewMessageFlowNotifierUseCase(
-    private val asyncChatLoader: AsyncChatLoader,
+    private val asyncDataLoader: AsyncDataLoader,
 ) {
-    operator fun invoke() = asyncChatLoader.newMessage
+    operator fun invoke() = asyncDataLoader.asyncChatLoader.newMessage
 }

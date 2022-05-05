@@ -5,12 +5,11 @@ function deleteUniversityInfo(app, database) {
         const accessToken = request.headers.access;
         const id = request.fields.id;
 
-        database.collection("users").findOne({
+        database.collection("Users").findOne({
             "accessToken": accessToken
         }, function (error, user) {
             if (user == null) {
                 result.json({
-                    "status": "error",
                     "message": "User has been logged out"
                 });
             } else {
@@ -18,7 +17,7 @@ function deleteUniversityInfo(app, database) {
                     for (let i = 0; i < user.education.length; i++) {
                         if (user.education[i]._id.toString() === id) {
                             user.education.splice(i, 1);
-                            database.collection("users").updateOne({
+                            database.collection("Users").updateOne({
                                     "accessToken": accessToken
                                 },
                                 {
@@ -28,14 +27,12 @@ function deleteUniversityInfo(app, database) {
                                 }
                             );
                             result.json({
-                                "status": "success",
                                 "message": "Data have been changed"
                             });
                             return;
                         }
                     }
                     result.json({
-                        "status": "error",
                         "message": "Wrong id"
                     });
                 }

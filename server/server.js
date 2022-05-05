@@ -1,8 +1,9 @@
 const homeRoute = require("./routes/homeRoute")
 const signupRoute = require("./routes/user/auth/signupRoute")
 const signinRoute = require("./routes/user/auth/signinRoute")
-const allUsersRoute = require("./routes/common/allUsersRoute")
-const profileInfoRoute = require("./routes/common/profileInfoRoute")
+const allUsersRoute = require("./routes/user/info/allUsersRoute")
+const userInfoRoute = require("./routes/user/info/userInfoRoute")
+const profileInfoRoute = require("./routes/user/info/profileInfoRoute")
 const getChatsInfo = require("./routes/conversation/getChatsInfo")
 const sendMessage = require("./routes/conversation/sendMessage")
 const removeMessage = require("./routes/conversation/removeMessage")
@@ -32,15 +33,13 @@ app.use("/public", express.static(__dirname + "/public"))
 app.set("view engine", "ejs")
 
 http.listen(3000, function () {
-    console.log("server started")
     mongoClient.connect("mongodb://localhost:27017", function (error, client) {
         const database = client.db("my_social_network");
-        console.log("database connected")
-
         homeRoute(app)
         signupRoute(app, database)
         signinRoute(app, database)
         allUsersRoute(app, database)
+        userInfoRoute(app, database)
         profileInfoRoute(app, database)
         getChatsInfo(app, database)
         sendMessage(app, database)

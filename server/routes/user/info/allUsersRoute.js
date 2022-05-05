@@ -1,7 +1,7 @@
-module.exports = getAllSubscriptions
+module.exports = allUsersRoute
 
-function getAllSubscriptions(app, database) {
-    app.post("/getAllSubscriptions", function (request, result) {
+function allUsersRoute(app, database) {
+    app.post("/getAllUsers", function (request, result) {
         const accessToken = request.headers.access;
 
         database.collection("Users").findOne({
@@ -11,7 +11,7 @@ function getAllSubscriptions(app, database) {
                 database.collection("Users").find().toArray(function (error, data) {
                     const modifiedData = data
                         .filter(userData => {
-                            return user.subscriptions.findIndex(x => x.userId.toString() === userData._id.toString()) !== -1
+                            return userData._id.toString() !== user._id.toString() && userData.name !== "" && userData.name !== ""
                         })
                         .map(userData => {
                             delete userData.password;
@@ -22,11 +22,20 @@ function getAllSubscriptions(app, database) {
                             delete userData.friends;
                             delete userData.subscribers;
                             delete userData.subscriptions;
-                            userData["userRole"] = "subscription";
+                            userData["userRole"] = "default";
+                            if (user.friends.findIndex(x => x.userId.toString() === userData._id.toString()) !== -1) {
+                                userData["userRole"] = "friend";
+                            }
+                            if (user.subscriptions.findIndex(x => x.userId.toString() === userData._id.toString()) !== -1) {
+                                userData["userRole"] = "subscription";
+                            }
+                            if (user.subscribers.findIndex(x => x.userId.toString() === userData._id.toString()) !== -1) {
+                                userData["userRole"] = "subscriber";
+                            }
                             return userData;
                         })
                     result.status(200).json({
-                        "message": "All subscriptions",
+                        "message": "All users",
                         "data": modifiedData
                     });
                 });

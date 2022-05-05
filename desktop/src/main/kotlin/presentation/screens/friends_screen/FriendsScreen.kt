@@ -1,7 +1,6 @@
 package presentation.screens.friends_screen
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -10,9 +9,9 @@ import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,8 +19,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import domain.entities.data.UserInfo
+import org.kodein.di.compose.rememberInstance
 import presentation.components.SearchTextField
-import presentation.components.PersonItem
+import presentation.components.dialogs.SendMessageDialog
+import presentation.components.person_item.PersonItemOneButton
+import presentation.components.person_item.PersonItemTwoButton
+import presentation.screens.people_screen.PeopleScreenContract
 import ui.theme.EXTRA_LARGE_PADDING
 import ui.theme.MEDIUM_PADDING
 import ui.theme.THE_SMALLEST_PADDING
@@ -31,15 +34,20 @@ enum class ActiveTab { FRIENDS, SUBSCRIBERS, SUBSCRIPTIONS }
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun FriendsScreen() {
-    val activeTabState = remember { mutableStateOf(ActiveTab.FRIENDS) }
+    val viewModel: FriendsScreenViewModel by rememberInstance()
+
+    var activeTabState by remember { mutableStateOf(ActiveTab.FRIENDS) }
     val searchText = remember { mutableStateOf("") }
-    var peopleList = mutableStateListOf<UserInfo>().apply {
-        add(UserInfo("", userRole = UserInfo.UserRole.FRIEND))
-        add(UserInfo("", userRole = UserInfo.UserRole.FRIEND))
-        add(UserInfo("", userRole = UserInfo.UserRole.FRIEND))
-        add(UserInfo("", userRole = UserInfo.UserRole.FRIEND))
-        add(UserInfo("", userRole = UserInfo.UserRole.FRIEND))
-    }
+    val friendsList = viewModel.friendsList
+    val subscribersList = viewModel.subscribersList
+    val subscriptionsList = viewModel.subscriptionsList
+    val userToSendMessage = remember { mutableStateOf<UserInfo?>(null) }
+
+    initFriendsObservable(
+        scope = rememberCoroutineScope(),
+        viewModel = viewModel,
+        userToSendMessage = userToSendMessage
+    )
 
     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         Row(
@@ -57,6 +65,9 @@ fun FriendsScreen() {
             SearchTextField(
                 modifier = Modifier.fillMaxWidth(),
                 text = searchText,
+                onValueChanged = {
+                    viewModel.setEvent(FriendsScreenContract.Event.OnSearchUserTextAppear(it))
+                },
                 hint = "Search"
             )
         }
@@ -66,7 +77,7 @@ fun FriendsScreen() {
                     .weight(1f)
                     .padding(horizontal = EXTRA_LARGE_PADDING)
                     .clickable {
-                        activeTabState.value = ActiveTab.FRIENDS
+                        activeTabState = ActiveTab.FRIENDS
                     },
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -76,7 +87,7 @@ fun FriendsScreen() {
                     fontSize = 16.sp
                 )
                 Divider(
-                    modifier = (if (activeTabState.value == ActiveTab.FRIENDS) Modifier.fillMaxWidth()
+                    modifier = (if (activeTabState == ActiveTab.FRIENDS) Modifier.fillMaxWidth()
                     else Modifier.width(0.dp))
                         .height(2.dp)
                         .padding(horizontal = EXTRA_LARGE_PADDING)
@@ -89,7 +100,7 @@ fun FriendsScreen() {
                     .weight(1f)
                     .padding(horizontal = EXTRA_LARGE_PADDING)
                     .clickable {
-                        activeTabState.value = ActiveTab.SUBSCRIBERS
+                        activeTabState = ActiveTab.SUBSCRIBERS
                     },
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -99,7 +110,7 @@ fun FriendsScreen() {
                     fontSize = 16.sp
                 )
                 Divider(
-                    modifier = (if (activeTabState.value == ActiveTab.SUBSCRIBERS) Modifier.fillMaxWidth()
+                    modifier = (if (activeTabState == ActiveTab.SUBSCRIBERS) Modifier.fillMaxWidth()
                     else Modifier.width(0.dp))
                         .height(2.dp)
                         .padding(horizontal = EXTRA_LARGE_PADDING)
@@ -112,7 +123,7 @@ fun FriendsScreen() {
                     .weight(1f)
                     .padding(horizontal = EXTRA_LARGE_PADDING)
                     .clickable {
-                        activeTabState.value = ActiveTab.SUBSCRIPTIONS
+                        activeTabState = ActiveTab.SUBSCRIPTIONS
                     },
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -122,7 +133,7 @@ fun FriendsScreen() {
                     fontSize = 16.sp
                 )
                 Divider(
-                    modifier = (if (activeTabState.value == ActiveTab.SUBSCRIPTIONS) Modifier.fillMaxWidth()
+                    modifier = (if (activeTabState == ActiveTab.SUBSCRIPTIONS) Modifier.fillMaxWidth()
                     else Modifier.width(0.dp))
                         .height(2.dp)
                         .padding(horizontal = EXTRA_LARGE_PADDING)
@@ -135,24 +146,74 @@ fun FriendsScreen() {
             cells = GridCells.Fixed(3),
             contentPadding = PaddingValues(8.dp)
         ) {
+            val peopleList = when (activeTabState) {
+                ActiveTab.FRIENDS -> friendsList
+                ActiveTab.SUBSCRIBERS -> subscribersList
+                ActiveTab.SUBSCRIPTIONS -> subscriptionsList
+            }
+
             peopleList.forEach { personInfo ->
-                val (actionImg, action) = when (personInfo.userRole) {
-                    UserInfo.UserRole.FRIEND -> "remove_friend.svg" to {}
-                    UserInfo.UserRole.SUBSCRIBER -> "accept.svg" to {}
-                    UserInfo.UserRole.SUBSCRIPTION -> "cancel.svg" to {}
-                    UserInfo.UserRole.DEFAULT -> "add_friend" to {}
-                    UserInfo.UserRole.ME -> return@forEach
-                }
                 item {
-                    PersonItem(personInfo, actionImg, action)
+                    when (personInfo.userRole) {
+                        UserInfo.UserRole.FRIEND -> {
+                            PersonItemTwoButton(
+                                userInfo = personInfo,
+                                actionImg1Src = "send_message.svg",
+                                actionImg2Src = "remove_friend.svg",
+                                onActionImg1Click = {
+                                    viewModel.setEvent(FriendsScreenContract.Event.OnShowSendMessageClick(personInfo))
+                                },
+                                onActionImg2Click = {
+                                    viewModel.setEvent(FriendsScreenContract.Event.OnRemoveFriendClick(personInfo))
+                                }
+                            )
+                        }
+                        UserInfo.UserRole.SUBSCRIBER -> {
+                            PersonItemTwoButton(
+                                userInfo = personInfo,
+                                actionImg1Src = "accept.svg",
+                                actionImg2Src = "cancel.svg",
+                                onActionImg1Click = {
+                                    viewModel.setEvent(FriendsScreenContract.Event.OnAcceptSubscriberClick(personInfo))
+                                },
+                                onActionImg2Click = {
+                                    viewModel.setEvent(FriendsScreenContract.Event.OnCancelSubscriberClick(personInfo))
+                                }
+                            )
+                        }
+                        UserInfo.UserRole.SUBSCRIPTION -> {
+                            PersonItemOneButton(
+                                userInfo = personInfo,
+                                actionImgSrc = "cancel.svg",
+                                onActionImgClick = {
+                                    viewModel.setEvent(FriendsScreenContract.Event.OnCancelSubscriptionClick(personInfo))
+                                },
+                            )
+                        }
+                        UserInfo.UserRole.DEFAULT ->
+                            PersonItemOneButton(
+                                userInfo = personInfo,
+                                actionImgSrc = "add_friend.svg",
+                                onActionImgClick = {
+                                    viewModel.setEvent(FriendsScreenContract.Event.OnAddFriendClick(personInfo))
+                                },
+                            )
+                        UserInfo.UserRole.ME -> return@item
+                    }
                 }
             }
         }
     }
-}
 
-@Preview
-@Composable
-fun FriendsScreenPreview() {
-    FriendsScreen()
+    if (userToSendMessage.value != null) {
+        SendMessageDialog(
+            onClickCancel = {
+                userToSendMessage.value = null
+            },
+            onClickSend = {
+                viewModel.setEvent(FriendsScreenContract.Event.OnSendMessageClick(userToSendMessage.value!!, it))
+                userToSendMessage.value = null
+            }
+        )
+    }
 }

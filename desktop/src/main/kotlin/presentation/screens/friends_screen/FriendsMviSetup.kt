@@ -1,4 +1,4 @@
-package presentation.screens.people_screen
+package presentation.screens.friends_screen
 
 import androidx.compose.runtime.MutableState
 import domain.entities.data.UserInfo
@@ -7,19 +7,20 @@ import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-fun initPeopleObservable(
+fun initFriendsObservable(
     scope: CoroutineScope,
-    viewModel: PeopleScreenViewModel,
+    viewModel: FriendsScreenViewModel,
     userToSendMessage: MutableState<UserInfo?>,
-) {
+    ) {
     scope.launch {
         viewModel.effect.collect {
             scope.ensureActive()
             when (it) {
-                is PeopleScreenContract.Effect.ShowSendMessageDialog -> {
+                is FriendsScreenContract.Effect.ShowSendMessageDialog -> {
                     userToSendMessage.value = it.user
                 }
             }
         }
     }
+
 }

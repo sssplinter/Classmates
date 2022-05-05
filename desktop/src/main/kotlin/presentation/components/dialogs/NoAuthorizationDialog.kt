@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 
 @Composable
 fun NoAuthorizationDialog(onClick: () -> Unit) {
-    ShadowBox {
+    Popup {
         BasicDialogBody(
             title = "",
             message = "",

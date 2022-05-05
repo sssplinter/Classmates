@@ -7,8 +7,10 @@ import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
 import di.kodein
+import domain.loader.AsyncChatLoader
 import localization.Localization
 import org.kodein.di.compose.withDI
+import org.kodein.di.instance
 import presentation.screens.host_screen.HostScreen
 import ui.theme.AppTheme
 import java.awt.Dimension

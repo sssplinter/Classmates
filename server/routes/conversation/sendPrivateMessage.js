@@ -9,11 +9,10 @@ function sendPrivateMessage(app, database) {
 
         if (accessToken == null || toUserId == null || messageText == null) {
             result.status(400).json({
-                "status": "error",
                 "message": "Wrong params"
             });
         } else {
-            database.collection("users").findOne({
+            database.collection("Users").findOne({
                 "accessToken": accessToken
             }, function (error, fromUser) {
                 if (fromUser != null) {
@@ -43,7 +42,7 @@ function sendPrivateMessage(app, database) {
                                         subChatId: privateChatId
                                     })
 
-                                    database.collection("messages").insertOne({
+                                    database.collection("Messages").insertOne({
                                         _id: messageId,
                                         chatId: chatId,
                                         fromUserId: fromUser._id,
@@ -64,12 +63,12 @@ function sendPrivateMessage(app, database) {
                                         chatId: chatId,
                                         unreadMessagesAmount: 1
                                     });
-                                    database.collection("users").updateOne({
+                                    database.collection("Users").updateOne({
                                             _id: ObjectID(toUserId.toString())
                                         },
                                         {$push: {"chats": {"chatId": user1ChatStatId}}}
                                     );
-                                    database.collection("users").updateOne({
+                                    database.collection("Users").updateOne({
                                             _id: ObjectID(fromUser._id.toString())
                                         },
                                         {$push: {"chats": {"chatId": user2ChatStatId}}}
@@ -79,7 +78,7 @@ function sendPrivateMessage(app, database) {
                                         subChatId: privateChat._id
                                     }, function (error, chat) {
                                         let messageId = ObjectId()
-                                        database.collection("messages").insertOne({
+                                        database.collection("Messages").insertOne({
                                             _id: messageId,
                                             chatId: chat._id,
                                             fromUserId: fromUser._id,
@@ -101,7 +100,6 @@ function sendPrivateMessage(app, database) {
                                     });
                                 }
                                 result.status(200).json({
-                                    "status": "success",
                                     "message": "Message had been send"
                                 });
                             });
@@ -109,12 +107,10 @@ function sendPrivateMessage(app, database) {
                         }
                     }
                     result.status(403).json({
-                        "status": "error",
                         "message": "User isn't your friend"
                     });
                 } else {
                     result.status(401).json({
-                        "status": "error",
                         "message": "User has been logged out"
                     });
                 }

@@ -1,5 +1,7 @@
 package domain.entities.data
 
+import com.google.gson.annotations.SerializedName
+
 data class UserInfo(
     val _id: String = "",
     val email: String = "",
@@ -10,10 +12,19 @@ data class UserInfo(
     val userRole: UserRole,
 ) {
     enum class UserRole(val value: String) {
+        @SerializedName("me")
         ME("me"),
+
+        @SerializedName("friend")
         FRIEND("friend"),
+
+        @SerializedName("subscriber")
         SUBSCRIBER("subscriber"),
+
+        @SerializedName("subscription")
         SUBSCRIPTION("subscription"),
+
+        @SerializedName("default")
         DEFAULT("default")
     }
 }

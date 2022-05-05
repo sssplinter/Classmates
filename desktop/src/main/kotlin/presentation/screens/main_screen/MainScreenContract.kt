@@ -21,5 +21,7 @@ class MainScreenContract {
         data class ChangeFragment(val route: String) : Effect()
         object OpenProfile : Effect()
         object CloseProfile : Effect()
+        object NotifyMessages : Effect()
+        object NotifyConnections : Effect()
     }
 }

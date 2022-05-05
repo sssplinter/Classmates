@@ -1,9 +1,9 @@
 package domain.use_cases.people_flow_data
 
-import domain.loader.AsyncPeopleLoader
+import domain.loader.AsyncDataLoader
 
 class SubscribersFlowUseCase(
-    private val asyncPeopleLoader: AsyncPeopleLoader
+    private val asyncDataLoader: AsyncDataLoader
 ) {
-    operator fun invoke() = asyncPeopleLoader.allSubscribers
+    operator fun invoke() = asyncDataLoader.asyncPeopleLoader.allSubscribers
 }

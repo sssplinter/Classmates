@@ -8,11 +8,10 @@ function removeSubscription(app, database) {
 
         if (accessToken == null || userId == null) {
             result.status(400).json({
-                "status": "error",
                 "message": "Wrong params"
             });
         } else {
-            database.collection("users").findOne({
+            database.collection("Users").findOne({
                 "accessToken": accessToken
             }, function (error, userFrom) {
                 if (userFrom != null) {
@@ -20,7 +19,7 @@ function removeSubscription(app, database) {
                         for (let i = 0; i < userFrom.subscriptions.length; i++) {
                             if (userFrom.subscriptions[i].userId.toString() === userId) {
                                 userFrom.subscriptions.splice(i, 1);
-                                database.collection("users").updateOne({
+                                database.collection("Users").updateOne({
                                         "accessToken": accessToken
                                     },
                                     {
@@ -33,7 +32,7 @@ function removeSubscription(app, database) {
                             }
                         }
 
-                        database.collection("users").findOne({
+                        database.collection("Users").findOne({
                             _id: ObjectID(userId.toString())
                         }, function (error, toUser) {
                             if (toUser != null) {
@@ -41,7 +40,7 @@ function removeSubscription(app, database) {
                                     for (let i = 0; i < toUser.subscribers.length; i++) {
                                         if (toUser.subscribers[i].userId.toString() === userFrom._id.toString()) {
                                             toUser.subscribers.splice(i, 1);
-                                            database.collection("users").updateOne({
+                                            database.collection("Users").updateOne({
                                                     _id: ObjectID(userId.toString())
                                                 },
                                                 {
@@ -51,7 +50,6 @@ function removeSubscription(app, database) {
                                                 }
                                             );
                                             result.status(200).json({
-                                                "status": "success",
                                                 "message": "Subscription was removed"
                                             });
                                             break;
@@ -59,26 +57,22 @@ function removeSubscription(app, database) {
                                     }
                                 } else {
                                     result.status(202).json({
-                                        "status": "success",
                                         "message": "You didn't subscribe on that user"
                                     });
                                 }
                             } else {
                                 result.status(404).json({
-                                    "status": "error",
                                     "message": "User not found"
                                 });
                             }
                         });
                     } else {
                         result.status(202).json({
-                            "status": "success",
                             "message": "You don't have subscription"
                         });
                     }
                 } else {
                     result.status(401).json({
-                        "status": "error",
                         "message": "User has been logged out"
                     });
                 }

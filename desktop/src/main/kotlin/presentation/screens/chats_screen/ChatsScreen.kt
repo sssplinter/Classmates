@@ -30,14 +30,12 @@ fun ChatsScreen(navController: NavHostController) {
     val findMessageStatus = remember { mutableStateOf(FindMessageStatus(-1, false, false)) }
     val chatsList = viewModel.chatsList
     val currentMessages = viewModel.currentChatData
-    val showNoInternetConnectionDialog = remember { mutableStateOf(false) }
     val showLoadingDialog = remember { mutableStateOf(false) }
 
     initChatsObservable(
         scope = rememberCoroutineScope(),
         viewModel = viewModel,
         messagesListState = messagesListState,
-        showNoInternetConnectionDialog = showNoInternetConnectionDialog,
         showLoadingDialog = showLoadingDialog,
         findMessageStatus = findMessageStatus
     )
@@ -61,6 +59,7 @@ fun ChatsScreen(navController: NavHostController) {
                 chatsList.forEach { chatInfo ->
                     item {
                         DialogsChatItem(
+                            isSelected = chatInfo.id == currentMessages.value?.first,
                             chatInfo = chatInfo,
                             onClick = {
                                 viewModel.setEvent(ChatsScreenContract.Event.OnSelectChat(chatInfo.id))
@@ -70,7 +69,7 @@ fun ChatsScreen(navController: NavHostController) {
                 }
             }
         }
-        currentMessages.value?.let { (chatInfo, messages) ->
+        currentMessages.value?.let { (currentChatId, chatInfo, messages) ->
             DialogsMessageScreen(
                 chatInfo,
                 messages,

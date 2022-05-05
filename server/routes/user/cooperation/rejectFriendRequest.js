@@ -8,11 +8,10 @@ function rejectFriendRequest(app, database) {
 
         if (accessToken == null || userId == null) {
             result.status(400).json({
-                "status": "error",
                 "message": "Wrong params"
             });
         } else {
-            database.collection("users").findOne({
+            database.collection("Users").findOne({
                 "accessToken": accessToken
             }, function (error, userFrom) {
                 if (userFrom != null) {
@@ -20,7 +19,7 @@ function rejectFriendRequest(app, database) {
                         for (let i = 0; i < userFrom.subscribers.length; i++) {
                             if (userFrom.subscribers[i].userId.toString() === userId) {
                                 userFrom.subscribers.splice(i, 1);
-                                database.collection("users").updateOne({
+                                database.collection("Users").updateOne({
                                         "accessToken": accessToken
                                     },
                                     {
@@ -33,7 +32,7 @@ function rejectFriendRequest(app, database) {
                             }
                         }
 
-                        database.collection("users").findOne({
+                        database.collection("Users").findOne({
                             _id: ObjectID(userId.toString())
                         }, function (error, toUser) {
                             if (toUser != null) {
@@ -41,7 +40,7 @@ function rejectFriendRequest(app, database) {
                                     for (let i = 0; i < toUser.subscriptions.length; i++) {
                                         if (toUser.subscriptions[i].userId.toString() === userFrom._id.toString()) {
                                             toUser.subscriptions.splice(i, 1);
-                                            database.collection("users").updateOne({
+                                            database.collection("Users").updateOne({
                                                     _id: ObjectID(userId.toString())
                                                 },
                                                 {
@@ -51,7 +50,6 @@ function rejectFriendRequest(app, database) {
                                                 }
                                             );
                                             result.status(200).json({
-                                                "status": "success",
                                                 "message": "User had been rejected"
                                             });
                                             break;
@@ -59,26 +57,22 @@ function rejectFriendRequest(app, database) {
                                     }
                                 } else {
                                     result.status(202).json({
-                                        "status": "success",
                                         "message": "User hadn't been subscribed on you"
                                     });
                                 }
                             } else {
                                 result.status(404).json({
-                                    "status": "error",
                                     "message": "User not found"
                                 });
                             }
                         });
                     } else {
                         result.status(202).json({
-                            "status": "success",
                             "message": "You don't have such subscriber"
                         });
                     }
                 } else {
                     result.status(401).json({
-                        "status": "error",
                         "message": "User has been logged out"
                     });
                 }

@@ -17,25 +17,25 @@ class HostScreenViewModel(
 ) : BaseViewModel<HostScreenContract.Event, HostScreenContract.State, HostScreenContract.Effect>() {
 
     init {
-        startCollectionBadInputException()
-        startCollectionForbiddenException()
-        startCollectionNoConnectionException()
-        startCollectionUnauthorizedException()
+        startCollectingBadInputException()
+        startCollectingForbiddenException()
+        startCollectingNoConnectionException()
+        startCollectingUnauthorizedException()
     }
 
-    private fun startCollectionBadInputException() = MainScope().launch {
+    private fun startCollectingBadInputException() = MainScope().launch {
         getBadInputExceptionFlowUseCase.invoke().collect {
             if (it != null) setEffect { HostScreenContract.Effect.ShowBadInputDialog }
         }
     }
 
-    private fun startCollectionForbiddenException() = MainScope().launch {
+    private fun startCollectingForbiddenException() = MainScope().launch {
         getForbiddenExceptionFlowUseCase.invoke().collect {
             if (it != null) setEffect { HostScreenContract.Effect.ShowForbiddenDialog }
         }
     }
 
-    private fun startCollectionNoConnectionException() = MainScope().launch {
+    private fun startCollectingNoConnectionException() = MainScope().launch {
         getNoConnectionExceptionFlowUseCase.invoke().collect {
             val effect = if (it != null) HostScreenContract.Effect.ShowNoConnectionDialog
             else HostScreenContract.Effect.HideNoConnectionDialog
@@ -43,7 +43,7 @@ class HostScreenViewModel(
         }
     }
 
-    private fun startCollectionUnauthorizedException() = MainScope().launch {
+    private fun startCollectingUnauthorizedException() = MainScope().launch {
         getUnauthorizedExceptionFlowUseCase.invoke().collect {
             if (it != null)  setEffect { HostScreenContract.Effect.ShowNoAuthorizationDialog }
         }

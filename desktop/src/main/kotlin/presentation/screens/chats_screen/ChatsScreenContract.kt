@@ -27,6 +27,10 @@ class ChatsScreenContract {
     sealed class Effect : UiEffect {
         data class ShowUserProfile(val id: Int) : Effect()
         data class ShowFoundMessage(val position: Int, val hasNext: Boolean, val hasPrev: Boolean) : Effect()
-        data class UpdateChatData(val chatInfo: ChatInfo, val messagesList: List<MessageInfo>) : Effect()
+        data class UpdateChatData(
+            val currentChatId: String,
+            val chatInfo: ChatInfo,
+            val messagesList: List<MessageInfo>,
+        ) : Effect()
     }
 }

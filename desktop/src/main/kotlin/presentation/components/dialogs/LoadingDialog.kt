@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun LoadingDialog() {
-    ShadowBox {
+    Popup {
         Box(
             modifier = Modifier
                 .size(70.dp)

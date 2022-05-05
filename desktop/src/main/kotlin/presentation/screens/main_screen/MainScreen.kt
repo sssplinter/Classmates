@@ -35,13 +35,17 @@ fun MainScreen(navController: NavHostController) {
     val tabNavController = rememberNavController()
     val isProfileDialog = remember { mutableStateOf(false) }
     val currentTabRoute = remember { mutableStateOf(Screen.Messages.route) }
+    val isMessagesNotified = remember { mutableStateOf(false) }
+    val isConnectionsNotified = remember { mutableStateOf(false) }
 
     initMainObservable(
         scope = rememberCoroutineScope(),
         viewModel = viewModel,
         tabNavController = tabNavController,
         isProfileDialog = isProfileDialog,
-        currentTabRoute = currentTabRoute
+        currentTabRoute = currentTabRoute,
+        isMessagesNotified = isMessagesNotified,
+        isConnectionsNotified = isConnectionsNotified
     )
 
     Box(
@@ -70,16 +74,21 @@ fun MainScreen(navController: NavHostController) {
                 ) {
                     Column {
                         val buttonsInfo = listOf(
-                            Screen.Messages.route to Icons.Default.Email,
-                            Screen.Connections.route to Icons.Default.Person,
-                            Screen.People.route to Icons.Default.Search,
-                            Screen.Settings.route to Icons.Default.Settings
+                            Triple(Screen.Messages.route, Icons.Default.Email, isMessagesNotified),
+                            Triple(Screen.Connections.route, Icons.Default.Person, isConnectionsNotified),
+                            Triple(Screen.People.route, Icons.Default.Search, null),
+                            Triple(Screen.Settings.route, Icons.Default.Settings, null)
                         )
-                        buttonsInfo.forEach { (route, icon) ->
+                        buttonsInfo.forEach { (route, icon, isNotified) ->
+                            if (route == currentTabRoute.value) {
+                                isNotified?.value = false
+                            }
                             MenuButton(
                                 icon = icon,
                                 isActive = route == currentTabRoute.value,
+                                isNotified = isNotified?.value == true,
                                 onClick = {
+                                    isNotified?.value = false
                                     viewModel.setEvent(MainScreenContract.Event.OnMenuButtonClick(route))
                                     tabNavController.navigate(route)
                                 }

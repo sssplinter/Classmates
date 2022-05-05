@@ -1,20 +1,23 @@
 package domain.loader
 
-import di.kodein
 import domain.exceptions_broadscast.ConnectionExceptionsBroadcast
 import domain.exceptions_broadscast.exceptions.NoConnectionException
+import domain.source.chat.ChatRepository
+import domain.source.people.PeopleRepository
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import org.kodein.di.instance
-import org.kodein.di.newInstance
 import java.net.ConnectException
 
-class AsyncDataLoader(private val exceptionsBroadcast: ConnectionExceptionsBroadcast) : CoroutineScope {
+class AsyncDataLoader(
+    private val exceptionsBroadcast: ConnectionExceptionsBroadcast,
+    chatRepository: ChatRepository,
+    peopleRepository: PeopleRepository,
+) : CoroutineScope {
     override var coroutineContext = Dispatchers.IO + SupervisorJob()
 
-    private val asyncChatLoader by kodein.newInstance { AsyncChatLoader(this@AsyncDataLoader, instance()) }
-    private val asyncPeopleLoader by kodein.newInstance { AsyncPeopleLoader(this@AsyncDataLoader, instance()) }
+    val asyncChatLoader = AsyncChatLoader(this, chatRepository)
+    val asyncPeopleLoader = AsyncPeopleLoader(this, peopleRepository)
 
     init {
         launchLoading()
@@ -39,18 +42,23 @@ class AsyncDataLoader(private val exceptionsBroadcast: ConnectionExceptionsBroad
             do {
                 try {
                     dataProvider().let {
+                        flowDestination.emit(it)
                         if (it != currentList) {
                             updatedDateNotifier?.emit(Any())
                             currentList = it
-                            flowDestination.emit(it)
                         }
                     }
                     exceptionsBroadcast.sendException(null)
                     delay(checkDelay)
                 } catch (e: Exception) {
                     exceptionsBroadcast.sendException(e)
-                    if (e is NoConnectionException || e is ConnectException) delay(internetErrorDelay)
-                    else break
+                    when (e) {
+                        is NoConnectionException,
+                        is ConnectException,
+                        -> delay(internetErrorDelay)
+                        is NumberFormatException -> continue
+                        else -> break
+                    }
                 }
             } while (true)
         }

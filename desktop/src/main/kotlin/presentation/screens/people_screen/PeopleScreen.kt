@@ -4,10 +4,9 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -15,8 +14,10 @@ import androidx.compose.ui.unit.sp
 import domain.entities.data.UserInfo
 import navigation.component.NavHostController
 import org.kodein.di.compose.rememberInstance
-import presentation.components.PersonItem
 import presentation.components.SearchTextField
+import presentation.components.dialogs.SendMessageDialog
+import presentation.components.person_item.PersonItemOneButton
+import presentation.components.person_item.PersonItemTwoButton
 import ui.theme.MEDIUM_PADDING
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -26,6 +27,13 @@ fun PeopleScreen(navController: NavHostController) {
 
     val searchText = remember { mutableStateOf("") }
     val peopleList = viewModel.peopleList
+    val userToSendMessage = remember { mutableStateOf<UserInfo?>(null) }
+
+    initPeopleObservable(
+        scope = rememberCoroutineScope(),
+        viewModel = viewModel,
+        userToSendMessage = userToSendMessage
+    )
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -45,6 +53,9 @@ fun PeopleScreen(navController: NavHostController) {
             SearchTextField(
                 modifier = Modifier.fillMaxWidth(),
                 text = searchText,
+                onValueChanged = {
+                    viewModel.setEvent(PeopleScreenContract.Event.OnSearchUserTextAppear(it))
+                },
                 hint = "Search"
             )
         }
@@ -53,17 +64,67 @@ fun PeopleScreen(navController: NavHostController) {
             contentPadding = PaddingValues(8.dp)
         ) {
             peopleList.forEach { personInfo ->
-                val (actionImg, action) = when (personInfo.userRole) {
-                    UserInfo.UserRole.FRIEND -> "remove_friend.svg" to {}
-                    UserInfo.UserRole.SUBSCRIBER -> "accept.svg" to {}
-                    UserInfo.UserRole.SUBSCRIPTION -> "cancel.svg" to {}
-                    UserInfo.UserRole.DEFAULT -> "add_friend.svg" to {}
-                    UserInfo.UserRole.ME -> return@forEach
-                }
                 item {
-                    PersonItem(personInfo, actionImg, action)
+                    when (personInfo.userRole) {
+                        UserInfo.UserRole.FRIEND -> {
+                            PersonItemTwoButton(
+                                userInfo = personInfo,
+                                actionImg1Src = "send_message.svg",
+                                actionImg2Src = "remove_friend.svg",
+                                onActionImg1Click = {
+                                    viewModel.setEvent(PeopleScreenContract.Event.OnShowSendMessageClick(personInfo))
+                                },
+                                onActionImg2Click = {
+                                    viewModel.setEvent(PeopleScreenContract.Event.OnRemoveFriendClick(personInfo))
+                                }
+                            )
+                        }
+                        UserInfo.UserRole.SUBSCRIBER -> {
+                            PersonItemTwoButton(
+                                userInfo = personInfo,
+                                actionImg1Src = "accept.svg",
+                                actionImg2Src = "cancel.svg",
+                                onActionImg1Click = {
+                                    viewModel.setEvent(PeopleScreenContract.Event.OnAcceptSubscriberClick(personInfo))
+                                },
+                                onActionImg2Click = {
+                                    viewModel.setEvent(PeopleScreenContract.Event.OnCancelSubscriberClick(personInfo))
+                                }
+                            )
+                        }
+                        UserInfo.UserRole.SUBSCRIPTION -> {
+                            PersonItemOneButton(
+                                userInfo = personInfo,
+                                actionImgSrc = "cancel.svg",
+                                onActionImgClick = {
+                                    viewModel.setEvent(PeopleScreenContract.Event.OnCancelSubscriptionClick(personInfo))
+                                },
+                            )
+                        }
+                        UserInfo.UserRole.DEFAULT ->
+                            PersonItemOneButton(
+                                userInfo = personInfo,
+                                actionImgSrc = "add_friend.svg",
+                                onActionImgClick = {
+                                    viewModel.setEvent(PeopleScreenContract.Event.OnAddFriendClick(personInfo))
+                                },
+                            )
+                        UserInfo.UserRole.ME -> return@item
+                    }
                 }
             }
         }
+    }
+
+    if (userToSendMessage.value != null) {
+        SendMessageDialog(
+            onClickCancel = {
+                userToSendMessage.value = null
+            },
+            onClickSend = {
+                viewModel.setEvent(PeopleScreenContract.Event.OnSendMessageClick(userToSendMessage.value!!, it))
+                userToSendMessage.value = null
+            }
+        )
     }
 }

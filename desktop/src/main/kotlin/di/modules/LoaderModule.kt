@@ -13,7 +13,5 @@ import org.kodein.di.singleton
 val loaderModule = DI.Module(name = "loader", allowSilentOverride = false) {
     bind { singleton { ConnectionExceptionsBroadcast() } }
     bind { singleton { ConnectionChecker(instance()) } }
-    bind { singleton { AsyncDataLoader(instance()) } }
-    bind { singleton { AsyncChatLoader(instance(), instance()) } }
-    bind { singleton { AsyncPeopleLoader(instance(), instance()) } }
+    bind { singleton { AsyncDataLoader(instance(), instance(), instance()) } }
 }

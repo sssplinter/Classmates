@@ -17,18 +17,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import domain.entities.data.ChatInfo
 import presentation.components.WebImage
-import ui.theme.EXTRA_SMALL_PADDING
-import ui.theme.MEDIUM_PADDING
-import ui.theme.ProfileOutline
-import ui.theme.SMALL_PADDING
+import ui.theme.*
+import util.toTime
 
 @Composable
-fun DialogsChatItem(chatInfo: ChatInfo, onClick: () -> Unit) {
+fun DialogsChatItem(
+    isSelected: Boolean,
+    chatInfo: ChatInfo,
+    onClick: () -> Unit,
+) {
     Box(
         modifier = Modifier
             .padding(bottom = SMALL_PADDING)
             .clip(MaterialTheme.shapes.medium)
-            .background(if (chatInfo.isSelected) Color(0xFF6B86F8) else Color(0xFFF3F4FA))
+            .background(if (isSelected) Color(0xFF6B86F8) else Color(0xFFF3F4FA))
             .clickable {
                 onClick()
             }
@@ -52,20 +54,20 @@ fun DialogsChatItem(chatInfo: ChatInfo, onClick: () -> Unit) {
                     Text(
                         text = chatInfo.name,
                         fontSize = 14.sp,
-                        color = if (chatInfo.isSelected) Color.White else Color.Black,
+                        color = if (isSelected) Color.White else Color.Black,
                         fontWeight = FontWeight.Black
                     )
                     Text(
-                        text = chatInfo.lastMessageDate.toString(),
+                        text = chatInfo.lastMessageDate.toTime(),
                         fontSize = 10.sp,
-                        color = if (chatInfo.isSelected) Color.White else Color.Gray,
+                        color = if (isSelected) Color.White else Color.Gray,
                     )
                 }
                 Text(
                     text = chatInfo.lastMessage,
                     fontSize = 10.sp,
                     maxLines = 2,
-                    color = if (chatInfo.isSelected) Color.White else Color.Gray,
+                    color = if (isSelected) Color.White else Color.Gray,
                     overflow = TextOverflow.Ellipsis
                 )
             }
@@ -73,7 +75,7 @@ fun DialogsChatItem(chatInfo: ChatInfo, onClick: () -> Unit) {
         Box(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(EXTRA_SMALL_PADDING / 2)
+                .padding(THE_SMALLEST_PADDING)
                 .size(14.dp)
                 .clip(MaterialTheme.shapes.medium)
                 .background(Color(0xFF65C876))

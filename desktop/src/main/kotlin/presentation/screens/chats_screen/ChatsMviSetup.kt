@@ -12,7 +12,6 @@ fun initChatsObservable(
     scope: CoroutineScope,
     viewModel: ChatsScreenViewModel,
     messagesListState: LazyListState,
-    showNoInternetConnectionDialog: MutableState<Boolean>,
     showLoadingDialog: MutableState<Boolean>,
     findMessageStatus: MutableState<FindMessageStatus>,
 ) {
@@ -22,12 +21,12 @@ fun initChatsObservable(
             when (it.state) {
                 is ChatsScreenContract.DialogsScreenState.Loading -> {
                     resetActivationState(
-                        activate = listOf(showNoInternetConnectionDialog, showLoadingDialog),
+                        activate = listOf(showLoadingDialog),
                     )
                 }
                 is ChatsScreenContract.DialogsScreenState.Idle -> {
                     resetActivationState(
-                        disActivate = listOf(showNoInternetConnectionDialog, showLoadingDialog)
+                        disActivate = listOf(showLoadingDialog)
                     )
                 }
             }
@@ -47,10 +46,8 @@ fun initChatsObservable(
 
                 }
                 is ChatsScreenContract.Effect.UpdateChatData -> {
-                    if (viewModel.currentChatData.value?.second != it.messagesList) {
-                        viewModel.currentChatData.value = it.chatInfo to it.messagesList
-                        messagesListState.animateScrollToItem(it.messagesList.lastIndex)
-                    }
+                    viewModel.currentChatData.value = Triple(it.currentChatId, it.chatInfo, it.messagesList)
+                    messagesListState.animateScrollToItem(it.messagesList.lastIndex)
                 }
             }
         }

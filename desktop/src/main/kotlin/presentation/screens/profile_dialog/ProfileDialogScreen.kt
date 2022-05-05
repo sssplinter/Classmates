@@ -23,7 +23,7 @@ import navigation.component.NavHostController
 import org.kodein.di.compose.rememberInstance
 import presentation.components.RowUniversityItem
 import presentation.components.dialogs.LoadingDialog
-import presentation.components.dialogs.ShadowBox
+import presentation.components.dialogs.Popup
 import presentation.screens.profile_dialog.elements.*
 import ui.theme.EXTRA_SMALL_PADDING
 import ui.theme.SMALL_PADDING
@@ -55,8 +55,8 @@ fun ProfileScreen(navController: NavHostController, onOutBoxClick: () -> Unit) {
         showLoadingDialog = showLoadingDialog
     )
 
-    ShadowBox(
-        onClick = {
+    Popup(
+        onOutBoxClick = {
             onOutBoxClick()
             viewModel.setEvent(ProfileScreenContract.Event.OnDialogClose)
         })

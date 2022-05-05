@@ -8,10 +8,11 @@ import domain.use_cases.chat.FindChatsUseCase
 import domain.use_cases.chat.FindMessagesUseCase
 import domain.use_cases.chat.GetChatMessagesUseCase
 import domain.use_cases.chat.SendMessageUseCase
-import kotlinx.coroutines.Dispatchers
+import domain.use_cases.chat_flow_data.GetChatsFlowUseCase
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import presentation.base.BaseViewModel
 import util.getListIterator
 
@@ -20,14 +21,25 @@ class ChatsScreenViewModel(
     private val findMessagesUseCase: FindMessagesUseCase,
     private val findChatsUseCase: FindChatsUseCase,
     private val sendMessageUseCase: SendMessageUseCase,
+    private val getChatsFlowUseCase: GetChatsFlowUseCase,
 ) : BaseViewModel<ChatsScreenContract.Event, ChatsScreenContract.State, ChatsScreenContract.Effect>() {
+    private var searchText = ""
     var chatsList = mutableStateListOf<ChatInfo>()
     var isSearchPanelVisible = mutableStateOf(false)
-    val currentChatData = mutableStateOf<Pair<ChatInfo, List<MessageInfo>>?>(null)
+    val currentChatData = mutableStateOf<Triple<String, ChatInfo, List<MessageInfo>>?>(null)
     private var findMessagesIterator = emptyList<Int>().getListIterator()
 
     init {
-        searchChats()
+        getAllChats()
+    }
+
+    private fun getAllChats() = MainScope().launch {
+        getChatsFlowUseCase().collect { chats ->
+            val sortedChats = chats.filter { it.name.contains(searchText, true) }.toMutableList()
+            sortedChats.sortByDescending { it.lastMessageDate }
+            chatsList.clear()
+            chatsList.addAll(sortedChats)
+        }
     }
 
     override fun createInitialState(): ChatsScreenContract.State {
@@ -36,10 +48,10 @@ class ChatsScreenViewModel(
 
     override fun handleEvent(event: ChatsScreenContract.Event) {
         when (event) {
-            is ChatsScreenContract.Event.OnSelectChat -> selectChat(event.id)
+            is ChatsScreenContract.Event.OnSelectChat -> selectCurrentChat(event.id)
             is ChatsScreenContract.Event.OnOpenCloseSearchClick -> activateSearchPanel()
             is ChatsScreenContract.Event.OnSearchMessageTextAppear -> searchMessages(event.text)
-            is ChatsScreenContract.Event.OnSearchChatTextAppear -> searchChats(event.text)
+            is ChatsScreenContract.Event.OnSearchChatTextAppear -> searchChat(event.text)
             is ChatsScreenContract.Event.OnSendMessageBtnClick -> sendMessage(event.text)
             is ChatsScreenContract.Event.OnNextFoundMessageBtnClick -> nextFoundMessage()
             is ChatsScreenContract.Event.OnPrevFoundMessageBtnClick -> prevFoundMessage()
@@ -51,8 +63,17 @@ class ChatsScreenViewModel(
         sendUnFoundEffect()
     }
 
+    private fun searchChat(text: String) = launch {
+        searchText = text
+        val chats = getChatsFlowUseCase().first()
+        val sortedChats = chats.filter { it.name.contains(searchText, true) }.toMutableList()
+        sortedChats.sortByDescending { it.lastMessageDate }
+        chatsList.clear()
+        chatsList.addAll(sortedChats)
+    }
+
     private fun searchMessages(text: String) = launch {
-        currentChatData.value?.first?.let { chatInfo ->
+        currentChatData.value?.second?.let { chatInfo ->
             findMessagesIterator = findMessagesUseCase(chatInfo.id, text)
             if (findMessagesIterator.hasNext()) {
                 sendFoundEffect(true)
@@ -62,16 +83,8 @@ class ChatsScreenViewModel(
         }
     }
 
-    private fun searchChats(text: String = "") = launch {
-        val newChats = findChatsUseCase(text)
-        withContext(Dispatchers.Main) {
-            chatsList.clear()
-            chatsList.addAll(newChats)
-        }
-    }
-
     private fun sendMessage(text: String) = launch {
-        currentChatData.value?.first?.let { chatInfo ->
+        currentChatData.value?.second?.let { chatInfo ->
             sendMessageUseCase(chatInfo.id, text)
         }
     }
@@ -113,21 +126,10 @@ class ChatsScreenViewModel(
         setState { copy(state = ChatsScreenContract.DialogsScreenState.Idle) }
     }
 
-    private fun selectChat(id: String) {
-        activateChat(id)
-        selectCurrentMessages(id)
-    }
-
-    private fun activateChat(id: String) {
-        chatsList.replaceAll {
-            it.copy(isSelected = it.id == id)
-        }
-    }
-
-    private fun selectCurrentMessages(id: String) = launch {
+    private fun selectCurrentChat(id: String) = launch {
         chatsList.firstOrNull { it.id == id }?.let { chatInfo ->
             getChatMessagesUseCase.invoke(chatInfo.id).collect { list ->
-                setEffect { ChatsScreenContract.Effect.UpdateChatData(chatInfo, list) }
+                setEffect { ChatsScreenContract.Effect.UpdateChatData(id, chatInfo, list) }
             }
         }
     }
