@@ -19,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import localization.Vocabulary
 import presentation.components.RoundedTextField
 import ui.theme.EXTRA_SMALL_PADDING
 import ui.theme.MEDIUM_PADDING
@@ -44,7 +45,7 @@ fun SendMessageDialog(onClickCancel: () -> Unit, onClickSend: (String) -> Unit) 
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = EXTRA_SMALL_PADDING),
-                text = "Send message",
+                text = Vocabulary.localization.sendMsg,
                 textAlign = TextAlign.Center,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Medium
@@ -53,14 +54,14 @@ fun SendMessageDialog(onClickCancel: () -> Unit, onClickSend: (String) -> Unit) 
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = SMALL_PADDING),
-                text = "That message will be send to private messages",
+                text =  Vocabulary.localization.privateMsgSend,
                 textAlign = TextAlign.Center,
                 fontSize = 10.sp,
             )
             RoundedTextField(
                 modifier = Modifier.fillMaxWidth().border(1.dp, Color.Gray, RoundedCornerShape(5.dp)),
                 text = messageText,
-                hint = "message",
+                hint =  Vocabulary.localization.message,
             )
             Row(modifier = Modifier.fillMaxWidth().padding(top = MEDIUM_PADDING)) {
                 Text(
@@ -68,7 +69,7 @@ fun SendMessageDialog(onClickCancel: () -> Unit, onClickSend: (String) -> Unit) 
                         .weight(1f)
                         .height(20.sp.dp)
                         .clickable(onClick = onClickCancel),
-                    text = "Cancel",
+                    text =  Vocabulary.localization.cancel,
                     textAlign = TextAlign.Center,
                     fontSize = 14.sp,
                     color = Color(0xFF0C4CDD)
@@ -82,7 +83,7 @@ fun SendMessageDialog(onClickCancel: () -> Unit, onClickSend: (String) -> Unit) 
                                 onClickSend(messageText.value)
                             }
                         },
-                    text = "Send",
+                    text =  Vocabulary.localization.send,
                     textAlign = TextAlign.Center,
                     fontSize = 14.sp,
                     color = Color(0xFF0C4CDD)

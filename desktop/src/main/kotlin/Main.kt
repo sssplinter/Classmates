@@ -14,6 +14,7 @@ import domain.use_cases.settings.GetLanguageUseCase
 import domain.use_cases.settings.GetThemeUseCase
 import localization.Language
 import localization.Localization
+import localization.Vocabulary
 import localization.languages.LanguageEn
 import org.kodein.di.compose.withDI
 import org.kodein.di.instance
@@ -30,7 +31,7 @@ private val MIN_HEIGHT = 500.dp
 fun main() = application {
     withDI(kodein) {
         Window(
-            title = "Classmates",
+            title = Vocabulary.localization.appName,//TODO
             state = WindowState(
                 width = DEFAULT_WIDTH,
                 height = DEFAULT_HEIGHT,

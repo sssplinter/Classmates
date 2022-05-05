@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import localization.Vocabulary
 import presentation.screens.profile_dialog.ProfileScreenContract
 import ui.theme.EXTRA_SMALL_PADDING
 import ui.theme.THE_LARGEST_PADDING
@@ -35,7 +36,7 @@ fun ProfileLogoutButton(onClick: () -> Unit) {
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center,
             fontSize = 14.sp,
-            text = "Log out",
+            text = Vocabulary.localization.logOut,
             color = Color.Blue,
         )
     }

@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import localization.Vocabulary
 import ui.theme.EXTRA_SMALL_PADDING
 import ui.theme.MEDIUM_PADDING
 
@@ -46,7 +47,7 @@ fun TextFieldWithError(
                 imageVector?.let {
                     Icon(
                         imageVector = imageVector,
-                        contentDescription = "email icon"
+                        contentDescription =  Vocabulary.localization.emailImgContent
                     )
                 }
             },
@@ -54,7 +55,7 @@ fun TextFieldWithError(
                 if (isError)
                     Icon(
                         imageVector = Icons.Default.Warning,
-                        "Error image",
+                        Vocabulary.localization.errorImgContent,
                         tint = MaterialTheme.colors.error
                     )
             },
