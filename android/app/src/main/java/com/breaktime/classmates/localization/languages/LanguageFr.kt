@@ -27,4 +27,6 @@ object LanguageFr : Language {
         get() = "password less then 8 signs"
     override val differentPasswordError: String
         get() = "passwords are different"
+    override val settings: String
+        get() = "Settings"
 }

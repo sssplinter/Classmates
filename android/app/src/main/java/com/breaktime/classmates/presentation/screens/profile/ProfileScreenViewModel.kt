@@ -1,14 +1,18 @@
 package com.breaktime.classmates.presentation.screens.profile
 
-import com.breaktime.classmates.domain.use_cases.authorization.DeleteAccountUseCase
+import com.breaktime.classmates.domain.entities.data.CurrentUser
 import com.breaktime.classmates.domain.use_cases.authorization.SignOutUseCase
+import com.breaktime.classmates.domain.use_cases.people.GetProfileInfoUseCase
+import com.breaktime.classmates.domain.use_cases.user_info.LoadProfileInfoUseCase
+import com.breaktime.classmates.domain.use_cases.user_info.UpdateProfileInfoUseCase
+import com.breaktime.classmates.presentation.base.BaseViewModel
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
-import com.breaktime.classmates.presentation.base.BaseViewModel
 
 class ProfileScreenViewModel(
-    private val deleteAccountUseCase: DeleteAccountUseCase,
     private val signOutUseCase: SignOutUseCase,
+    private val updateProfileInfoUseCase: UpdateProfileInfoUseCase,
+    private val loadProfileInfoUseCase: LoadProfileInfoUseCase,
 ) :
     BaseViewModel<ProfileScreenContract.Event, ProfileScreenContract.State, ProfileScreenContract.Effect>() {
 
@@ -20,44 +24,32 @@ class ProfileScreenViewModel(
 
     override fun handleEvent(event: ProfileScreenContract.Event) {
         when (event) {
-            is ProfileScreenContract.Event.OnAddUniversityBtnClick -> {
-
-            }
-            is ProfileScreenContract.Event.OnEditUniversityBtnClick -> {
-
-            }
             is ProfileScreenContract.Event.OnLogOutBtnClick -> {
                 logOut()
             }
-            is ProfileScreenContract.Event.OnDeleteAccountBtnClick -> {
-                deleteAccount()
-            }
-            is ProfileScreenContract.Event.OnDialogClose -> {
-
-            }
-            is ProfileScreenContract.Event.OnNoInternetBtnClick -> {
-                setState { copy(profileScreenState = ProfileScreenContract.ProfileScreenState.Idle) }
+            is ProfileScreenContract.Event.OnSaveInfo -> {
+                launch {
+                    updateProfileInfoUseCase(
+                        event.name,
+                        event.surname,
+                        event.bio
+                    )
+                }.invokeOnCompletion {
+                    launch { loadProfileInfoUseCase(CurrentUser.token) }
+                }
             }
         }
     }
 
     private fun logOut() {
-        setState { copy(profileScreenState = ProfileScreenContract.ProfileScreenState.Loading) }
+        setState { copy(state = ProfileScreenContract.ProfileScreenState.Loading) }
         MainScope().launch {
             signOutUseCase()
-            setState { copy(profileScreenState = ProfileScreenContract.ProfileScreenState.LoggedOut) }
-        }
-    }
-
-    private fun deleteAccount() {
-        setState { copy(profileScreenState = ProfileScreenContract.ProfileScreenState.Loading) }
-        MainScope().launch {
-            deleteAccountUseCase("")
-            setState { copy(profileScreenState = ProfileScreenContract.ProfileScreenState.Deleted) }
+            setState { copy(state = ProfileScreenContract.ProfileScreenState.LoggedOut) }
         }
     }
 
     override fun clearState() {
-        setState { copy(profileScreenState = ProfileScreenContract.ProfileScreenState.Idle) }
+        setState { copy(state = ProfileScreenContract.ProfileScreenState.Idle) }
     }
 }

@@ -11,6 +11,7 @@ import com.breaktime.classmates.domain.use_cases.exception.GetForbiddenException
 import com.breaktime.classmates.domain.use_cases.exception.GetNoConnectionExceptionFlowUseCase
 import com.breaktime.classmates.domain.use_cases.exception.GetUnauthorizedExceptionFlowUseCase
 import com.breaktime.classmates.domain.use_cases.friendship.*
+import com.breaktime.classmates.domain.use_cases.people.GetProfileInfoUseCase
 import com.breaktime.classmates.domain.use_cases.people_flow_data.*
 import com.breaktime.classmates.domain.use_cases.server_connection.StartCheckConnectionWithServerUseCase
 import com.breaktime.classmates.domain.use_cases.server_connection.StopCheckConnectionWithServerUseCase
@@ -61,6 +62,7 @@ val useCaseModule = DI.Module(name = "useCase", allowSilentOverride = false) {
     bind { singleton { SaveThemeUseCase(instance()) } }
     bind { singleton { GetThemeUseCase(instance()) } }
     bind { singleton { SaveLanguageUseCase(instance()) } }
+    bind { singleton { GetProfileInfoUseCase(instance()) } }
     bind { singleton { GetLanguageUseCase(instance()) } }
     bind { singleton { UpdateProfileInfoUseCase(instance(), instance()) } }
 }

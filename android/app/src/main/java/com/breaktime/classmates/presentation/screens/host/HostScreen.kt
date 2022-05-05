@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.compose.rememberNavController
-import com.breaktime.classmates.ComposeNavigation
+import com.breaktime.classmates.navigation.GlobalNavGraph
 import com.breaktime.classmates.navigation.Screen
 import com.breaktime.classmates.presentation.components.dialogs.BadInputDialog
 import com.breaktime.classmates.presentation.components.dialogs.ForbiddenDialog
@@ -31,8 +31,7 @@ fun HostScreen() {
         showNoAuthorizationDialog = showNoAuthorizationDialog,
         showNoConnectionDialog = showNoConnectionDialog
     )
-//    EnteringNavGraph(screenController)
-    ComposeNavigation()
+    GlobalNavGraph(screenController)
 
     if (showBadInputDialog.value) {
         BadInputDialog(

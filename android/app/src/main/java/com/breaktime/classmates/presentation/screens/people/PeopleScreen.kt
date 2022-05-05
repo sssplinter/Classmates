@@ -2,17 +2,13 @@ package com.breaktime.classmates.presentation.screens.people
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyVerticalGrid
-import androidx.compose.material.Text
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.breaktime.classmates.R
 import com.breaktime.classmates.domain.entities.data.UserInfo
@@ -41,29 +37,18 @@ fun PeopleScreen(navController: NavHostController) {
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        Row(
+        SearchTextField(
             modifier = Modifier
                 .padding(MEDIUM_PADDING)
                 .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                modifier = Modifier.fillMaxWidth(0.7f),
-                text = "Find all people",
-                textAlign = TextAlign.Center,
-                fontSize = 28.sp
-            )
-            SearchTextField(
-                modifier = Modifier.fillMaxWidth(),
-                text = searchText,
-                onValueChanged = {
-                    viewModel.setEvent(PeopleScreenContract.Event.OnSearchUserTextAppear(it))
-                },
-                hint = "Search"
-            )
-        }
-        LazyVerticalGrid(
-            cells = GridCells.Fixed(3),
+            text = searchText,
+            onValueChanged = {
+                viewModel.setEvent(PeopleScreenContract.Event.OnSearchUserTextAppear(it))
+            },
+            hint = "Search"
+        )
+
+        LazyColumn(
             contentPadding = PaddingValues(8.dp)
         ) {
             peopleList.forEach { personInfo ->
@@ -72,7 +57,7 @@ fun PeopleScreen(navController: NavHostController) {
                         UserInfo.UserRole.FRIEND -> {
                             PersonItemTwoButton(
                                 userInfo = personInfo,
-                                actionImg1Src = R.drawable.ic_send_message,
+                                actionImg1Src = R.drawable.send_message,
                                 actionImg2Src = R.drawable.remove_friend,
                                 onActionImg1Click = {
                                     viewModel.setEvent(
@@ -93,8 +78,8 @@ fun PeopleScreen(navController: NavHostController) {
                         UserInfo.UserRole.SUBSCRIBER -> {
                             PersonItemTwoButton(
                                 userInfo = personInfo,
-                                actionImg1Src = R.drawable.ic_accept,
-                                actionImg2Src = R.drawable.ic_cancel,
+                                actionImg1Src = R.drawable.accept,
+                                actionImg2Src = R.drawable.cancel,
                                 onActionImg1Click = {
                                     viewModel.setEvent(
                                         PeopleScreenContract.Event.OnAcceptSubscriberClick(
@@ -114,7 +99,7 @@ fun PeopleScreen(navController: NavHostController) {
                         UserInfo.UserRole.SUBSCRIPTION -> {
                             PersonItemOneButton(
                                 userInfo = personInfo,
-                                actionImgSrc = R.drawable.ic_cancel,
+                                actionImgSrc = R.drawable.cancel,
                                 onActionImgClick = {
                                     viewModel.setEvent(
                                         PeopleScreenContract.Event.OnCancelSubscriptionClick(

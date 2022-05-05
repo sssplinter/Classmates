@@ -7,8 +7,11 @@ const accessTokenSecret = "myAccessTokenSecret1234567890";
 
 function signinRoute(app, database) {
     app.post("/signin", function (request, result) {
+        console.log("sign in")
         const email = request.fields.email;
         const password = request.fields.password;
+        console.log("email   " + email)
+        console.log("password   " + password)
         if (email == null || password == null) {
             result.status(400).json({
                 "accessToken": "",
@@ -20,6 +23,7 @@ function signinRoute(app, database) {
                 "email": email
             }, function (error, user) {
                 if (user == null) {
+                    console.log("wrong data")
                     result.status(400).json({
                         "accessToken": "",
                         "isConfirmed": false,
@@ -43,6 +47,7 @@ function signinRoute(app, database) {
                                 });
                             });
                         } else {
+                            console.log("wrong password")
                             result.status(400).json({
                                 "accessToken": "",
                                 "isConfirmed": false,

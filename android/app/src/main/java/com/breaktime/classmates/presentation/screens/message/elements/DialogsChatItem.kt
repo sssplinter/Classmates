@@ -15,21 +15,26 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.breaktime.classmates.R
 import com.breaktime.classmates.domain.entities.data.ChatInfo
 import com.breaktime.classmates.presentation.components.WebImage
-import com.breaktime.classmates.ui.theme.EXTRA_SMALL_PADDING
 import com.breaktime.classmates.ui.theme.MEDIUM_PADDING
 import com.breaktime.classmates.ui.theme.ProfileOutline
 import com.breaktime.classmates.ui.theme.SMALL_PADDING
+import com.breaktime.classmates.ui.theme.THE_SMALLEST_PADDING
+import com.breaktime.classmates.util.toTime
+import com.breaktime.classmates.R
 
 @Composable
-fun MessageItem(chatInfo: ChatInfo, onClick: () -> Unit) {
+fun DialogsChatItem(
+    isSelected: Boolean,
+    chatInfo: ChatInfo,
+    onClick: () -> Unit,
+) {
     Box(
         modifier = Modifier
             .padding(bottom = SMALL_PADDING)
             .clip(MaterialTheme.shapes.medium)
-//            .background(if (chatInfo.isSelected) Color(0xFF6B86F8) else Color(0xFFF3F4FA))
+            .background(if (isSelected) Color(0xFF6B86F8) else Color(0xFFF3F4FA))
             .clickable {
                 onClick()
             }
@@ -53,20 +58,20 @@ fun MessageItem(chatInfo: ChatInfo, onClick: () -> Unit) {
                     Text(
                         text = chatInfo.name,
                         fontSize = 14.sp,
-//                        color = if (chatInfo.isSelected) Color.White else Color.Black,
+                        color = if (isSelected) Color.White else Color.Black,
                         fontWeight = FontWeight.Black
                     )
                     Text(
-                        text = chatInfo.lastMessageDate.toString(),
+                        text = chatInfo.lastMessageDate.toTime(),
                         fontSize = 10.sp,
-//                        color = if (chatInfo.isSelected) Color.White else Color.Gray,
+                        color = if (isSelected) Color.White else Color.Gray,
                     )
                 }
                 Text(
                     text = chatInfo.lastMessage,
                     fontSize = 10.sp,
                     maxLines = 2,
-//                    color = if (chatInfo.isSelected) Color.White else Color.Gray,
+                    color = if (isSelected) Color.White else Color.Gray,
                     overflow = TextOverflow.Ellipsis
                 )
             }
@@ -74,7 +79,7 @@ fun MessageItem(chatInfo: ChatInfo, onClick: () -> Unit) {
         Box(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(EXTRA_SMALL_PADDING / 2)
+                .padding(THE_SMALLEST_PADDING)
                 .size(14.dp)
                 .clip(MaterialTheme.shapes.medium)
                 .background(Color(0xFF65C876))

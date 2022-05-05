@@ -8,6 +8,7 @@ sealed class Screen(val route: String) {
     object Messages : Screen(route = "messages")
     object Chat: Screen(route = "chat")
     object Favorite : Screen(route = "favorite")
+    object Friends : Screen(route = "friends")
     object People : Screen(route = "people")
     object Settings : Screen(route = "settings")
     object Profile : Screen(route = "profile")

@@ -5,7 +5,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.*
-import com.breaktime.classmatei.theme.*
+import com.breaktime.classmatei.theme.Shapes
+import com.breaktime.classmatei.theme.Typography
 
 private val DarkColorPalette = darkColors(
     primary = Purple200,
@@ -28,9 +29,29 @@ private val LightColorPalette = lightColors(
     */
 )
 
+private var currentTheme = AppTheme.AUTO
+private var themeAppListener: ((AppTheme) -> Unit)? = null
 
 @Composable
-fun AppTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
+fun AppTheme(startTheme: AppTheme, content: @Composable () -> Unit) {
+    val systemTheme: Boolean = isSystemInDarkTheme()
+    var darkTheme by remember {
+        mutableStateOf(
+            when (startTheme) {
+                AppTheme.DAY -> false
+                AppTheme.NIGHT -> true
+                AppTheme.AUTO -> systemTheme
+            }
+        )
+    }
+    themeAppListener = {
+        darkTheme = when (currentTheme) {
+            AppTheme.DAY -> false
+            AppTheme.NIGHT -> true
+            AppTheme.AUTO -> systemTheme
+        }
+    }
+
     val colors = if (darkTheme) {
         DarkColorPalette
     } else {
@@ -43,6 +64,11 @@ fun AppTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable ()
         shapes = Shapes,
         content = content
     )
+}
+
+fun rememberTheme(theme: AppTheme) {
+    currentTheme = theme
+    themeAppListener?.invoke(theme)
 }
 
 enum class AppTheme { DAY, NIGHT, AUTO }

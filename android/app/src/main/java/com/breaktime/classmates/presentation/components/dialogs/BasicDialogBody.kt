@@ -3,11 +3,15 @@ package com.breaktime.classmates.presentation.components.dialogs
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -20,6 +24,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.*
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupPositionProvider
+import androidx.compose.ui.window.PopupProperties
+import com.breaktime.classmates.presentation.components.RoundedTextField
 
 @Composable
 fun Popup(onOutBoxClick: (() -> Unit)? = null, content: @Composable (BoxScope.() -> Unit)) {
@@ -32,7 +38,7 @@ fun Popup(onOutBoxClick: (() -> Unit)? = null, content: @Composable (BoxScope.()
                 popupContentSize: IntSize,
             ): IntOffset = IntOffset.Zero
         },
-//        focusable = true
+        properties = PopupProperties(focusable = true)
     ) {
         ShadowBox(onOutBoxClick) { content() }
     }

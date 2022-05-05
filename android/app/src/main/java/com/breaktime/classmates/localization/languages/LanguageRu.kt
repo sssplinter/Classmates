@@ -27,4 +27,6 @@ object LanguageRu : Language {
         get() = "пароль должен содержать не менее 8 символов"
     override val differentPasswordError: String
         get() = "пароли не совпадают"
+    override val settings: String
+        get() = "Настройки"
 }

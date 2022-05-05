@@ -1,18 +1,30 @@
 package com.breaktime.classmates.domain.source.settings.local
 
-import java.util.prefs.Preferences
+import android.content.Context
+import android.content.SharedPreferences
 
-private const val THEME = "theme"
-private const val LANGUAGE = "language"
+private const val SETTINGS_PREFERENCES = "SETTINGS_PREFERENCES"
+private const val THEME = "THEME"
+private const val LANGUAGE = "LANGUAGE"
 
-class SettingsStorageImpl : SettingsStorage {
-    private val preferences = Preferences.userRoot().node(this::javaClass.name)
+class SettingsStorageImpl(context: Context) : SettingsStorage {
+    private val sharedPref = context.getSharedPreferences(
+        SETTINGS_PREFERENCES, Context.MODE_PRIVATE
+    )
 
-    override fun saveTheme(theme: String) = preferences.put(THEME, theme)
+    override fun saveTheme(theme: String) {
+        val editor: SharedPreferences.Editor = sharedPref.edit()
+        editor.putString(THEME, theme)
+        editor.apply()
+    }
 
-    override fun getTheme() = preferences.get(THEME, null)
+    override fun getTheme() = sharedPref.getString(THEME, null)
 
-    override fun saveLanguage(language: String) = preferences.put(LANGUAGE, language)
+    override fun saveLanguage(language: String) {
+        val editor: SharedPreferences.Editor = sharedPref.edit()
+        editor.putString(LANGUAGE, language)
+        editor.apply()
+    }
 
-    override fun getLanguage() = preferences.get(LANGUAGE, null)
+    override fun getLanguage() = sharedPref.getString(LANGUAGE, null)
 }

@@ -14,4 +14,5 @@ interface Language {
     val emptyPasswordError: String
     val wrongPasswordLengthError: String
     val differentPasswordError: String
+    val settings: String
 }

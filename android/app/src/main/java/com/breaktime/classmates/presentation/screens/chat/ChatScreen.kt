@@ -1,11 +1,11 @@
-package com.breaktime.classmates.presentation.screens.message.elements
+package com.breaktime.classmates.presentation.screens.chat
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -17,9 +17,9 @@ import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,30 +28,38 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.breaktime.classmates.R
 import com.breaktime.classmates.domain.entities.data.ChatInfo
-import com.breaktime.classmates.domain.entities.data.MessageInfo
+import com.breaktime.classmates.domain.entities.data.CurrentUser
 import com.breaktime.classmates.presentation.components.RoundedTextField
 import com.breaktime.classmates.presentation.components.SearchTextField
 import com.breaktime.classmates.presentation.components.WebImage
-//import presentation.screens.message_screen.FindMessageStatus
 import com.breaktime.classmates.presentation.screens.message.FindMessageStatus
-import com.breaktime.classmates.presentation.screens.message.MessageScreenContract
-import com.breaktime.classmates.presentation.screens.message.chat.ChatViewModel
-import com.breaktime.classmatei.theme.*
+import com.breaktime.classmates.presentation.screens.message.elements.DialogsMessageItem
+import com.breaktime.classmates.presentation.screens.message.initChatsObservable
 import com.breaktime.classmates.ui.theme.*
+import com.breaktime.classmates.util.toTime
+import org.kodein.di.compose.rememberInstance
 
 @Composable
-fun MessageDialog(
-    chatInfo: ChatInfo,
-    messages: List<MessageInfo>,
-    findMessageStatus: MutableState<FindMessageStatus>,
-    messagesListState: LazyListState,
-    viewModel: ChatViewModel,
-) {
+fun ChatScreen(navController: NavController, chatInfo: ChatInfo) {
+    val viewModel: ChatScreenViewModel by rememberInstance(arg = chatInfo)
+
+    val messagesListState = rememberLazyListState()
+    val findMessageStatus = remember { mutableStateOf(FindMessageStatus(-1, false, false)) }
+    val currentMessages = viewModel.currentMessages
+
     val isSearchPanelVisible = viewModel.isSearchPanelVisible
     val searchMessageText = remember { mutableStateOf("") }
     val sendMessageText = remember { mutableStateOf("") }
+
+    initChatObservable(
+        scope = rememberCoroutineScope(),
+        viewModel = viewModel,
+        messagesListState = messagesListState,
+        findMessageStatus = findMessageStatus
+    )
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -63,7 +71,7 @@ fun MessageDialog(
             WebImage(
                 url = chatInfo.photoUrl,
                 modifier = Modifier
-                    .padding(start = EXTRA_LARGE_PADDING)
+                    .padding(start = THE_LARGEST_PADDING)
                     .size(40.dp)
                     .clip(MaterialTheme.shapes.large)
                     .background(MaterialTheme.colors.ProfileOutline.copy(alpha = 0.5f)),
@@ -82,7 +90,7 @@ fun MessageDialog(
                     .size(45.dp)
                     .clip(MaterialTheme.shapes.medium)
                     .clickable {
-                        viewModel.setEvent(MessageScreenContract.Event.OnOpenCloseSearchClick)
+                        viewModel.setEvent(ChatScreenContract.Event.OnOpenCloseSearchClick)
                         searchMessageText.value = ""
                     }
             ) {
@@ -104,7 +112,7 @@ fun MessageDialog(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = MEDIUM_PADDING, vertical = SMALL_PADDING)
+                    .padding(horizontal = MEDIUM_PADDING).padding(top = SMALL_PADDING)
                     .height(if (isSearchPanelVisible.value) 25.dp else 0.dp)
                     .animateContentSize()
             ) {
@@ -115,7 +123,7 @@ fun MessageDialog(
                         .clip(MaterialTheme.shapes.medium)
                         .background(if (findMessageStatus.value.second) Color(0xFF6C85F5) else Color(0xFFD7D7D7))
                         .clickable(enabled = findMessageStatus.value.second) {
-                            viewModel.setEvent(MessageScreenContract.Event.OnPrevFoundMessageBtnClick)
+                            viewModel.setEvent(ChatScreenContract.Event.OnPrevFoundMessageBtnClick)
                         }
                 ) {
                     Icon(
@@ -133,7 +141,7 @@ fun MessageDialog(
                         .clip(MaterialTheme.shapes.medium)
                         .background(if (findMessageStatus.value.third) Color(0xFF6C85F5) else Color(0xFFD7D7D7))
                         .clickable(enabled = findMessageStatus.value.third) {
-                            viewModel.setEvent(MessageScreenContract.Event.OnNextFoundMessageBtnClick)
+                            viewModel.setEvent(ChatScreenContract.Event.OnNextFoundMessageBtnClick)
                         }
                 ) {
                     Icon(
@@ -148,7 +156,7 @@ fun MessageDialog(
                     modifier = Modifier.fillMaxHeight().weight(1f),
                     text = searchMessageText,
                     onValueChanged = {
-                        viewModel.setEvent(MessageScreenContract.Event.OnSearchMessageTextAppear(it))
+                        viewModel.setEvent(ChatScreenContract.Event.OnSearchMessageTextAppear(it))
                     },
                     hint = "Search message...",
                     fontSize = 10.sp,
@@ -163,7 +171,7 @@ fun MessageDialog(
                         .clip(MaterialTheme.shapes.medium)
                         .background(Color(0xFF6C85F5))
                         .clickable {
-                            viewModel.setEvent(MessageScreenContract.Event.OnOpenCloseSearchClick)
+                            viewModel.setEvent(ChatScreenContract.Event.OnOpenCloseSearchClick)
                             searchMessageText.value = ""
                         }
                 ) {
@@ -176,16 +184,19 @@ fun MessageDialog(
                 }
             }
             LazyColumn(
-                modifier = Modifier.fillMaxSize().weight(1f).animateContentSize(),
+                modifier = Modifier.fillMaxSize().weight(1f).animateContentSize().padding(SMALL_PADDING),
                 state = messagesListState
             ) {
-                messages.withIndex().forEach { (index, message) ->
+                currentMessages.withIndex().forEach { (index, message) ->
                     item {
-                        val backgroundColor =
-                            if (findMessageStatus.value.first == index) Color.Blue else Color.Transparent
-                        Box(modifier = Modifier.fillMaxWidth().background(backgroundColor)) {
-
-                        }
+                        DialogsMessageItem(
+                            message = message.messageText,
+                            messageTime = message.sendDate.toTime(),
+                            isMyMessage = message.fromUserId == CurrentUser.userId,
+                            isFoundMessage = findMessageStatus.value.first == index,
+                            isLastUserMessage = false,
+                            isTimeNeeded = false,
+                        )
                     }
                 }
             }
@@ -203,7 +214,7 @@ fun MessageDialog(
                         .clip(MaterialTheme.shapes.medium)
                         .background(if (sendMessageText.value.isNotEmpty()) Color(0xFF6C85F5) else Color(0xFFD7D7D7))
                         .clickable(enabled = sendMessageText.value.isNotEmpty()) {
-                            viewModel.setEvent(MessageScreenContract.Event.OnSendMessageBtnClick(sendMessageText.value))
+                            viewModel.setEvent(ChatScreenContract.Event.OnSendMessageBtnClick(sendMessageText.value))
                             sendMessageText.value = ""
                         }
                 ) {

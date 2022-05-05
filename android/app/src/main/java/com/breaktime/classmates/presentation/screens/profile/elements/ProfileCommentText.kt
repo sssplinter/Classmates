@@ -10,9 +10,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
-import com.breaktime.classmates.util.dp
 import com.breaktime.classmates.ui.theme.SMALL_PADDING
 import com.breaktime.classmates.ui.theme.THE_SMALLEST_PADDING
+import com.breaktime.classmates.util.dp
 
 @Composable
 fun ProfileCommentText(
