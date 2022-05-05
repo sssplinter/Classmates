@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import domain.entities.data.CurrentUser
+import localization.Vocabulary
 import navigation.component.NavHostController
 import org.kodein.di.compose.rememberInstance
 import presentation.components.dialogs.LoadingDialog
@@ -71,24 +72,24 @@ fun ProfileScreen(navController: NavHostController, onOutBoxClick: () -> Unit) {
                 }
             }
             ProfileCommentText(
-                text = "Enter your name and add a profile photo",
+                text = Vocabulary.localization.enterYourName,
                 fontSize = 12.sp
             )
             Column(modifier = Modifier.padding(vertical = SMALL_PADDING)) {
                 ProfileCommentText(
-                    text = "BIO",
+                    text = Vocabulary.localization.bio,
                     fontSize = 14.sp
                 )
                 ProfileColumnContainer(backgroundColor = Color(0xFFEFEFEF)) {
                     ProfileTextField(text = bio)
                 }
                 ProfileCommentText(
-                    text = "Any details such as age, occupation or city",
+                    text = Vocabulary.localization.anyDetails,
                     fontSize = 12.sp
                 )
             }
             ProfileCommentText(
-                text = "Email",
+                text = Vocabulary.localization.email,
                 fontSize = 14.sp
             )
             ProfileColumnContainer(backgroundColor = Color(0xFFEFEFEF)) {

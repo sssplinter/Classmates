@@ -12,6 +12,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import domain.entities.data.UserInfo
+import localization.Vocabulary
 import navigation.component.NavHostController
 import org.kodein.di.compose.rememberInstance
 import presentation.components.SearchTextField
@@ -46,7 +47,7 @@ fun PeopleScreen(navController: NavHostController) {
         ) {
             Text(
                 modifier = Modifier.fillMaxWidth(0.7f),
-                text = "Find all people",
+                text = Vocabulary.localization.findAllPeople,
                 textAlign = TextAlign.Center,
                 fontSize = 28.sp
             )
@@ -56,7 +57,7 @@ fun PeopleScreen(navController: NavHostController) {
                 onValueChanged = {
                     viewModel.setEvent(PeopleScreenContract.Event.OnSearchUserTextAppear(it))
                 },
-                hint = "Search"
+                hint = Vocabulary.localization.search
             )
         }
         LazyVerticalGrid(

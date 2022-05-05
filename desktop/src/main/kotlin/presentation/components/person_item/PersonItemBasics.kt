@@ -18,6 +18,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import domain.entities.data.UserInfo
+import localization.Vocabulary
 import presentation.components.WebImage
 import ui.theme.MEDIUM_PADDING
 import ui.theme.ProfileOutline
@@ -61,7 +62,7 @@ fun PersonItemImage(imgSrc: String, onClick: () -> Unit) {
                     onClick()
                 },
             painter = painterResource(imgSrc),
-            contentDescription = "Action image",
+            contentDescription = Vocabulary.localization.actionImgContent,
             tint = Color.Black
         )
 }

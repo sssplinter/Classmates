@@ -12,6 +12,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.sp
+import localization.Vocabulary
 import ui.theme.THE_SMALLEST_PADDING
 
 @Composable
@@ -35,7 +36,7 @@ fun RowUniversityItem(
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 text = buildAnnotatedString {
-                    append("group: ")
+                    append(Vocabulary.localization.group)
                     withStyle(style = SpanStyle(fontStyle = FontStyle.Italic)) {
                         append(group)
                     }
@@ -45,7 +46,7 @@ fun RowUniversityItem(
         }
         Text(
             modifier = Modifier.clickable { onEditClick() },
-            text = "edit ->",
+            text = Vocabulary.localization.editGroup,
             fontSize = 12.sp,
             color = Color.Gray
         )

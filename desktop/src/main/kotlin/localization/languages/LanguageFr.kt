@@ -2,71 +2,71 @@ package localization.languages
 
 import localization.Language
 
-object LanguageEn : Language {
+object LanguageFr: Language {
     override val appName: String
-        get() = "Classmates"
+        get() = "Camarades"
     override val login: String
         get() = "Login"
     override val signIn: String
-        get() = "Sign in"
+        get() = "Se connecter"
     override val signUp: String
-        get() = "Sign up"
+        get() = "Creer nouveau compte"
     override val email: String
         get() = "email"
     override val password: String
-        get() = "password"
+        get() = "le mot de passe"
     override val repeatPassword: String
-        get() = "repeat password"
+        get() = "répéter le mot de passe"
     override val emptyEmailError: String
-        get() = "email is empty"
+        get() = "l'e-mail est vide"
     override val wrongEmailError: String
-        get() = "wrong email"
+        get() = "adresse Email incorrecte"
     override val emptyPasswordError: String
-        get() = "password is empty"
+        get() = "le mot de passe est vide"
     override val wrongPasswordLengthError: String
-        get() = "password less than 8 signs"
+        get() = "le mot de passe doit comporter plus de 8 signes"
     override val differentPasswordError: String
-        get() = "passwords are different"
+        get() = "les mots de passe sont différents"
     override val settings: String
-        get() = "Settings"
+        get() = "Réglages"
     override val searchMsg: String
-        get() = "Search message..."
+        get() = "Trouver un message..."
     override val msg: String
         get() = "Message..."
     override val yourConnections: String
-        get() = "Your connections"
+        get() = "Vos connexions"
     override val search: String
-        get() = "Search"
+        get() = "Recherche"
     override val group: String
-        get() = "Group: "
+        get() = "Groupe: "
     override val logOut: String
-        get() = "Log out"
+        get() = "Se déconnecter"
     override val editGroup: String
-        get() = "edit ->"
+        get() = "editer ->"
     override val setupUserInfo: String
-        get() = "Setup user info"
+        get() = "Configurer les informations utilisateur"
     override val name: String
-        get() = "Name"
+        get() = "Nom"
     override val nameNotEmpty: String
-        get() = "Name shouldn't be empty"
+        get() = "Le nom ne doit pas être vide"
     override val surname: String
-        get() = "Surname"
+        get() = "Prenom"
     override val surnameNotEmpty: String
-        get() = "Surname shouldn't be empty"
+        get() = "Le prenom ne doit pas être vide"
     override val confirm: String
-        get() = "Confirm"
+        get() = "Confirmer"
     override val friends: String
-        get() = "Friends"
+        get() = "Amis"
     override val subscribers: String
-        get() = "Subscribers"
+        get() = "Les abonnés"
     override val noInternet: String
-        get() = "No internet connection"
+        get() = "Pas de connexion Internet"
     override val noInternetMsg: String
-        get() = "Please reconnect to network"
+        get() = "Veuillez vous reconnecter au réseau"
     override val subscriptions: String
-        get() = "Subscriptions"
+        get() = "Abonnements"
     override val findAllPeople: String
-        get() = "Find all people"
+        get() = "Trouver toutes les personnes"
     override val actionImgContent: String
         get() = "Action image"
     override val errorImgContent: String
@@ -78,21 +78,21 @@ object LanguageEn : Language {
     override val bio: String
         get() = "BIO"
     override val anyDetails: String
-        get() = "Any details such as age, occupation or city"
+        get() = "Tous les détails tels que l'âge, la profession ou la ville"
     override val enterYourName: String
-        get() = "Enter your name and add a profile photo"
+        get() = "Entrez votre nom et ajoutez une photo de profil"
     override val theme: String
-        get() = "Theme"
+        get() = "Thème"
     override val language: String
-        get() = "Language"
+        get() = "Langue"
     override val sendMsg: String
-        get() = "Send message"
+        get() = "Envoyer le message"
     override val privateMsgSend: String
-        get() = "That message will be send to private messages"
+        get() = "Ce message sera envoyé aux messages privés"
     override val message: String
         get() = "message"
     override val cancel: String
-        get() = "Cancel"
+        get() = "Annuler"
     override val send: String
-        get() = "Send"
+        get() = "Envoyé"
 }

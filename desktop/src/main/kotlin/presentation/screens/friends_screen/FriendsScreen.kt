@@ -19,6 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import domain.entities.data.UserInfo
+import localization.Vocabulary
 import org.kodein.di.compose.rememberInstance
 import presentation.components.SearchTextField
 import presentation.components.dialogs.SendMessageDialog
@@ -58,7 +59,7 @@ fun FriendsScreen() {
         ) {
             Text(
                 modifier = Modifier.fillMaxWidth(0.7f),
-                text = "Your connections",
+                text = Vocabulary.localization.yourConnections,
                 textAlign = TextAlign.Center,
                 fontSize = 28.sp
             )
@@ -68,7 +69,7 @@ fun FriendsScreen() {
                 onValueChanged = {
                     viewModel.setEvent(FriendsScreenContract.Event.OnSearchUserTextAppear(it))
                 },
-                hint = "Search"
+                hint = Vocabulary.localization.search
             )
         }
         Row(modifier = Modifier.fillMaxWidth().padding(horizontal = MEDIUM_PADDING)) {
@@ -83,7 +84,7 @@ fun FriendsScreen() {
             ) {
                 Text(
                     modifier = Modifier.padding(vertical = THE_SMALLEST_PADDING),
-                    text = "Friends",
+                    text = Vocabulary.localization.friends,
                     fontSize = 16.sp
                 )
                 Divider(
@@ -106,7 +107,7 @@ fun FriendsScreen() {
             ) {
                 Text(
                     modifier = Modifier.padding(vertical = THE_SMALLEST_PADDING),
-                    text = "Subscribers",
+                    text = Vocabulary.localization.subscribers,
                     fontSize = 16.sp
                 )
                 Divider(
@@ -129,7 +130,7 @@ fun FriendsScreen() {
             ) {
                 Text(
                     modifier = Modifier.padding(vertical = THE_SMALLEST_PADDING),
-                    text = "Subscriptions",
+                    text = Vocabulary.localization.subscriptions,
                     fontSize = 16.sp
                 )
                 Divider(
