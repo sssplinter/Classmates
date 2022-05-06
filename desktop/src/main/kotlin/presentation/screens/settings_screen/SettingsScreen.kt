@@ -17,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalLocalization
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -34,8 +33,8 @@ import ui.theme.loginActiveButton
 fun SettingsScreen() {
     val viewModel: SettingsScreenViewModel by rememberInstance()
 
-    val currentTheme = remember { mutableStateOf(Themes.DAY_NIGHT) }
-    val currentLanguage = remember { mutableStateOf(Languages.EN) }
+    val currentTheme = remember { mutableStateOf(viewModel.savedTheme) }
+    val currentLanguage = remember { mutableStateOf(viewModel.savedLanguage) }
     initSettingsObservable(
         scope = rememberCoroutineScope(),
         viewModel = viewModel,

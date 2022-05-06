@@ -2,11 +2,11 @@ package domain.source.user.remote
 
 import domain.entities.data.CurrentUser
 import domain.entities.response.UserInfoResponse
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.PUT
+import retrofit2.http.*
+
 
 interface UserApiService {
     @GET("/profileInfo")
@@ -24,6 +24,13 @@ interface UserApiService {
     suspend fun setUserFullName(
         @Header("Access") token: String,
         @Body userInfo: UserInfoBody,
+    ): Response<Void>
+
+    @Multipart
+    @POST("/uploadProfileImage")
+    suspend fun uploadProfileImage(
+        @Header("Access") token: String = CurrentUser.token,
+        @Part image: MultipartBody.Part
     ): Response<Void>
 
     data class UserInfoBody(

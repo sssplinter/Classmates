@@ -48,5 +48,9 @@ interface Language {
     val message: String
     val cancel: String
     val send: String
-
+    val createGroup: String
+    val createGroupName: String
+    val createGroupNameHint: String
+    val createGroupFirstMessage: String
+    val createGroupChoosePeople: String
 }

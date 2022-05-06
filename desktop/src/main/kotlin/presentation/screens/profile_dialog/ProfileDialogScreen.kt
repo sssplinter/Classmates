@@ -17,6 +17,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.AwtWindow
 import domain.entities.data.CurrentUser
 import localization.Vocabulary
 import navigation.component.NavHostController
@@ -26,6 +27,11 @@ import presentation.components.dialogs.Popup
 import presentation.screens.profile_dialog.elements.*
 import ui.theme.EXTRA_SMALL_PADDING
 import ui.theme.SMALL_PADDING
+import util.BASE_URL
+import java.awt.FileDialog
+import java.awt.Frame
+import java.io.File
+import java.io.FilenameFilter
 
 @Composable
 fun ProfileScreen(navController: NavHostController, onOutBoxClick: () -> Unit) {
@@ -35,6 +41,7 @@ fun ProfileScreen(navController: NavHostController, onOutBoxClick: () -> Unit) {
     val surname = remember { mutableStateOf(CurrentUser.surname) }
     val bio = remember { mutableStateOf(CurrentUser.bio) }
     val showLoadingDialog = remember { mutableStateOf(false) }
+    val isFileChooser = remember { mutableStateOf(false) }
 
     initProfileObservable(
         scope = rememberCoroutineScope(),
@@ -62,8 +69,10 @@ fun ProfileScreen(navController: NavHostController, onOutBoxClick: () -> Unit) {
         ) {
             ProfileRowContainer(backgroundColor = Color(0xFFEFEFEF)) {
                 ProfileImageButton(
-                    imageUrl = "no_user_photo.svg",
-                    onClick = {}
+                    imageUrl = CurrentUser.profileImageUrl,
+                    onClick = {
+                        isFileChooser.value = true
+                    }
                 )
                 Column(modifier = Modifier.padding(start = EXTRA_SMALL_PADDING)) {
                     ProfileTextField(text = name)
@@ -101,5 +110,36 @@ fun ProfileScreen(navController: NavHostController, onOutBoxClick: () -> Unit) {
 
     if (showLoadingDialog.value) {
         LoadingDialog()
+    }
+
+    if (isFileChooser.value) {
+        AwtWindow(
+            create = {
+                val parent: Frame? = null
+                val fileChooser = object : FileDialog(parent, "Choose a file", LOAD) {
+                    override fun setVisible(value: Boolean) {
+                        super.setVisible(value)
+                        val file = file
+                        val directory = directory
+                        viewModel.setEvent(ProfileScreenContract.Event.UpdateProfileImage(directory + file))
+                        isFileChooser.value = false
+                    }
+                }
+                val okFileExtensions = listOf("jpg", "jpeg", "png", "gif")
+                val fileNameFilter = object : FilenameFilter {
+                    override fun accept(pathname: File?, name: String?): Boolean {
+                        for (extension in okFileExtensions) {
+                            if (name?.toLowerCase()?.endsWith(extension) == true) {
+                                return true
+                            }
+                        }
+                        return false
+                    }
+                }
+                fileChooser.filenameFilter = fileNameFilter
+                fileChooser
+            },
+            dispose = FileDialog::dispose
+        )
     }
 }

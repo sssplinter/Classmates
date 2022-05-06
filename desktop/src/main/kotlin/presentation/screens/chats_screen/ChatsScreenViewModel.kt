@@ -2,6 +2,7 @@ package presentation.screens.chats_screen
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.window.AwtWindow
 import domain.entities.data.ChatInfo
 import domain.entities.data.MessageInfo
 import domain.use_cases.chat.FindChatsUseCase
@@ -15,6 +16,8 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import presentation.base.BaseViewModel
 import util.getListIterator
+import java.awt.FileDialog
+import java.awt.Frame
 
 class ChatsScreenViewModel(
     private val getChatMessagesUseCase: GetChatMessagesUseCase,
@@ -53,9 +56,14 @@ class ChatsScreenViewModel(
             is ChatsScreenContract.Event.OnSearchMessageTextAppear -> searchMessages(event.text)
             is ChatsScreenContract.Event.OnSearchChatTextAppear -> searchChat(event.text)
             is ChatsScreenContract.Event.OnSendMessageBtnClick -> sendMessage(event.text)
+            is ChatsScreenContract.Event.OnSelectFile -> openFileChooser()
             is ChatsScreenContract.Event.OnNextFoundMessageBtnClick -> nextFoundMessage()
             is ChatsScreenContract.Event.OnPrevFoundMessageBtnClick -> prevFoundMessage()
         }
+    }
+
+    private fun openFileChooser() {
+
     }
 
     private fun activateSearchPanel() {

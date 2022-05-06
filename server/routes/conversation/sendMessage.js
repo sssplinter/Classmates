@@ -22,6 +22,7 @@ function sendMessage(app, database) {
                         database.collection("Messages").insertOne({
                             _id: messageId,
                             chatId: chat.chatId,
+                            fromUserName: user.name + " " + user.surname,
                             fromUserId: user._id,
                             messageText: messageText,
                             sendDate: Date.now()

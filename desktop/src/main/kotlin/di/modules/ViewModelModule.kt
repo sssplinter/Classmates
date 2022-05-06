@@ -5,6 +5,7 @@ import org.kodein.di.bind
 import org.kodein.di.instance
 import org.kodein.di.singleton
 import presentation.screens.chats_screen.ChatsScreenViewModel
+import presentation.screens.create_group_dialog.CreateGroupViewModel
 import presentation.screens.friends_screen.FriendsScreenViewModel
 import presentation.screens.host_screen.HostScreenViewModel
 import presentation.screens.login_screen.LoginScreenViewModel
@@ -18,10 +19,11 @@ val viewModelModule = DI.Module(name = "viewModelModule", allowSilentOverride = 
     bind { singleton { HostScreenViewModel(instance(), instance(), instance(), instance()) } }
     bind { singleton { SplashScreenViewModel(instance(), instance(), instance(), instance(), instance(), instance(), instance()) } }
     bind { singleton { LoginScreenViewModel(instance(), instance(), instance(), instance(), instance()) } }
-    bind { singleton { ProfileScreenViewModel(instance(), instance(), instance()) } }
+    bind { singleton { ProfileScreenViewModel(instance(), instance(), instance(), instance()) } }
     bind { singleton { ChatsScreenViewModel(instance(), instance(), instance(), instance(), instance()) } }
     bind { singleton { PeopleScreenViewModel(instance(), instance(), instance(), instance(), instance(), instance(), instance()) } }
     bind { singleton { FriendsScreenViewModel(instance(), instance(), instance(), instance(), instance(), instance(), instance(), instance(), instance()) } }
     bind { singleton { MainScreenViewModel(instance(), instance()) } }
     bind { singleton { SettingsScreenViewModel(instance(), instance(),instance(), instance()) } }
+    bind { singleton { CreateGroupViewModel(instance(), instance()) } }
 }

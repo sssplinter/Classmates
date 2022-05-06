@@ -33,9 +33,21 @@ interface ChatApiService {
         @Body body: ChatBody,
     ): Response<ChatMessagesResponse>
 
+    @POST("/createGroupChat")
+    suspend fun createGroupChat(
+        @Header("Access") token: String = CurrentUser.token,
+        @Body body: GroupBody,
+    ): Response<Void>
+
     data class ChatBody(
         val messageText: String = "",
         val chatId: String = "",
         val userId: String = "",
+    )
+
+    data class GroupBody(
+        val groupName: String,
+        val messageText: String,
+        val usersId: String,
     )
 }

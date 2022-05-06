@@ -4,6 +4,11 @@ import domain.source.checkResponseCode
 import domain.source.user.remote.UserApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import java.io.File
+
 
 class UserRepository(
     private val userApiService: UserApiService,
@@ -25,5 +30,20 @@ class UserRepository(
         val response = userApiService.setUserFullName(token, params)
         response.checkResponseCode()
         return@withContext response.isSuccessful
+    }
+
+    suspend fun uploadProfileImage(path: String) = withContext(Dispatchers.IO) {
+        try {
+            val file = File(path)
+            val image = MultipartBody.Part.createFormData(
+                "image", file.name, RequestBody.create("image/*".toMediaTypeOrNull(), file)
+            )
+            val response = userApiService.uploadProfileImage(image = image)
+            response.checkResponseCode()
+            return@withContext response.isSuccessful
+        } catch (e: Exception) {
+            println(e)
+        }
+        return@withContext false
     }
 }

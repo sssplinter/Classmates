@@ -95,4 +95,14 @@ object LanguageRu : Language {
         get() = "Закрыть"
     override val send: String
         get() = "Отправить"
+    override val createGroup: String
+        get() = TODO("Not yet implemented")
+    override val createGroupName: String
+        get() = TODO("Not yet implemented")
+    override val createGroupNameHint: String
+        get() = TODO("Not yet implemented")
+    override val createGroupFirstMessage: String
+        get() = TODO("Not yet implemented")
+    override val createGroupChoosePeople: String
+        get() = TODO("Not yet implemented")
 }

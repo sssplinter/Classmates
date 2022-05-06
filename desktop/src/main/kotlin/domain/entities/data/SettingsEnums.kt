@@ -2,6 +2,7 @@ package domain.entities.data
 
 import localization.Language
 import localization.languages.LanguageEn
+import localization.languages.LanguageFr
 import localization.languages.LanguageRu
 import ui.theme.AppTheme
 
@@ -13,7 +14,7 @@ enum class Themes(val imgSrc: String) {
 
 enum class Languages(val imgSrc: String, val language: Language) {
     EN("flags/uk_flag.svg", LanguageEn),
-    FR("flags/french_flag.svg", LanguageEn),
+    FR("flags/french_flag.svg", LanguageFr),
     RU("flags/ru_flag.svg", LanguageRu)
 }
 

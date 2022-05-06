@@ -94,6 +94,7 @@ fun LogBox(
                 horizontalArrangement = Arrangement.Center
             ) {
                 TextButton(
+                    modifier = Modifier.weight(1f),
                     colors = if (isSignIn) ButtonDefaults.textButtonColors(backgroundColor = MaterialTheme.colors.loginActiveButton) else ButtonDefaults.textButtonColors(),
                     onClick = {
                         isSignIn = true
@@ -104,11 +105,13 @@ fun LogBox(
                     }
                 ) {
                     Text(
-                        modifier = Modifier.padding(horizontal = THE_LARGEST_PADDING),
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center,
                         text = Vocabulary.localization.signIn
                     )
                 }
                 TextButton(
+                    modifier = Modifier.weight(1f),
                     colors = if (!isSignIn) ButtonDefaults.textButtonColors(backgroundColor = MaterialTheme.colors.loginActiveButton) else ButtonDefaults.textButtonColors(),
                     onClick = {
                         isSignIn = false
@@ -119,7 +122,8 @@ fun LogBox(
                     }
                 ) {
                     Text(
-                        modifier = Modifier.padding(horizontal = THE_LARGEST_PADDING),
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center,
                         text = Vocabulary.localization.signUp
                     )
                 }

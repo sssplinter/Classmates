@@ -36,4 +36,16 @@ class ChatRepository(
         response.checkResponseCode()
         return@withContext response.isSuccessful
     }
+
+    suspend fun createGroupChat(groupName: String, messageText: String, usersId: List<String>) =
+        withContext(Dispatchers.IO) {
+            val body = ChatApiService.GroupBody(
+                groupName = groupName,
+                messageText = messageText,
+                usersId = usersId.joinToString(prefix = "[", postfix = "]", transform = { "\"$it\"" })
+            )
+            val response = chatApiService.createGroupChat(body = body)
+            response.checkResponseCode()
+            return@withContext response.isSuccessful
+        }
 }

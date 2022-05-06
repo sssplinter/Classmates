@@ -13,6 +13,7 @@ class ChatsScreenContract {
         data class OnSearchChatTextAppear(val text: String) : Event()
         data class OnSearchMessageTextAppear(val text: String) : Event()
         data class OnSendMessageBtnClick(val text: String) : Event()
+        object OnSelectFile : Event()
         object OnNextFoundMessageBtnClick : Event()
         object OnPrevFoundMessageBtnClick : Event()
     }

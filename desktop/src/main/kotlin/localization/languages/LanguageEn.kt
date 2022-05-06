@@ -95,4 +95,14 @@ object LanguageEn : Language {
         get() = "Cancel"
     override val send: String
         get() = "Send"
+    override val createGroup: String
+        get() = "Create group"
+    override val createGroupName: String
+        get() = "Create group name"
+    override val createGroupNameHint: String
+        get() = "name"
+    override val createGroupFirstMessage: String
+        get() = "Send first message to group"
+    override val createGroupChoosePeople: String
+        get() = "Choose people for group"
 }

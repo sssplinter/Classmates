@@ -1,5 +1,7 @@
 package domain.entities.data
 
+import util.BASE_URL
+
 object CurrentUser {
     var userId: String = ""
         private set
@@ -34,7 +36,7 @@ object CurrentUser {
         this.surname = surname
         this.email = email
         this.bio = bio
-        this.profileImageUrl = profileImageUrl
+        this.profileImageUrl = BASE_URL + "/"+  profileImageUrl
         this.universities = universities
     }
 }

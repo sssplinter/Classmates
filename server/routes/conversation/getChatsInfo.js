@@ -31,7 +31,7 @@ function getChatsInfo(app, database) {
                                 database.collection("GroupChat").findOne({
                                     _id: chat.subChatId
                                 }, function (error, groupChat) {
-                                    let name = groupChat.name
+                                    let name = groupChat.groupName
                                     let photoUrl = groupChat.photoUrl
                                     chatsInfo.push({
                                         id: chatId,

@@ -1,9 +1,9 @@
 package presentation.screens.chats_screen.elements
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
@@ -17,31 +17,44 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import presentation.components.WebImage
-import ui.theme.EXTRA_SMALL_PADDING
-import ui.theme.MEDIUM_PADDING
-import ui.theme.ProfileOutline
-import ui.theme.THE_SMALLEST_PADDING
+import ui.theme.*
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DialogsMessageItem(
     message: String,
     messageTime: String,
     isMyMessage: Boolean,
+    fromUserName: String,
     isLastUserMessage: Boolean,
     isTimeNeeded: Boolean,
     isFoundMessage: Boolean = false,
     imageUrl: String? = null,
 ) {
-    var isExpanded by remember { mutableStateOf(false) }
+    var showFromUser by remember { mutableStateOf(false) }
+    var showTime by remember { mutableStateOf(false) }
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .background(
                 if (isFoundMessage) Color(0x556778E5)
                 else Color.Transparent
-            ),
+            )
+            .animateContentSize(),
         horizontalAlignment = if (isMyMessage) Alignment.End else Alignment.Start
     ) {
+        val fromUserTextHeightModifier = if (!isMyMessage && showFromUser) Modifier else Modifier.height(0.dp)
+        Text(
+            modifier = fromUserTextHeightModifier
+                .padding(
+                    horizontal = MEDIUM_PADDING
+                )
+                .padding(top = SMALL_PADDING)
+                .animateContentSize(),
+            text = fromUserName,
+            fontSize = 12.sp,
+            color = Color.Blue
+        )
         Row(verticalAlignment = Alignment.Bottom) {
             if (isLastUserMessage) imageUrl?.let {
                 WebImage(
@@ -64,9 +77,14 @@ fun DialogsMessageItem(
                     bottomEnd = if (isMyMessage && isLastUserMessage) 5.dp else 12.dp
                 ))
                 .background(if (isMyMessage) Color(0xFF6C84F6) else Color(0xFFFFFFFD))
-                .clickable {
-                    isExpanded = !isExpanded
-                }
+                .combinedClickable(
+                    onClick = {
+                        showFromUser = !showFromUser
+                    },
+                    onLongClick = {
+                        showTime = !showTime
+                    }
+                )
                 .padding(EXTRA_SMALL_PADDING)
             ) {
                 Text(
@@ -77,7 +95,7 @@ fun DialogsMessageItem(
                 )
             }
         }
-        val textHeightModifier = if (isTimeNeeded || isExpanded) Modifier else Modifier.height(0.dp)
+        val textHeightModifier = if (isTimeNeeded || showTime) Modifier else Modifier.height(0.dp)
         Text(
             modifier = textHeightModifier
                 .padding(
@@ -89,23 +107,5 @@ fun DialogsMessageItem(
             fontSize = 12.sp,
             color = Color.Gray
         )
-    }
-}
-
-@Preview
-@Composable
-fun PreviewDialogs() {
-    Column(modifier = Modifier.fillMaxSize().background(Color(0xFFEDEFF8))) {
-        DialogsMessageItem("hello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello worldhello world",
-            "12.22",
-            false,
-            false,
-            false,
-            false,
-            "")
-        DialogsMessageItem("hello world", "12.22", false, true, true, false, "")
-        DialogsMessageItem("hello world", "12.22", true, true, false)
-        DialogsMessageItem("hello world", "12.22", true, true, false)
-        DialogsMessageItem("hello world", "12.22", true, true, true)
     }
 }

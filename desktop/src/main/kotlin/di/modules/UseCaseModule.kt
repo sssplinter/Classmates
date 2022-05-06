@@ -10,6 +10,7 @@ import domain.use_cases.exception.GetForbiddenExceptionFlowUseCase
 import domain.use_cases.exception.GetNoConnectionExceptionFlowUseCase
 import domain.use_cases.exception.GetUnauthorizedExceptionFlowUseCase
 import domain.use_cases.friendship.*
+import domain.use_cases.people.GetFriendsUseCase
 import domain.use_cases.people_flow_data.*
 import domain.use_cases.server_connection.StartCheckConnectionWithServerUseCase
 import domain.use_cases.server_connection.StopCheckConnectionWithServerUseCase
@@ -19,6 +20,7 @@ import domain.use_cases.settings.SaveLanguageUseCase
 import domain.use_cases.settings.SaveThemeUseCase
 import domain.use_cases.user_info.LoadProfileInfoUseCase
 import domain.use_cases.user_info.UpdateProfileInfoUseCase
+import domain.use_cases.user_info.UploadProfileImageUseCase
 import org.kodein.di.DI
 import org.kodein.di.bind
 import org.kodein.di.instance
@@ -63,4 +65,7 @@ val useCaseModule = DI.Module(name = "useCase", allowSilentOverride = false) {
     bind { singleton { SaveLanguageUseCase(instance()) } }
     bind { singleton { GetLanguageUseCase(instance()) } }
     bind { singleton { UpdateProfileInfoUseCase(instance(), instance()) } }
+    bind { singleton { CreateGroupChatUseCase(instance()) } }
+    bind { singleton { GetFriendsUseCase(instance()) } }
+    bind { singleton { UploadProfileImageUseCase(instance()) } }
 }

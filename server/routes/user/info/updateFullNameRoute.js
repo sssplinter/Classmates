@@ -7,6 +7,7 @@ function updateFullNameRoute(app, database) {
         const surname = request.fields.surname;
 
         if (accessToken == null || name == null || surname == null) {
+            console.log("400 1")
             result.status(400).json({
                 "message": "Wrong params"
             });
@@ -25,10 +26,12 @@ function updateFullNameRoute(app, database) {
                             }
                         }
                     )
+                    console.log("200")
                     result.status(200).json({
                         "message": "Data have been changed"
                     });
                 } else {
+                    console.log("401")
                     result.status(401).json({
                         "message": "User has been logged out"
                     });

@@ -1,5 +1,6 @@
 package domain.loader
 
+import androidx.compose.runtime.MutableState
 import domain.entities.data.ChatInfo
 import domain.entities.data.MessageInfo
 import domain.source.chat.ChatRepository
@@ -25,7 +26,7 @@ class AsyncChatLoader(
 
     private var isChatsLoading = AsyncDataLoader.ValueWrapper(false)
     private val _allChats: MutableStateFlow<List<ChatInfo>> = MutableStateFlow(emptyList())
-    val allChats = _allChats.asSharedFlow()
+    val allChats: StateFlow<List<ChatInfo>> get() = _allChats.asStateFlow()
 
     private val _allMessages = HashMap<String, MessageMapValue>()
     fun getChatMessagesFlow(chatId: String) = _allMessages[chatId]?.second ?: throw NullPointerException()

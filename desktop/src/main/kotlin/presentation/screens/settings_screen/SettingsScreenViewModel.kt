@@ -17,6 +17,8 @@ class SettingsScreenViewModel(
     private val saveLanguageUseCase: SaveLanguageUseCase,
     private val saveThemeUseCase: SaveThemeUseCase,
 ) : BaseViewModel<SettingsScreenContract.Event, SettingsScreenContract.State, SettingsScreenContract.Effect>() {
+    var savedTheme: Themes = Themes.DAY_NIGHT
+    var savedLanguage: Languages = Languages.EN
 
     init {
         loadSavedTheme()
@@ -24,17 +26,13 @@ class SettingsScreenViewModel(
     }
 
     private fun loadSavedTheme() {
-        val savedTheme = getThemeUseCase()
-        savedTheme?.let {
-            setEffect { SettingsScreenContract.Effect.ChangeTheme(Themes.valueOf(savedTheme)) }
-        }
+        savedTheme = getThemeUseCase()?.let { Themes.valueOf(it) } ?: savedTheme
+        setEffect { SettingsScreenContract.Effect.ChangeTheme(savedTheme) }
     }
 
     private fun loadSavedLanguage() {
-        val savedLanguage = getLanguageUseCase()
-        savedLanguage?.let {
-            setEffect { SettingsScreenContract.Effect.ChangeLanguage(Languages.valueOf(savedLanguage)) }
-        }
+        savedLanguage = getLanguageUseCase()?.let { Languages.valueOf(it) } ?: savedLanguage
+        setEffect { SettingsScreenContract.Effect.ChangeLanguage(savedLanguage) }
     }
 
     override fun createInitialState(): SettingsScreenContract.State {
@@ -49,12 +47,14 @@ class SettingsScreenViewModel(
     }
 
     private fun updateTheme(theme: Themes) {
+        savedTheme = theme
         saveThemeUseCase(theme.name)
         rememberTheme(theme.toAppTheme())
         setEffect { SettingsScreenContract.Effect.ChangeTheme(theme) }
     }
 
     private fun updateLanguage(language: Languages) {
+        savedLanguage = language
         saveLanguageUseCase(language.name)
         rememberLocalization(language.language)
         setEffect { SettingsScreenContract.Effect.ChangeLanguage(language) }

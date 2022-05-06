@@ -29,7 +29,7 @@ import com.breaktime.classmates.util.dp
 @Composable
 fun SendMessageDialog(onClickCancel: () -> Unit, onClickSend: (String) -> Unit) {
     val messageText = remember { mutableStateOf("") }
-    Popup {
+    ShadowBox {
         Column(
             modifier = Modifier
                 .width(250.dp)
